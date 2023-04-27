@@ -6,7 +6,6 @@ public class FingerPath {
     public boolean blur;
     public int strokeWidth;
     public Path path;
-
     public FingerPath(int color, boolean emboss, boolean blur, int strokeWidth, Path path) {
         this.color = color;
         this.emboss = emboss;

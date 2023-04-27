@@ -37,6 +37,7 @@ public class PaintView extends View {
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private Canvas canvas;
 
     public PaintView(Context context) {
         this(context, null);
@@ -74,13 +75,13 @@ public class PaintView extends View {
         blur = false;
     }
     public void size_normal() {
-        strokeWidth = 10;
+        strokeWidth = 20;
     }
     public void size_big() {
-        strokeWidth = 15;
+        strokeWidth = 30;
     }
     public void size_small() {
-        strokeWidth = 5;
+        strokeWidth = 10;
     }
     public void color_green() {
         currentColor = Color.GREEN;
@@ -90,6 +91,12 @@ public class PaintView extends View {
     }
     public void color_black() {
         currentColor = Color.BLACK;
+    }
+    public void color_yellow() {
+        currentColor = Color.YELLOW;
+    }
+    public void color_blue() {
+        currentColor = Color.BLUE;
     }
 
     public void emboss() {
@@ -111,9 +118,9 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        this.canvas = canvas;
         canvas.save();
         mCanvas.drawColor(backgroundColor);
-
         for (FingerPath fp : paths) {
             mPaint.setColor(fp.color);
             mPaint.setStrokeWidth(fp.strokeWidth);
@@ -173,7 +180,6 @@ public class PaintView extends View {
                 invalidate();
                 break;
         }
-
         return true;
     }
 }

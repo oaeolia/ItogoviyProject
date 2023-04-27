@@ -40,6 +40,12 @@
             <item
                 android:id="@+id/color_green"
                 android:title="Зеленый" />
+            <item
+                android:id="@+id/color_yellow"
+                android:title="Желтый"/>
+            <item
+                android:id="@+id/color_blue"
+                android:title="Синий"/>
         </menu>
     </item>
     <item

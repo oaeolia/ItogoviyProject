@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.color_black:
                 paintView.color_black();
                 return true;
+            case R.id.color_yellow:
+                paintView.color_yellow();
+                return true;
+            case R.id.color_blue:
+                paintView.color_blue();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
