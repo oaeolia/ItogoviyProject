@@ -1,2 +1,0 @@
-# ItogoviyProject
-# ItogoviyProject
