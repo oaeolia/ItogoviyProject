@@ -2,7 +2,7 @@
 This is the final project for samsung school.
 
 
-## TOOD:
+## TODO:
 - Chat
 - Login and registration
 - Create room
