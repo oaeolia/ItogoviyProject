@@ -34,5 +34,19 @@ def registration() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': registration_message}))
 
 
+@app.route(settings.API_URL_MAIN + '/auth/login', methods=['POST'])
+def login() -> Response:
+    data = request.get_json()
+    if 'login' not in data or 'password' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'massage': 'Not all data in request'}))
+
+    login_message = auth.auth(data['login'], data['password'])
+    print(type(login_message))
+    if type(login_message) is not str:
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0]}))
+    else:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': login_message}))
+
+
 if __name__ == '__main__':
     app.run(debug=True)

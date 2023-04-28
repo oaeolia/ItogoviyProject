@@ -1,6 +1,7 @@
 from pymysql.connections import Connection
 
 import settings
+from services.auth import generate_session_token
 
 # noinspection PyTypeChecker
 now_connection: Connection = None
@@ -48,3 +49,17 @@ def check_user_email_and_name_for_existence(email: str, name: str) -> bool:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT 1 FROM users WHERE email = %s OR name = %s", (email, name))
         return cursor.fetchone() is not None
+
+
+def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, int]:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT id FROM users WHERE (email = %s or name = %s) AND password = %s", (login, login, password))
+        data = cursor.fetchone()
+        if data is None:
+            return None
+        else:
+            token = generate_session_token()
+            cursor.execute("INSERT INTO sessions (user_id, data, last_time) VALUES (%s, %s, NOW())", (data[0], '{}'))
+            session_id = cursor.lastrowid
+            cursor.connection.commit()
+            return token, session_id
