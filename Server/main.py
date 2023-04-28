@@ -41,7 +41,6 @@ def login() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_OK, 'massage': 'Not all data in request'}))
 
     login_message = auth.auth(data['login'], data['password'])
-    print(type(login_message))
     if type(login_message) is not str:
         return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0]}))
     else:
