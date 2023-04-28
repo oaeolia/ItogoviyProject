@@ -26,7 +26,7 @@ def test_db() -> Response:
 def registration() -> Response:
     data = request.get_json()
     if 'name' not in data or 'email' not in data or 'password' not in data:
-        return Response(json.dumps({'status': settings.RESPONSE_OK, 'massage': 'Not all data in request'}))
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
     registration_message = auth.registration(data['name'], data['email'], data['password'])
     if registration_message == '':
         return Response(json.dumps({'status': settings.RESPONSE_OK}))
@@ -38,7 +38,7 @@ def registration() -> Response:
 def login() -> Response:
     data = request.get_json()
     if 'login' not in data or 'password' not in data:
-        return Response(json.dumps({'status': settings.RESPONSE_OK, 'massage': 'Not all data in request'}))
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
 
     login_message = auth.auth(data['login'], data['password'])
     if type(login_message) is not str:

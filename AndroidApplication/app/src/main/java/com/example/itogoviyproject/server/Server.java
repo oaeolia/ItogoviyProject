@@ -46,6 +46,7 @@ public class Server {
                 Request.Method.POST, SERVER_URL + "auth/registration", jsonBody, responseData -> {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+
                     callback.onDataReady(true, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(null, responseData.getString("message"), null);
@@ -54,7 +55,9 @@ public class Server {
                         errorCallback.onDataReady(responseData.getString("message"), -1, null);
                     }
                 } else {
-                    errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
                     logger.logError("Server", "Server undefined error (undefined status, try registration)");
                 }
             } catch (JSONException e) {
@@ -68,6 +71,51 @@ public class Server {
             }
             if (errorCallback != null) {
                 errorCallback.onDataReady("Server undefined error", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void login(String login, String password, ServerCallback<Boolean, String, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("login", login);
+            jsonBody.put("password", password);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "auth/login", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    sessionId = responseData.getInt("session_id");
+                    sessionToken = responseData.getString("session_token");
+                    callback.onDataReady(true, null, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, responseData.getString("message"), null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try login)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (login): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t login " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t login " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try login)", null, null);
             }
         });
 
