@@ -24,7 +24,6 @@ def auth(login: str, password: str) -> str | tuple[str, int]:
         return result
 
 
-# TODO: Add register function
 def registration(name: str, email: str, password: str) -> str:
     name_re = re.compile(r'^[a-zA-Zа-яА-Я0-9_-]{3,20}$')
     email_re = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
@@ -49,3 +48,7 @@ def generate_session_token() -> str:
     for i in range(settings.TOKEN_LENGTH):
         result += str(settings.TOKEN_SYMBOLS[randint(0, len(settings.TOKEN_SYMBOLS) - 1)])
     return result
+
+
+def clear_sessions() -> None:
+    db.clear_sessions()

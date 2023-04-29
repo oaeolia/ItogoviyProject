@@ -47,5 +47,10 @@ def login() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
 
 
+@app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
+def clear_sessions():
+    auth.clear_sessions()
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.1.13')

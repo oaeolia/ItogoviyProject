@@ -63,3 +63,9 @@ def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, 
             session_id = cursor.lastrowid
             cursor.connection.commit()
             return token, session_id
+
+
+def clear_sessions() -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("DELETE FROM sessions WHERE last_time < NOW() - INTERVAL 10 MINUTE")
+        cursor.connection.commit()
