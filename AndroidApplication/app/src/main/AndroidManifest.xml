@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="32">
         <activity
+            android:name=".GameMenuActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegistrationActivity"
             android:exported="false" />
         <activity
