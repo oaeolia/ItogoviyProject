@@ -4,6 +4,11 @@ import android.util.Log;
 
 public class ConsoleLogger implements ILogger{
     @Override
+    public void logDebug(String tag, String message) {
+        Log.d(tag, message);
+    }
+
+    @Override
     public void logInfo(String tag, String message) {
         Log.i(tag, message);
     }
