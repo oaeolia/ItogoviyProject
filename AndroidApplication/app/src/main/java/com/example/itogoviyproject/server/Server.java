@@ -92,6 +92,7 @@ public class Server {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
                     sessionId = responseData.getInt("session_id");
                     sessionToken = responseData.getString("session_token");
+                    logger.logInfo("Server", "Login successful, session id: " + sessionId);
                     callback.onDataReady(true, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(null, responseData.getString("message"), null);
