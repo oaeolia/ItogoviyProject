@@ -2,6 +2,7 @@ package com.example.itogoviyproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
         binding.buttonLogin.setOnClickListener(view -> {
             binding.buttonLogin.setEnabled(false);
+            binding.textErrorMessage.setText("");
             ((Application) getApplication()).getServer().login(binding.inputLogin.getText().toString(), binding.inputPassword.getText().toString(),
                     new ServerCallback<Boolean, String, Object>() {
                         @Override
@@ -47,14 +49,20 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 ((Application) getApplication()).getLogger().logDebug("Login", "Cant logged in");
                                 ((Application) getApplication()).getLogger().logDebug("Login", arg2);
+                                binding.textErrorMessage.setText(R.string.message_error_login_invalid_user_data);
                             }
                         }
                     }, new ServerCallback<String, Integer, Object>() {
                         @Override
                         public void onDataReady(String arg1, Integer arg2, Object arg3) {
+                            binding.textErrorMessage.setText(R.string.message_error_cannt_send_request);
                             ((Application) getApplication()).getLogger().logError("Login", "Cant logged in (" + arg1 + ")");
                         }
                     });
+        });
+        binding.buttonGoRegistration.setOnClickListener(view -> {
+            Intent intent = new Intent(this, RegistrationActivity.class);
+            startActivity(intent);
         });
     }
 }

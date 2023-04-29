@@ -2,6 +2,23 @@
     <string name="app_name">ItogoviyProject</string>
 
     <string name="title_login_input">Имя пользователя или почта</string>
+    <string name="title_username_input">Имя пользователя</string>
+    <string name="title_email_input">Почта</string>
     <string name="title_password_input">Пароль</string>
+
     <string name="action_login">Войти</string>
+    <string name="action_register">Зарегистрироваться</string>
+    <string name="action_go_to_registration">Еще нет аккаунта? Зарегистрироваться</string>
+    <string name="action_go_to_login">Уже есть аккаунт? Войти</string>
+
+    <string name="message_error_login_invalid_user_data">Неверный логин или пароль</string>
+    <string name="message_error_user_name_or_emeail_is_not_free">Имя пользователя или почта заняты</string>
+    <string name="message_error_cannt_send_request">Неудаётся получить ответ сервера</string>
+    <string name="message_error_register_password_is_short">Пароль должен быть не меньше 7 символов</string>
+    <string name="message_error_register_password_is_long">Пароль должен быть не более 20 символов</string>
+    <string name="message_error_register_password_need_spacial_symbols">Пароль должен содержать хотя бы один специальный символ</string>
+    <string name="message_error_register_password_need_number">Пароль должен содержать хотя бы одну цифру</string>
+    <string name="message_error_register_password_need_char">Пароль должен содержать хотя бы одну букву</string>
+    <string name="message_error_register_password_have_spaces">Пароль должен содержать хотя бы одну букву</string>
+    <string name="message_error_register_email_is_now_valid">Введите корректный email</string>
 </resources>

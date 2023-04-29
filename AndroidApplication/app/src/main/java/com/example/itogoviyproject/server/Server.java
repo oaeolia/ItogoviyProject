@@ -49,7 +49,7 @@ public class Server {
 
                     callback.onDataReady(true, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
-                    callback.onDataReady(null, responseData.getString("message"), null);
+                    callback.onDataReady(false, responseData.getString("message"), null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
                     if (errorCallback != null) {
                         errorCallback.onDataReady(responseData.getString("message"), -1, null);
@@ -95,7 +95,7 @@ public class Server {
                     logger.logInfo("Server", "Login successful, session id: " + sessionId);
                     callback.onDataReady(true, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
-                    callback.onDataReady(null, responseData.getString("message"), null);
+                    callback.onDataReady(false, responseData.getString("message"), null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
                     if (errorCallback != null) {
                         errorCallback.onDataReady(responseData.getString("message"), -1, null);

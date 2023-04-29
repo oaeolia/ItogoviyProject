@@ -4,39 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal|center_vertical"
-    tools:context=".LoginActivity">
-
-    <TextView
-        android:id="@+id/text_error_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text=""
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout" />
+    tools:context=".RegistrationActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <TextView
+            android:id="@+id/text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="16sp" />
+
         <EditText
-            android:id="@+id/input_login"
+            android:id="@+id/input_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints="username"
             android:ems="10"
             android:gravity="center_horizontal"
-            android:hint="@string/title_login_input"
+            android:hint="@string/title_username_input"
             android:inputType="text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autofillHints="emailAddress"
+            android:ems="10"
+            android:gravity="center_horizontal"
+            android:hint="@string/title_email_input"
+            android:inputType="textEmailAddress"
             android:textSize="20sp" />
 
         <EditText
@@ -52,25 +61,25 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button_login"
+            android:id="@+id/button_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:enabled="false"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@string/action_login"
-            android:textSize="20sp" />
+            android:text="@string/action_register"
+            android:textSize="16sp" />
 
         <Button
-            android:id="@+id/button_go_registration"
+            android:id="@+id/button_go_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@string/action_go_to_registration"
-            android:textSize="20sp" />
+            android:text="@string/action_go_to_login"
+            android:textSize="16sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
