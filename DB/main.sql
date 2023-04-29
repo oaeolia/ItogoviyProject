@@ -11,8 +11,19 @@ CREATE TABLE `sessions`
 (
     `id`        INT UNSIGNED                                                   NOT NULL AUTO_INCREMENT,
     `user_id`   INT UNSIGNED                                                   NOT NULL,
+    `token`     VARCHAR(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci   NOT NULL,
     `data`      VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `last_time` DATETIME                                                       NOT NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES  `users`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `application_sessions`
+(
+    `id`        INT UNSIGNED                                                   NOT NULL AUTO_INCREMENT,
+    `user_id`   INT UNSIGNED                                                   NOT NULL,
+    `token`     VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    `last_time` DATETIME                                                       NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
