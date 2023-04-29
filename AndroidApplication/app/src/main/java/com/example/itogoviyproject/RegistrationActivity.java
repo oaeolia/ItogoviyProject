@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 
 import com.example.itogoviyproject.databinding.ActivityRegistrationBinding;
 import com.example.itogoviyproject.server.ServerCallback;
@@ -35,9 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                binding.buttonRegistration.setEnabled(android.util.Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText()).matches() &&
-                        checkPassword(binding.inputPassword.getText().toString()) != -1 &&
-                        binding.inputUsername.getText().toString().length() > 4);
+                binding.buttonRegistration.setEnabled(checkAll() == -1);
             }
         };
 
@@ -58,11 +57,15 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText()).matches())
-                {
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText()).matches()) {
                     binding.textMessage.setText(R.string.message_error_register_email_is_now_valid);
-                }else{
-                    binding.textMessage.setText("");
+                } else {
+                    int buffer = checkAll();
+                    if(buffer != -1) {
+                        binding.textMessage.setText(buffer);
+                    }else {
+                        binding.textMessage.setText("");
+                    }
                 }
             }
         });
@@ -80,10 +83,40 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 int checkResult = checkPassword(editable.toString());
-                if(checkResult == -1)
-                {
-                    binding.textMessage.setText("");
-                }else{
+                if (checkResult == -1) {
+                    int buffer = checkAll();
+                    if(buffer != -1) {
+                        binding.textMessage.setText(buffer);
+                    }else {
+                        binding.textMessage.setText("");
+                    }
+                } else {
+                    binding.textMessage.setText(checkResult);
+                }
+            }
+        });
+        binding.inputUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                int checkResult = checkUsername(editable.toString());
+                if (checkResult == -1) {
+                    int buffer = checkAll();
+                    if(buffer != -1) {
+                        binding.textMessage.setText(buffer);
+                    }else {
+                        binding.textMessage.setText("");
+                    }
+                } else {
                     binding.textMessage.setText(checkResult);
                 }
             }
@@ -118,6 +151,33 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
+    private int checkAll() {
+        int buffer = checkUsername(binding.inputUsername.getText().toString());
+        if (buffer != -1) {
+            return buffer;
+        }
+
+        buffer = checkPassword(binding.inputPassword.getText().toString());
+        if (buffer != -1) {
+            return buffer;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText()).matches()) {
+            binding.textMessage.setText(R.string.message_error_register_email_is_now_valid);
+        }
+
+        return -1;
+    }
+
+    private int checkUsername(String username) {
+        if (username.length() < 4 || username.length() > 20) {
+            return R.string.message_error_register_username_not_valid;
+        }
+
+        Pattern pattern = Pattern.compile("^\\w+$");
+        return pattern.matcher(username).matches() ? -1 : R.string.message_error_register_username_not_valid;
+    }
+
     private int checkPassword(String password) {
         if (password.length() < 7) {
             return R.string.message_error_register_password_is_short;
@@ -132,7 +192,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         Pattern pattern;
         Matcher matcher;
-        String passwordPattern = "^.+\\W+.+$";
+        String passwordPattern = "^.*\\W+.*$";
         pattern = Pattern.compile(passwordPattern);
         matcher = pattern.matcher(password);
 
@@ -140,7 +200,7 @@ public class RegistrationActivity extends AppCompatActivity {
             return R.string.message_error_register_password_need_spacial_symbols;
         }
 
-        passwordPattern = "^.+\\d+.+$";
+        passwordPattern = "^.*\\d+.*$";
         pattern = Pattern.compile(passwordPattern);
         matcher = pattern.matcher(password);
 
@@ -148,8 +208,8 @@ public class RegistrationActivity extends AppCompatActivity {
             return R.string.message_error_register_password_need_number;
         }
 
-        passwordPattern = "^.+[^\\W1234567890_]+.+$";
-        pattern = Pattern.compile(passwordPattern, Pattern.UNICODE_CHARACTER_CLASS);
+        passwordPattern = "^.*[^\\W1234567890_]+.*$";
+        pattern = Pattern.compile(passwordPattern);
         matcher = pattern.matcher(password);
 
         if (!matcher.matches()) {
