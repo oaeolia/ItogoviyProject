@@ -55,6 +55,11 @@ def registration(name: str, email: str, password: str) -> str:
     return ''
 
 
+def logout_from_application(session_id: int, session_token: str) -> None:
+    db.remove_application_session(session_id, session_token)
+    db.close_now_connection()
+
+
 def generate_session_token() -> str:
     result = ''
     for i in range(settings.TOKEN_LENGTH):
@@ -64,3 +69,4 @@ def generate_session_token() -> str:
 
 def clear_sessions() -> None:
     db.clear_sessions()
+    db.close_now_connection()

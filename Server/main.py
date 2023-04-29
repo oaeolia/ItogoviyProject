@@ -55,6 +55,15 @@ def login() -> Response:
             return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
 
 
+@app.route(settings.API_URL_MAIN + '/auth/logout', methods=['POST'])
+def logout() -> Response:
+    data = request.get_json()
+    if 'application_session_id' not in data or 'application_session_token' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    auth.logout_from_application(data['application_session_id'], data['application_session_token'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK}))
+
+
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
 def clear_sessions():
     auth.clear_sessions()

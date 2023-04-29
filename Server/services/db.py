@@ -82,6 +82,12 @@ def try_auth_application_and_create_session(token: str, application_session_id: 
             return token, session_id
 
 
+def remove_application_session(session_id: int, session_token: str) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("DELETE FROM application_sessions WHERE id = %s AND token = %s", (session_id, session_token))
+        cursor.connection.commit()
+
+
 def clear_sessions() -> None:
     with get_connection().cursor() as cursor:
         cursor.execute("DELETE FROM sessions WHERE last_time < NOW() - INTERVAL 10 MINUTE")
