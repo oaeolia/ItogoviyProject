@@ -6,6 +6,9 @@
             <item
                 android:id="@+id/test_login"
                 android:title="Login" />
+            <item
+                android:id="@+id/test_auto_login"
+                android:title="Auto login" />
         </menu>
     </item>
     <item

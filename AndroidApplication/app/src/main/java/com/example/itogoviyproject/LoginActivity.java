@@ -3,6 +3,7 @@ package com.example.itogoviyproject;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +19,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //    TODO: Remove (only for test auto login)
+        if(getIntent().hasExtra("useAutoLogin")){
+            autoLogin();
+        }
 
         TextWatcher userInputTextWatcher = new TextWatcher() {
             @Override
@@ -64,5 +69,31 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void autoLogin(){
+        if(getSharedPreferences(Application.PREFERENCES_FILE_NAME, MODE_PRIVATE).contains("application_id")){
+            Application application = (Application) getApplication();
+            application.getLogger().logDebug("Login", "Find application id");
+            SharedPreferences preferences = getSharedPreferences(Application.PREFERENCES_FILE_NAME, MODE_PRIVATE);
+            application.getServer().loginByApplicationData(preferences.getString("application_token", ""), preferences.getInt("application_id", 0), new ServerCallback<Boolean, String, Object>() {
+                @Override
+                public void onDataReady(Boolean arg1, String arg2, Object arg3) {
+                    if (arg1) {
+                        ((Application) getApplication()).getLogger().logDebug("Login", "Successfully logged in");
+                    } else {
+                        ((Application) getApplication()).getLogger().logDebug("Login", "Cant logged in");
+                        ((Application) getApplication()).getLogger().logDebug("Login", arg2);
+                        binding.textErrorMessage.setText(R.string.message_error_login_invalid_user_data);
+                    }
+                }
+            }, new ServerCallback<String, Integer, Object>() {
+                @Override
+                public void onDataReady(String arg1, Integer arg2, Object arg3) {
+                    binding.textErrorMessage.setText(R.string.message_error_cannt_send_request);
+                    ((Application) getApplication()).getLogger().logError("Login", "Cant logged in (" + arg1 + ")");
+                }
+            });
+        }
     }
 }

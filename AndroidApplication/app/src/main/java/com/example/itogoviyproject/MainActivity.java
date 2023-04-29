@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (item.getItemId() == R.id.test_auto_login) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("useAutoLogin", true);
+            startActivity(intent);
+            return true;
+        }
 
         switch(item.getItemId()) {
             case R.id.normal:

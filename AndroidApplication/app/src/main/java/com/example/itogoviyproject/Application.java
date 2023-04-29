@@ -4,9 +4,11 @@ import com.example.itogoviyproject.loggers.ConsoleLogger;
 import com.example.itogoviyproject.loggers.ILogger;
 import com.example.itogoviyproject.server.Server;
 
-public class Application  extends android.app.Application {
+public class Application extends android.app.Application {
+    public static final String PREFERENCES_FILE_NAME = "preferences";
+
     private Server server;
-    private ILogger logger;
+    private final ILogger logger;
 
     public Application(){
         logger = new ConsoleLogger();
@@ -15,7 +17,6 @@ public class Application  extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         server = new Server(this, logger);
     }
 
