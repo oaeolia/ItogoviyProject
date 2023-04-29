@@ -1,3 +1,4 @@
-- [ ] Add save login to application
+- [X] Add save login to application
 - [ ] Add find room function
 - [ ] Add room function
+- [ ] Add logout from session 
