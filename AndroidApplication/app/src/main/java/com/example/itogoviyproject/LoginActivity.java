@@ -1,0 +1,63 @@
+package com.example.itogoviyproject;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+
+import com.example.itogoviyproject.databinding.ActivityLoginActivityBinding;
+import com.example.itogoviyproject.server.ServerCallback;
+
+public class LoginActivity extends AppCompatActivity {
+    private ActivityLoginActivityBinding binding;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityLoginActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        TextWatcher userInputTextWatcher = new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                binding.buttonLogin.setEnabled(binding.buttonLogin.getText().length() > 0 && binding.inputPassword.getText().length() > 0);
+            }
+        };
+
+        binding.inputLogin.addTextChangedListener(userInputTextWatcher);
+        binding.inputPassword.addTextChangedListener(userInputTextWatcher);
+
+        binding.buttonLogin.setOnClickListener(view -> {
+            binding.buttonLogin.setEnabled(false);
+            ((Application) getApplication()).getServer().login(binding.inputLogin.getText().toString(), binding.inputPassword.getText().toString(),
+                    new ServerCallback<Boolean, String, Object>() {
+                        @Override
+                        public void onDataReady(Boolean arg1, String arg2, Object arg3) {
+                            if (arg1) {
+                                ((Application) getApplication()).getLogger().logInfo("TEST", "Successfully logged in");
+                            } else {
+                                ((Application) getApplication()).getLogger().logInfo("TEST", "Cant logged in");
+                                ((Application) getApplication()).getLogger().logInfo("TEST", arg2);
+                            }
+                        }
+                    }, new ServerCallback<String, Integer, Object>() {
+                        @Override
+                        public void onDataReady(String arg1, Integer arg2, Object arg3) {
+                            ((Application) getApplication()).getLogger().logInfo("TEST", arg1);
+                        }
+                    });
+        });
+    }
+}
