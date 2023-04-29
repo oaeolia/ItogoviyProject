@@ -21,14 +21,6 @@ public class MainActivity extends AppCompatActivity {
         paintView.init(metrics);
     }
 
-    // TODO: Remove (only for test!!!)
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -37,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.test_login) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         switch(item.getItemId()) {
             case R.id.normal:
                 paintView.normal();

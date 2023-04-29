@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:locale="ru">
+    <item
+        android:title="Test">
+        <menu>
+            <item
+                android:id="@+id/test_login"
+                android:title="Login" />
+        </menu>
+    </item>
     <item
         android:title="Эффекты">
         <menu>
