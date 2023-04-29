@@ -184,4 +184,26 @@ public class Server {
 
         requestQueue.add(request);
     }
+
+
+    public void logout() {
+        JSONObject jsonBody = new JSONObject();
+        SharedPreferences preferences = context.getSharedPreferences(Application.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+        try {
+            jsonBody.put("application_session_id", preferences.getInt("application_id", -1));
+            jsonBody.put("application_session_token", preferences.getString("application_token", ""));
+        } catch (JSONException e) {
+            return;
+        }
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("application_id");
+        editor.remove("application_token");
+        editor.apply();
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "auth/logout", jsonBody, responseData -> { }, error -> { });
+
+        requestQueue.add(request);
+    }
 }

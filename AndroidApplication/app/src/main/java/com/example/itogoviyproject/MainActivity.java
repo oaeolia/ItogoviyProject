@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (item.getItemId() == R.id.test_application_logout) {
+            ((Application) getApplication()).getServer().logout();
+            return true;
+        }
 
         switch(item.getItemId()) {
             case R.id.normal:

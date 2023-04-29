@@ -9,6 +9,9 @@
             <item
                 android:id="@+id/test_auto_login"
                 android:title="Auto login" />
+            <item
+                android:id="@+id/test_application_logout"
+                android:title="App logout" />
         </menu>
     </item>
     <item
