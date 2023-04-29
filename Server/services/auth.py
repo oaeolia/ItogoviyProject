@@ -9,7 +9,7 @@ import re
 # TODO: Add auth function
 
 
-def auth(login: str, password: str) -> str | tuple[str, int]:
+def auth(login: str, password: str) -> str | tuple[str, int, str, int]:
     name_re = re.compile(r'^[a-zA-Zа-яА-Я0-9_-]{3,20}$')
     email_re = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     if re.match(name_re, login) is None and re.match(email_re, login):
@@ -20,6 +20,18 @@ def auth(login: str, password: str) -> str | tuple[str, int]:
     result = db.try_auth_and_create_session(login, password)
     if result is None:
         return 'Wrong login or password'
+    else:
+        return result
+
+
+def auth_application(application_session_token: str, application_session_id: int) -> str | tuple[str, int]:
+    token_re = re.compile(r'^[a-zA-Z0-9]{32}$')
+    if re.match(token_re, application_session_token) is None or type(application_session_id) is not int:
+        return 'Token or id is not valid'
+
+    result = db.try_auth_application_and_create_session(application_session_token, application_session_id)
+    if result is None:
+        return 'Wrong auth data'
     else:
         return result
 

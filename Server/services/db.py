@@ -51,7 +51,7 @@ def check_user_email_and_name_for_existence(email: str, name: str) -> bool:
         return cursor.fetchone() is not None
 
 
-def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, int]:
+def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, int, str, int]:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT id FROM users WHERE (email = %s or name = %s) AND password = %s", (login, login, password))
         data = cursor.fetchone()
@@ -59,7 +59,24 @@ def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, 
             return None
         else:
             token = generate_session_token()
-            cursor.execute("INSERT INTO sessions (user_id, data, last_time) VALUES (%s, %s, NOW())", (data[0], '{}'))
+            application_token = generate_session_token()
+            cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)", (data[0], '{}', token))
+            session_id = cursor.lastrowid
+            cursor.execute("INSERT INTO application_sessions (user_id, last_time, token) VALUES (%s, NOW(), %s)", (data[0], application_token))
+            application_session_id = cursor.lastrowid
+            cursor.connection.commit()
+            return token, session_id, application_token, application_session_id
+
+
+def try_auth_application_and_create_session(token: str, application_session_id: int) -> None | tuple[str, int]:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT id, user_id FROM application_sessions WHERE token=%s AND id = %s", (token, application_session_id))
+        data = cursor.fetchone()
+        if data is None:
+            return None
+        else:
+            token = generate_session_token()
+            cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)", (data[1], '{}', token))
             session_id = cursor.lastrowid
             cursor.connection.commit()
             return token, session_id

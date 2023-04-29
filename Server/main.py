@@ -37,14 +37,22 @@ def registration() -> Response:
 @app.route(settings.API_URL_MAIN + '/auth/login', methods=['POST'])
 def login() -> Response:
     data = request.get_json()
-    if 'login' not in data or 'password' not in data:
+    print(data)
+    if ('login' not in data or 'password' not in data) and ('application_token' not in data or 'application_session_id' not in data):
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
 
-    login_message = auth.auth(data['login'], data['password'])
-    if type(login_message) is not str:
-        return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0]}))
+    if 'application_token' in data:
+        login_message = auth.auth_application(data['application_token'], data['application_session_id'])
+        if type(login_message) is not str:
+            return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0]}))
+        else:
+            return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
     else:
-        return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
+        login_message = auth.auth(data['login'], data['password'])
+        if type(login_message) is not str:
+            return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0], 'application_token': login_message[2], 'application_id': login_message[3]}))
+        else:
+            return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
 
 
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
