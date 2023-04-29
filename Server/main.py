@@ -31,7 +31,7 @@ def registration() -> Response:
     if registration_message == '':
         return Response(json.dumps({'status': settings.RESPONSE_OK}))
     else:
-        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': registration_message}))
+        return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': registration_message}))
 
 
 @app.route(settings.API_URL_MAIN + '/auth/login', methods=['POST'])
@@ -44,7 +44,7 @@ def login() -> Response:
     if type(login_message) is not str:
         return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0]}))
     else:
-        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': login_message}))
+        return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
 
 
 if __name__ == '__main__':
