@@ -57,6 +57,9 @@
             <item
                 android:id="@+id/color_blue"
                 android:title="Синий"/>
+            <item
+                android:id="@+id/color_pink"
+                android:title="Розовый"/>
         </menu>
     </item>
     <item

@@ -24,4 +24,9 @@
     <string name="message_error_register_password_need_char">Пароль должен содержать хотя бы одну букву</string>
     <string name="message_error_register_password_have_spaces">Пароль должен содержать хотя бы одну букву</string>
     <string name="message_error_register_email_is_now_valid">Введите корректный email</string>
+
+    <string name="brush">Brush</string>
+    <string name="eraser">Eraser</string>
+    <string name="paint">Paint</string>
+
 </resources>
