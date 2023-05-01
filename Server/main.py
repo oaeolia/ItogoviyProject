@@ -37,7 +37,6 @@ def registration() -> Response:
 @app.route(settings.API_URL_MAIN + '/auth/login', methods=['POST'])
 def login() -> Response:
     data = request.get_json()
-    print(data)
     if ('login' not in data or 'password' not in data) and ('application_token' not in data or 'application_session_id' not in data):
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
 
