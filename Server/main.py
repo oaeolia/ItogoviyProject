@@ -3,7 +3,7 @@ import json
 from flask import Flask, request, Response
 
 import settings
-from services import db, auth
+from services import db, auth, game
 
 app = Flask(__name__)
 
@@ -63,9 +63,33 @@ def logout() -> Response:
     return Response(json.dumps({'status': settings.RESPONSE_OK}))
 
 
+@app.route(settings.API_URL_MAIN + '/game/get_new_room', methods=['POST'])
+def get_new_room() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_id': game.get_or_create_room(session['user_id'])}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/check_room', methods=['POST'])
+def user_check_room() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    status = game.check_game_room_for_user(session['user_id'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_status': status}))
+
+
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
 def clear_sessions():
     auth.clear_sessions()
+    return Response(json.dumps({'status': settings.RESPONSE_OK}))
 
 
 if __name__ == '__main__':

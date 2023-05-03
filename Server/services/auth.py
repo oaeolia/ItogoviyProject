@@ -67,6 +67,12 @@ def generate_session_token() -> str:
     return result
 
 
+def get_session(session_id: int, session_token: str) -> dict | None:
+    buffer = db.get_session(session_id, session_token)
+    db.close_now_connection()
+    return buffer
+
+
 def clear_sessions() -> None:
     db.clear_sessions()
     db.close_now_connection()
