@@ -16,25 +16,16 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-
 public class PaintView extends View {
-
     private int paintColor = 0xFF660000;
-    public static int BRUSH_SIZE = 20;
-    public static final int DEFAULT_COLOR = Color.BLACK;
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
-    //private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;
     private Paint mPaint, canvasPaint;
-    //private ArrayList<FingerPath> paths = new ArrayList<>();
-    private int currentColor;
     private int backgroundColor = DEFAULT_BG_COLOR;
-    private int strokeWidth;
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
-    private Canvas canvas;
 
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,27 +56,34 @@ public class PaintView extends View {
         mPaint.setColor(paintColor);
     }
 
-
-//    public void init(DisplayMetrics metrics) {
-//        int height = metrics.heightPixels;
-//        int width = metrics.widthPixels;
-//
-//        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//        mCanvas = new Canvas(mBitmap);
-//
-//        currentColor = DEFAULT_COLOR;
-//        strokeWidth = BRUSH_SIZE;
-//    }
-
-
     @Override
     protected void onDraw(Canvas canvas) {
-        //this.canvas = canvas;
         canvas.drawBitmap(mBitmap, 0, 0, canvasPaint);
         canvas.drawPath(mPath, mPaint);
-        //canvas.restore();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mX = event.getX();
+        mY = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mPath.moveTo(mX, mY);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mPath.lineTo(mX, mY);
+                break;
+            case MotionEvent.ACTION_UP:
+                mCanvas.drawPath(mPath, mPaint);
+                mPath.reset();
+                break;
+            default:
+                return false;
+        }
+        invalidate();
+        return true;
+    }
+}
 //    private void touchStart(float x, float y) {
 //        mPath = new Path();
 //        FingerPath fp = new FingerPath(currentColor, strokeWidth, mPath);
@@ -109,25 +107,14 @@ public class PaintView extends View {
 //    private void touchUp() {
 //        mPath.lineTo(mX, mY);
 //    }
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mX = event.getX();
-        mY = event.getY();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mPath.moveTo(mX, mY);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                mPath.lineTo(mX, mY);
-                break;
-            case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(mPath, mPaint);
-                mPath.reset();
-                break;
-            default:
-                return false;
-        }
-        invalidate();
-        return true;
-    }
-}
+
+//    public void init(DisplayMetrics metrics) {
+//        int height = metrics.heightPixels;
+//        int width = metrics.widthPixels;
+//
+//        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//        mCanvas = new Canvas(mBitmap);
+//
+//        currentColor = DEFAULT_COLOR;
+//        strokeWidth = BRUSH_SIZE;
+//    }
