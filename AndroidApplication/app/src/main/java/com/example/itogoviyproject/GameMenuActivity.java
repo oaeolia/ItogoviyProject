@@ -2,6 +2,7 @@ package com.example.itogoviyproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,7 +27,6 @@ public class GameMenuActivity extends AppCompatActivity {
         });
 
         binding.buttonRoomFindStart.setOnClickListener(view -> {
-//            TODO: Added move to another activity
             Application application = (Application) getApplication();
             application.getServer().startFindRoom(new ServerCallback<Integer, String, Object>() {
                 @Override
@@ -34,8 +34,9 @@ public class GameMenuActivity extends AppCompatActivity {
                     if (arg1 == -1) {
                         application.getLogger().logDebug("Test", arg2);
                     } else {
-                        //                    TODO: Add waiter
                         application.getLogger().logDebug("Test", String.valueOf(arg1));
+                        binding.layoutMainScreen.setVisibility(View.INVISIBLE);
+                        binding.layoutLoadScreen.setVisibility(View.VISIBLE);
                         startWaitingRoom(arg1);
                     }
                 }
