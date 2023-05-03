@@ -3,6 +3,4 @@ This is the final project for samsung school.
 
 
 ## TODO:
-- Chat
-- Login and registration
-- Create room
+- [ ] Add auto connect to room, if has not end room with this user

@@ -133,6 +133,51 @@ public class Server {
         requestQueue.add(request);
     }
 
+    public void startFindRoom(ServerCallback<Integer, String, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+        } catch (JSONException e) {
+            return;
+        }
+
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/get_new_room", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+
+                    callback.onDataReady(responseData.getInt("room_id"), null, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(-1, responseData.getString("message"), null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try get new room)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (get new room): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t get new room " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t get new room " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error", null, null);
+            }
+        });;
+
+        requestQueue.add(request);
+    }
+
     public void loginByApplicationData(String token, int id, ServerCallback<Boolean, String, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
         JSONObject jsonBody = new JSONObject();
         try {
@@ -179,6 +224,49 @@ public class Server {
             }
             if (errorCallback != null) {
                 errorCallback.onDataReady("Server undefined error (try Auto login)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void checkRoom(ServerCallback<String, Boolean, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/check_room", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    callback.onDataReady(responseData.getString("room_status"), true, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(responseData.getString("message"), false, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try check room)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (check room): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t check room " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t check room " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try check room)", null, null);
             }
         });
 
