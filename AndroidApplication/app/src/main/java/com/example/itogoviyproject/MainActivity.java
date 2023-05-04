@@ -1,8 +1,8 @@
 package com.example.itogoviyproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.app.Dialog;
 import android.view.View.OnClickListener;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton currentPaint, drawBtn, eraseBtn;
@@ -27,16 +28,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
-        paintView = findViewById(R.id.paintView);
-        LinearLayout paintLayout = findViewById(R.id.paint_colors);
+        paintView = findViewById(R.id.paint_view);
+        LinearLayout paintLayout = findViewById(R.id.layout_paint_colors);
         currentPaint = (ImageButton)paintLayout.getChildAt(0);
-        currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+        currentPaint.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint_pressed));
 
         smallBrush = getResources().getInteger(R.integer.small_size);
         mediumBrush = getResources().getInteger(R.integer.medium_size);
         largeBrush = getResources().getInteger(R.integer.large_size);
-        drawBtn = findViewById(R.id.draw_btn);
-        eraseBtn = findViewById(R.id.erase_btn);
+        drawBtn = findViewById(R.id.button_draw);
+        eraseBtn = findViewById(R.id.button_erase);
         drawBtn.setOnClickListener(this);
         eraseBtn.setOnClickListener(this);
         paintView.setBrushSize(mediumBrush);
@@ -47,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ImageButton imgView = (ImageButton)view;
             String color = view.getTag().toString();
             paintView.setColor(color);
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-            currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            imgView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint_pressed));
+            currentPaint.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint));
             currentPaint =(ImageButton)view;
         }
     }
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if(view.getId()==R.id.draw_btn){
+        if(view.getId()==R.id.button_draw){
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setContentView(R.layout.dialog_brushchooser);
             ImageButton smallBtn = brushDialog.findViewById(R.id.small_brush);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
             brushDialog.show();
-        } else if (view.getId()==R.id.erase_btn) {
+        } else if (view.getId()==R.id.button_erase) {
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setContentView(R.layout.dialog_brushchooser);
             ImageButton smallBtn = brushDialog.findViewById(R.id.small_brush);

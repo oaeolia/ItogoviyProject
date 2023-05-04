@@ -25,10 +25,12 @@
     <string name="message_error_register_password_have_spaces">Пароль должен содержать хотя бы одну букву</string>
     <string name="message_error_register_email_is_now_valid">Введите корректный email</string>
 
-    <string name="brush">Кисточка</string>
-    <string name="eraser">Ластик</string>
-    <string name="paint">Краска</string>
     <string name="sml">Small</string>
     <string name="med">Medium</string>
     <string name="lrg">Large</string>
+
+    <string name="content_description_brush">Кисточка</string>
+    <string name="content_description_erase">Ластик</string>
+    <string name="content_description_color">Цвет</string>
+
 </resources>
