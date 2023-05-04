@@ -1,4 +1,7 @@
 - [X] Add save login to application
-- [ ] Add find room function
+- [x] Add find room function
 - [ ] Add room function
 - [ ] Add logout from session 
+- [ ] Add get role of user in room
+- [ ] Add get word for painter role
+- [ ] Add get state of game
