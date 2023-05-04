@@ -1,22 +1,17 @@
 package com.example.itogoviyproject;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
     private ImageButton currentPaint;
@@ -28,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_main);
-        paintView = findViewById(R.id.paintView);
-        LinearLayout paintLayout = findViewById(R.id.paint_colors);
+        paintView = findViewById(R.id.paint_view);
+        LinearLayout paintLayout = findViewById(R.id.layout_paint_colors);
         currentPaint = (ImageButton)paintLayout.getChildAt(0);
         currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 
