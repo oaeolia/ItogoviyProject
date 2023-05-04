@@ -1,6 +1,7 @@
 package com.example.itogoviyproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         paintView = findViewById(R.id.paint_view);
         LinearLayout paintLayout = findViewById(R.id.layout_paint_colors);
         currentPaint = (ImageButton)paintLayout.getChildAt(0);
-        currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+        currentPaint.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint_pressed));
 
     }
 
@@ -36,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
             ImageButton imgView = (ImageButton)view;
             String color = view.getTag().toString();
             paintView.setColor(color);
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-            currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            imgView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint_pressed));
+            currentPaint.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint));
             currentPaint =(ImageButton)view;
         }
     }
