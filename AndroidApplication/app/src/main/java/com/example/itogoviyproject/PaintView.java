@@ -9,23 +9,30 @@ import android.graphics.EmbossMaskFilter;
 import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 
 public class PaintView extends View {
+
+    private static Paint mPaint;
     private int paintColor = 0xFF660000;
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
     private float mX, mY;
     private Path mPath;
-    private Paint mPaint, canvasPaint;
+    private Paint canvasPaint;
     private int backgroundColor = DEFAULT_BG_COLOR;
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private float brushSize, lastBrushSize;
+    private boolean erase=false;
 
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,11 +43,27 @@ public class PaintView extends View {
         mPaint = new Paint();
         mPaint.setColor(paintColor);
         mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(20);
+        mPaint.setStrokeWidth(brushSize);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
+
         canvasPaint = new Paint(Paint.DITHER_FLAG);
+        brushSize = getResources().getInteger(R.integer.medium_size);
+        lastBrushSize = brushSize;
+    }
+
+    public void setBrushSize(float newSize){
+        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, getResources().getDisplayMetrics());
+        brushSize = pixelAmount;
+        mPaint.setStrokeWidth(brushSize);
+    }
+
+    public void setLastBrushSize(float lastSize){
+        lastBrushSize = lastSize;
+    }
+    public float getLastBrushSize(){
+        return lastBrushSize;
     }
 
     @Override
@@ -60,6 +83,12 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(mBitmap, 0, 0, canvasPaint);
         canvas.drawPath(mPath, mPaint);
+    }
+
+    public void setErase(boolean isErase){
+        erase = isErase;
+        if(erase) mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        else mPaint.setXfermode(null);
     }
 
     @Override

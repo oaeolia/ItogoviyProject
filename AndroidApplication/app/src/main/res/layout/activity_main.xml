@@ -63,9 +63,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/eraser"
-                android:onClick="paintClicked"
-                android:src="@drawable/eraser"
-                android:tag="#FFFFFFFF" />
+                android:src="@drawable/eraser" />
         </LinearLayout>
 
         <LinearLayout
