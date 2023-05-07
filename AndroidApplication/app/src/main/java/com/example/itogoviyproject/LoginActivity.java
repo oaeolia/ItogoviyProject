@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         if (getSharedPreferences(Application.PREFERENCES_FILE_NAME, MODE_PRIVATE).contains("application_id")) {
+            binding.progressBarLayout.setVisibility(View.VISIBLE);
             autoLogin();
             return;
         }
@@ -115,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataReady(String arg1, Integer arg2, Object arg3) {
                 initUserInput();
+                binding.textErrorMessage.setText(R.string.message_error_cant_auto_login);
                 ((Application) getApplication()).getLogger().logError("Login", "Cant logged in (" + arg1 + ")");
             }
         });

@@ -24,6 +24,7 @@
     <string name="message_error_register_password_need_char">Пароль должен содержать хотя бы одну букву</string>
     <string name="message_error_register_password_have_spaces">Пароль должен содержать хотя бы одну букву</string>
     <string name="message_error_register_email_is_now_valid">Введите корректный email</string>
+    <string name="message_error_cant_auto_login">Не получается войти в аккаунт</string>
 
     <string name="sml">Small</string>
     <string name="med">Medium</string>
