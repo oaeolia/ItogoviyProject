@@ -1,4 +1,4 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,8 +7,8 @@ import android.text.TextWatcher;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.itogoviyproject.databinding.ActivityRegistrationBinding;
-import com.example.itogoviyproject.server.ServerCallback;
+import com.nikol.sketchit.databinding.ActivityRegistrationBinding;
+import com.nikol.sketchit.server.ServerCallback;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

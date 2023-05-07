@@ -1,4 +1,4 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 
 import org.junit.Test;
 

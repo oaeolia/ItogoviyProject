@@ -1,4 +1,4 @@
-package com.example.itogoviyproject.loggers;
+package com.nikol.sketchit.loggers;
 
 /*
 This class abstracts the general interface for the logging class. This is necessary because

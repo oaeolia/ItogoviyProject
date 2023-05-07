@@ -1,4 +1,4 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +9,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.itogoviyproject.databinding.ActivityLoginBinding;
-import com.example.itogoviyproject.server.ServerCallback;
+import com.nikol.sketchit.databinding.ActivityLoginBinding;
+import com.nikol.sketchit.server.ServerCallback;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;

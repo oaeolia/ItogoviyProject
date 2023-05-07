@@ -1,10 +1,10 @@
-package com.example.itogoviyproject.game;
+package com.nikol.sketchit.game;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import com.example.itogoviyproject.MainActivity;
-import com.example.itogoviyproject.databinding.ActivityMainBinding;
+import com.nikol.sketchit.MainActivity;
+import com.nikol.sketchit.databinding.ActivityMainBinding;
 
 public class GameLayoutBridge {
     private final ActivityMainBinding binding;

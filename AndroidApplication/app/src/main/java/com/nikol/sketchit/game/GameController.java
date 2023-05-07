@@ -1,11 +1,11 @@
-package com.example.itogoviyproject.game;
+package com.nikol.sketchit.game;
 
 import android.content.Context;
 
-import com.example.itogoviyproject.Application;
-import com.example.itogoviyproject.loggers.ILogger;
-import com.example.itogoviyproject.server.Server;
-import com.example.itogoviyproject.server.ServerCallback;
+import com.nikol.sketchit.Application;
+import com.nikol.sketchit.loggers.ILogger;
+import com.nikol.sketchit.server.Server;
+import com.nikol.sketchit.server.ServerCallback;
 
 public class GameController {
     private static final String USER_ROLE = "USER";

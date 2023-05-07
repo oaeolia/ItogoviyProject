@@ -1,4 +1,4 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 
 import android.content.Context;
 

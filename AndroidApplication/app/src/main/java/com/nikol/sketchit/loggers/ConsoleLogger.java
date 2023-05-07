@@ -1,4 +1,4 @@
-package com.example.itogoviyproject.loggers;
+package com.nikol.sketchit.loggers;
 
 import android.util.Log;
 

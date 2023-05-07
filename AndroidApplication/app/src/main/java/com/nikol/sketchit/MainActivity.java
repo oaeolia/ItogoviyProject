@@ -1,4 +1,4 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,9 +12,9 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.example.itogoviyproject.databinding.ActivityMainBinding;
-import com.example.itogoviyproject.game.GameController;
-import com.example.itogoviyproject.game.GameLayoutBridge;
+import com.nikol.sketchit.databinding.ActivityMainBinding;
+import com.nikol.sketchit.game.GameController;
+import com.nikol.sketchit.game.GameLayoutBridge;
 
 import java.util.Timer;
 import java.util.TimerTask;

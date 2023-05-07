@@ -1,4 +1,4 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 //import android.graphics.Path;
 //public class FingerPath {
 //    public int color;

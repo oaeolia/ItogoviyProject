@@ -1,8 +1,8 @@
-package com.example.itogoviyproject;
+package com.nikol.sketchit;
 
-import com.example.itogoviyproject.loggers.ConsoleLogger;
-import com.example.itogoviyproject.loggers.ILogger;
-import com.example.itogoviyproject.server.Server;
+import com.nikol.sketchit.loggers.ConsoleLogger;
+import com.nikol.sketchit.loggers.ILogger;
+import com.nikol.sketchit.server.Server;
 
 public class Application extends android.app.Application {
     public static final String PREFERENCES_FILE_NAME = "preferences";

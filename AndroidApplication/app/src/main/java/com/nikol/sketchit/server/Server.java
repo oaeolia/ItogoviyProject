@@ -1,4 +1,4 @@
-package com.example.itogoviyproject.server;
+package com.nikol.sketchit.server;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,8 +9,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.itogoviyproject.Application;
-import com.example.itogoviyproject.loggers.ILogger;
+import com.nikol.sketchit.Application;
+import com.nikol.sketchit.loggers.ILogger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
