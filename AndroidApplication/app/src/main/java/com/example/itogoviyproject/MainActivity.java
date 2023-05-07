@@ -1,19 +1,16 @@
 package com.example.itogoviyproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.app.Dialog;
-import android.view.View.OnClickListener;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.itogoviyproject.databinding.ActivityMainBinding;
 import com.example.itogoviyproject.game.GameController;
@@ -68,27 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             currentPaint.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint));
             currentPaint = (ImageButton) view;
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.test_login) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        if (item.getItemId() == R.id.test_application_logout) {
-            ((Application) getApplication()).getServer().logout();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
