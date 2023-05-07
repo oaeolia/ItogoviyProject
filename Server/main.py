@@ -77,13 +77,30 @@ def get_new_room() -> Response:
 @app.route(settings.API_URL_MAIN + '/game/check_room', methods=['POST'])
 def user_check_room() -> Response:
     data = request.get_json()
-    if 'session_id' not in data or 'session_token' not in data:
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
     session = auth.get_session(data['session_id'], data['session_token'])
     if session is None:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
-    status = game.check_game_room_for_user(session['user_id'])
+    status = game.check_game_room_for_user(data['room_id'], session['user_id'])
+    if status == '':
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR}))
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_status': status}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/get_role', methods=['POST'])
+def get_role() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+
+    try:
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'role': game.get_role(data['room_id'], session['user_id'])}))
+    except Exception as e:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': str(e)}))
 
 
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
@@ -93,4 +110,4 @@ def clear_sessions():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.1.13')
+    app.run(debug=True, host='192.168.0.17')

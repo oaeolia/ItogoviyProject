@@ -124,9 +124,9 @@ def get_session(session_id: int, session_token: str) -> dict | None:
             return json.loads(data[0])
 
 
-def check_game_room_for_user(user_id: int) -> str:
+def check_game_room_for_user(room_id: int, user_id: int) -> str:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started, start_checked_time FROM games_rooms WHERE user_1 = %s OR user_2 = %s OR user_3 = %s OR user_4 = %s OR user_5 = %s", (user_id, user_id, user_id, user_id, user_id))
+        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started, start_checked_time FROM games_rooms WHERE (user_1 = %s OR user_2 = %s OR user_3 = %s OR user_4 = %s OR user_5 = %s) AND id=%s", (user_id, user_id, user_id, user_id, user_id, room_id))
         data = cursor.fetchone()
         if data is None:
             return ''
@@ -149,31 +149,26 @@ def start_checked_game(room_id: int) -> None:
         cursor.connection.commit()
 
 
-def game_room_set_user_checked(user_id: int) -> None:
+def game_room_set_user_checked(room_id: int, user_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started  FROM games_rooms WHERE user_1 = %s OR user_2 = %s OR user_3 = %s OR user_4 = %s OR user_5 = %s", (user_id, user_id, user_id, user_id, user_id))
-        data = cursor.fetchone()
-        if data[1] == user_id:
-            cursor.execute("UPDATE games_rooms SET checked_user_1 = 1 WHERE id = %s", data[0])
-        elif data[2] == user_id:
-            cursor.execute("UPDATE games_rooms SET checked_user_2 = 1 WHERE id = %s", data[0])
-        elif data[3] == user_id:
-            cursor.execute("UPDATE games_rooms SET checked_user_3 = 1 WHERE id = %s", data[0])
-        elif data[4] == user_id:
-            cursor.execute("UPDATE games_rooms SET checked_user_4 = 1 WHERE id = %s", data[0])
-        else:
-            cursor.execute("UPDATE games_rooms SET checked_user_5 = 1 WHERE id = %s", data[0])
-        cursor.connection.commit()
-
-
-def get_user_room_id(user_id: int) -> int:
-    with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id FROM games_rooms WHERE user_1 = %s OR user_2 = %s OR user_3 = %s OR user_4 = %s OR user_5 = %s", (user_id, user_id, user_id, user_id, user_id))
+        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started  FROM games_rooms WHERE id=%s", room_id)
         data = cursor.fetchone()
         if data is None:
-            return -1
+            return False
+        if data[1] == user_id:
+            cursor.execute("UPDATE games_rooms SET checked_user_1 = 1 WHERE id = %s", room_id)
+        elif data[2] == user_id:
+            cursor.execute("UPDATE games_rooms SET checked_user_2 = 1 WHERE id = %s", room_id)
+        elif data[3] == user_id:
+            cursor.execute("UPDATE games_rooms SET checked_user_3 = 1 WHERE id = %s", room_id)
+        elif data[4] == user_id:
+            cursor.execute("UPDATE games_rooms SET checked_user_4 = 1 WHERE id = %s", room_id)
+        elif data[5] == user_id:
+            cursor.execute("UPDATE games_rooms SET checked_user_5 = 1 WHERE id = %s", room_id)
         else:
-            return data[0]
+            return False
+        cursor.connection.commit()
+        return True
 
 
 def check_game_room(room_id: int) -> bool:
@@ -194,9 +189,28 @@ def auto_set_room_word(room_id: int) -> None:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT MAX(id) FROM words")
         word_count = cursor.fetchone()[0]
-        cursor.execute('SELECT word FROM words WHERE id = %s', random.randrange(1, word_count))
+        cursor.execute('SELECT word FROM words WHERE id = %s', random.randint(1, word_count))
         word = cursor.fetchone()[0]
         cursor.execute("UPDATE games_rooms SET now_word = %s WHERE id = %s", (word, room_id))
+        cursor.connection.commit()
+
+
+def set_drawer(room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+
+        if data[0] is None:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[1], room_id))
+        elif data[0] == data[1]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[2], room_id))
+        elif data[0] == data[2]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[3], room_id))
+        elif data[0] == data[3]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[4], room_id))
+        elif data[0] == data[4]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[5], room_id))
+
         cursor.connection.commit()
 
 
@@ -210,6 +224,16 @@ def set_room_starting_status(room_id: int) -> None:
     with get_connection().cursor() as cursor:
         cursor.execute("UPDATE games_rooms SET is_started = 1 WHERE id = %s", room_id)
         cursor.connection.commit()
+
+
+def get_now_painter(room_id: int) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_painter FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return -1
+        else:
+            return data[0]
 
 
 def check_game_check_user_state(room_id: int) -> bool:
