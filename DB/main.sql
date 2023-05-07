@@ -44,17 +44,19 @@ CREATE TABLE `games_rooms`
     `checked_user_4`     boolean                                                        NOT NULL DEFAULT 0,
     `checked_user_5`     boolean                                                        NOT NULL DEFAULT 0,
     `start_checked_time` DATETIME,
+    `now_painter`        INT UNSIGNED,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_1`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`user_2`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`user_3`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`user_4`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`user_5`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    FOREIGN KEY (`user_5`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`now_painter`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `words`
 (
-    `id`       INT UNSIGNED                                                   NOT NULL AUTO_INCREMENT,
+    `id`   INT UNSIGNED                                                   NOT NULL AUTO_INCREMENT,
     `word` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`id`)
 )
