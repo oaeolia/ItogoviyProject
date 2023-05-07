@@ -34,6 +34,9 @@ public class PaintView extends View {
     private float brushSize, lastBrushSize;
     private boolean erase=false;
 
+//    For game system
+    private boolean isDrawEnabled = true;
+
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupDrawing();
@@ -93,24 +96,31 @@ public class PaintView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mX = event.getX();
-        mY = event.getY();
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mPath.moveTo(mX, mY);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                mPath.lineTo(mX, mY);
-                break;
-            case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(mPath, mPaint);
-                mPath.reset();
-                break;
-            default:
-                return false;
+        if(isDrawEnabled) {
+            mX = event.getX();
+            mY = event.getY();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mPath.moveTo(mX, mY);
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    mPath.lineTo(mX, mY);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    mCanvas.drawPath(mPath, mPaint);
+                    mPath.reset();
+                    break;
+                default:
+                    return false;
+            }
         }
         invalidate();
         return true;
+    }
+
+//    For game system
+    public void setEnabledDraw(boolean isEnabled){
+        isDrawEnabled = isEnabled;
     }
 }
 //    private void touchStart(float x, float y) {

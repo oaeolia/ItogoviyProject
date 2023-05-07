@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int smallBrush;
     private float mediumBrush;
     private float largeBrush;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         // For game system
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+//        TODO: Remake (this is only for test)
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         if (intent.hasExtra("roomId")) {
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // For game system
     private void createGameController(ActivityMainBinding binding, int roomId) {
-        GameLayoutBridge bridge = new GameLayoutBridge(binding);
+        GameLayoutBridge bridge = new GameLayoutBridge(binding, this);
         GameController controller = new GameController(roomId, bridge, this);
         controller.startGame();
         Timer timer = new Timer();
@@ -148,5 +150,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 controller.update();
             }
         }, 0, 1000);
+    }
+
+    public void setEnableDraw(boolean enable) {
+         binding.paintView.setEnabledDraw(enable);
     }
 }
