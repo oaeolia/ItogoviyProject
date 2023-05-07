@@ -8,7 +8,7 @@
 
     <string name="action_login">Войти</string>
     <string name="action_register">Зарегистрироваться</string>
-    <string name="action_go_to_registration">Еще нет аккаунта? Зарегистрироваться</string>
+    <string name="action_go_to_registration">Зарегистрироваться</string>
     <string name="action_go_to_login">Уже есть аккаунт? Войти</string>
     <string name="action_start_game_room_finder">Искать комнату</string>
     <string name="action_logout">Выйти из аккаунта</string>

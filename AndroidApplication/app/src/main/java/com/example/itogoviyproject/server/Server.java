@@ -16,7 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Server {
-    private static final String SERVER_URL = "http://192.168.1.13:5000/api/v1/";
+    private static final String SERVER_URL = "http://192.168.0.17:5000/api/v1/";
     private static final String SERVER_RESPONSE_OK = "OK";
     private static final String SERVER_RESPONSE_BAD = "BAD";
     private static final String SERVER_RESPONSE_ERROR = "ERROR";
@@ -173,7 +173,7 @@ public class Server {
             if (errorCallback != null) {
                 errorCallback.onDataReady("Server undefined error", null, null);
             }
-        });;
+        });
 
         requestQueue.add(request);
     }
@@ -230,11 +230,12 @@ public class Server {
         requestQueue.add(request);
     }
 
-    public void checkRoom(ServerCallback<String, Boolean, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+    public void checkRoom(int roomId, ServerCallback<String, Boolean, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("session_id", sessionId);
             jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
         } catch (JSONException e) {
             return;
         }
@@ -267,6 +268,50 @@ public class Server {
             }
             if (errorCallback != null) {
                 errorCallback.onDataReady("Server undefined error (try check room)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void getRole(int roomId, ServerCallback<String, Boolean, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/get_role", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    callback.onDataReady(responseData.getString("role"), true, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(responseData.getString("message"), false, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try get role)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (get role): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t get role " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t get role " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (get role)", null, null);
             }
         });
 

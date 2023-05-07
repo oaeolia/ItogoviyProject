@@ -58,13 +58,14 @@ public class GameMenuActivity extends AppCompatActivity {
             public void run() {
                 while (isWorking) {
                     try {
+                        //noinspection BusyWait
                         sleep(1000);
                     } catch (InterruptedException e) {
                         continue;
                     }
 
                     Application application = (Application) getApplication();
-                    application.getServer().checkRoom(new ServerCallback<String, Boolean, Object>() {
+                    application.getServer().checkRoom(roomId, new ServerCallback<String, Boolean, Object>() {
                         @Override
                         public void onDataReady(String arg1, Boolean arg2, Object arg3) {
                             application.getLogger().logDebug("Test", arg1);
@@ -72,6 +73,8 @@ public class GameMenuActivity extends AppCompatActivity {
                                 application.getLogger().logDebug("Test", "STARTED");
                                 interrupt();
                                 Intent intent = new Intent(GameMenuActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("roomId", roomId);
                                 startActivity(intent);
                                 finish();
                                 interrupt();

@@ -1,12 +1,11 @@
 package com.example.itogoviyproject;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Patterns;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.itogoviyproject.databinding.ActivityRegistrationBinding;
 import com.example.itogoviyproject.server.ServerCallback;

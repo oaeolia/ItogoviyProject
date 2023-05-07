@@ -15,6 +15,28 @@ import com.example.itogoviyproject.server.ServerCallback;
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
 
+    private class LoginServerCallback extends ServerCallback<Boolean, String, Object> {
+        @Override
+        public void onDataReady(Boolean arg1, String arg2, Object arg3) {
+            if (arg1) {
+                ((Application) getApplication()).getLogger().logDebug("Login", "Successfully logged in");
+                moveToGameMenu();
+            } else {
+                ((Application) getApplication()).getLogger().logDebug("Login", "Cant logged in");
+                ((Application) getApplication()).getLogger().logDebug("Login", arg2);
+                binding.textErrorMessage.setText(R.string.message_error_login_invalid_user_data);
+            }
+        }
+    }
+
+    private class LoginServerErrorCallback extends ServerCallback<String, Integer, Object> {
+        @Override
+        public void onDataReady(String arg1, Integer arg2, Object arg3) {
+            binding.textErrorMessage.setText(R.string.message_error_cannt_send_request);
+            ((Application) getApplication()).getLogger().logError("Login", "Cant logged in (" + arg1 + ")");
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,30 +75,23 @@ public class LoginActivity extends AppCompatActivity {
         binding.buttonLogin.setOnClickListener(view -> {
             binding.buttonLogin.setEnabled(false);
             binding.textErrorMessage.setText("");
-            ((Application) getApplication()).getServer().login(binding.inputLogin.getText().toString(), binding.inputPassword.getText().toString(),
-                    new ServerCallback<Boolean, String, Object>() {
-                        @Override
-                        public void onDataReady(Boolean arg1, String arg2, Object arg3) {
-                            if (arg1) {
-                                ((Application) getApplication()).getLogger().logDebug("Login", "Successfully logged in");
-                                moveToGameMenu();
-                            } else {
-                                ((Application) getApplication()).getLogger().logDebug("Login", "Cant logged in");
-                                ((Application) getApplication()).getLogger().logDebug("Login", arg2);
-                                binding.textErrorMessage.setText(R.string.message_error_login_invalid_user_data);
-                            }
-                        }
-                    }, new ServerCallback<String, Integer, Object>() {
-                        @Override
-                        public void onDataReady(String arg1, Integer arg2, Object arg3) {
-                            binding.textErrorMessage.setText(R.string.message_error_cannt_send_request);
-                            ((Application) getApplication()).getLogger().logError("Login", "Cant logged in (" + arg1 + ")");
-                        }
-                    });
+            ((Application) getApplication()).getServer().login(
+                    binding.inputLogin.getText().toString(),
+                    binding.inputPassword.getText().toString(),
+                    new LoginServerCallback(),
+                    new LoginServerErrorCallback());
         });
         binding.buttonGoRegistration.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
+        });
+
+//        TODO: Remove! (only for test)
+        binding.buttonTestPaint.setOnClickListener(view -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 
