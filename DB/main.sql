@@ -59,4 +59,13 @@ CREATE TABLE `words`
     `id`   INT UNSIGNED                                                   NOT NULL AUTO_INCREMENT,
     `word` VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     PRIMARY KEY (`id`)
-)
+);
+
+CREATE TABLE `messages`
+(
+    `id`      INT UNSIGNED                                                 NOT NULL AUTO_INCREMENT,
+    `room_id` INT UNSIGNED                                                 NOT NULL,
+    `text`    VARCHAR(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`room_id`) REFERENCES `games_rooms` (`id`) ON DELETE CASCADE
+);
