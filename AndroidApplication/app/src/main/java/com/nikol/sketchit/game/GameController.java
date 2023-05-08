@@ -7,6 +7,8 @@ import com.nikol.sketchit.loggers.ILogger;
 import com.nikol.sketchit.server.Server;
 import com.nikol.sketchit.server.ServerCallback;
 
+import java.util.List;
+
 public class GameController {
     private static final String USER_ROLE = "USER";
     private static final String PAINTER_ROLE = "PAINTER";
@@ -45,7 +47,16 @@ public class GameController {
     }
 
     public void update() {
-
+        server.getMessageForRoom(roomId, new ServerCallback<List<String>, Boolean, String>() {
+            @Override
+            public void onDataReady(List<String> arg1, Boolean arg2, String arg3) {
+                if(arg2) {
+                    uiBridge.updateChat(arg1);
+                }else {
+                    logger.logWarming("Game", "Cant get messages for game room");
+                }
+            }
+        }, null);
     }
 
     public void exitFromGame() {

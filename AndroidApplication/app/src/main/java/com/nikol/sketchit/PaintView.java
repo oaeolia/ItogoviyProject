@@ -26,16 +26,17 @@ public class PaintView extends View {
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
     private float brushSize, lastBrushSize;
-    private boolean erase=false;
+    private boolean erase = false;
 
-//    For game system
+    //    For game system
     private boolean isDrawEnabled = true;
 
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupDrawing();
     }
-    private void setupDrawing(){
+
+    private void setupDrawing() {
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setColor(paintColor);
@@ -50,16 +51,17 @@ public class PaintView extends View {
         lastBrushSize = brushSize;
     }
 
-    public void setBrushSize(float newSize){
+    public void setBrushSize(float newSize) {
         float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, getResources().getDisplayMetrics());
         brushSize = pixelAmount;
         mPaint.setStrokeWidth(brushSize);
     }
 
-    public void setLastBrushSize(float lastSize){
+    public void setLastBrushSize(float lastSize) {
         lastBrushSize = lastSize;
     }
-    public float getLastBrushSize(){
+
+    public float getLastBrushSize() {
         return lastBrushSize;
     }
 
@@ -70,7 +72,7 @@ public class PaintView extends View {
         mCanvas = new Canvas(mBitmap);
     }
 
-    public void setColor(String newColor){
+    public void setColor(String newColor) {
         invalidate();
         paintColor = Color.parseColor(newColor);
         mPaint.setColor(paintColor);
@@ -82,38 +84,45 @@ public class PaintView extends View {
         canvas.drawPath(mPath, mPaint);
     }
 
-    public void setErase(boolean isErase){
+    public void setErase(boolean isErase) {
         erase = isErase;
-        if(erase) mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        if (erase) mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         else mPaint.setXfermode(null);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(isDrawEnabled) {
-            mX = event.getX();
-            mY = event.getY();
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    mPath.moveTo(mX, mY);
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    mPath.lineTo(mX, mY);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    mCanvas.drawPath(mPath, mPaint);
-                    mPath.reset();
-                    break;
-                default:
-                    return false;
+        if (isDrawEnabled) {
+            if (draw(event.getX(), event.getY(), event.getAction())) {
+                return false;
             }
         }
         invalidate();
         return true;
     }
 
-//    For game system
-    public void setEnabledDraw(boolean isEnabled){
+    public boolean draw(float x, float y, int action) {
+        mX = x;
+        mY = y;
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mPath.moveTo(mX, mY);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mPath.lineTo(mX, mY);
+                break;
+            case MotionEvent.ACTION_UP:
+                mCanvas.drawPath(mPath, mPaint);
+                mPath.reset();
+                break;
+            default:
+                return true;
+        }
+        return false;
+    }
+
+    //    For game system
+    public void setEnabledDraw(boolean isEnabled) {
         isDrawEnabled = isEnabled;
     }
 }

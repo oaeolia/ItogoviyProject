@@ -12,11 +12,15 @@ import com.android.volley.toolbox.Volley;
 import com.nikol.sketchit.Application;
 import com.nikol.sketchit.loggers.ILogger;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Server {
-    private static final String SERVER_URL = "http://192.168.0.17:5000/api/v1/";
+    private static final String SERVER_URL = "http://192.168.1.13:5000/api/v1/";
     private static final String SERVER_RESPONSE_OK = "OK";
     private static final String SERVER_RESPONSE_BAD = "BAD";
     private static final String SERVER_RESPONSE_ERROR = "ERROR";
@@ -336,6 +340,55 @@ public class Server {
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.POST, SERVER_URL + "auth/logout", jsonBody, responseData -> { }, error -> { });
+
+        requestQueue.add(request);
+    }
+
+    public void getMessageForRoom(int roomId, ServerCallback<List<String>, Boolean, String> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/get_messages", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    List<String> resultBuffer = new LinkedList<>();
+                    JSONArray dataBuffer = responseData.getJSONArray("messages");
+                    for(int i = 0; i < dataBuffer.length(); i++) {
+                        resultBuffer.add(dataBuffer.getString(i));
+                    }
+                    callback.onDataReady(resultBuffer, true, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, false, responseData.getString("message"));
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try get messages)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (get messages): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t get messages " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t get messages " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (get messages)", null, null);
+            }
+        });
 
         requestQueue.add(request);
     }
