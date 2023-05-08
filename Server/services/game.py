@@ -51,3 +51,9 @@ def get_role(room_id: int, user_id: int) -> str:
         return 'PAINTER'
     else:
         return 'USER'
+
+
+def get_messages(room_id: int) -> list[str]:
+    data = db.get_messages_of_game(room_id)
+    db.close_now_connection()
+    return data

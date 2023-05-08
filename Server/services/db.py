@@ -214,6 +214,16 @@ def set_drawer(room_id: int) -> None:
         cursor.connection.commit()
 
 
+def get_messages_of_game(room_id: int) -> list[str]:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT text FROM messages WHERE room_id = %s", room_id)
+        data = cursor.fetchall()
+        if data is None:
+            return []
+        else:
+            return list(map(lambda x: x[0], data))
+
+
 def clear_sessions() -> None:
     with get_connection().cursor() as cursor:
         cursor.execute("DELETE FROM sessions WHERE last_time < NOW() - INTERVAL 10 MINUTE")

@@ -103,6 +103,17 @@ def get_role() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': str(e)}))
 
 
+@app.route(settings.API_URL_MAIN + '/game/get_messages', methods=['POST'])
+def get_messages() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'messages': game.get_messages(data['room_id'])}))
+
+
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
 def clear_sessions():
     auth.clear_sessions()
@@ -110,4 +121,4 @@ def clear_sessions():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.0.17')
+    app.run(debug=True, host='192.168.1.13')
