@@ -126,37 +126,3 @@ public class PaintView extends View {
         isDrawEnabled = isEnabled;
     }
 }
-//    private void touchStart(float x, float y) {
-//        mPath = new Path();
-//        FingerPath fp = new FingerPath(currentColor, strokeWidth, mPath);
-//        paths.add(fp);
-//
-//        mPath.reset();
-//        mPath.moveTo(x, y);
-//        mX = x;
-//        mY = y;
-//    }
-//    private void touchMove(float x, float y) {
-//        float dx = Math.abs(x - mX);
-//        float dy = Math.abs(y - mY);
-//
-//        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-//            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-//            mX = x;
-//            mY = y;
-//        }
-//    }
-//    private void touchUp() {
-//        mPath.lineTo(mX, mY);
-//    }
-
-//    public void init(DisplayMetrics metrics) {
-//        int height = metrics.heightPixels;
-//        int width = metrics.widthPixels;
-//
-//        mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//        mCanvas = new Canvas(mBitmap);
-//
-//        currentColor = DEFAULT_COLOR;
-//        strokeWidth = BRUSH_SIZE;
-//    }

@@ -172,9 +172,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@string/content_description_erase"
-            android:onClick="paintClicked"
-            android:src="@drawable/eraser"
-            android:tag="#FFFFFFFF" />
+            android:src="@drawable/eraser" />
     </LinearLayout>
 
     <com.nikol.sketchit.ChatRecycleView

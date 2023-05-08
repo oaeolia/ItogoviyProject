@@ -75,62 +75,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setContentView(R.layout.dialog_brushchooser);
             ImageButton smallBtn = brushDialog.findViewById(R.id.small_brush);
-            smallBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paintView.setBrushSize(smallBrush);
-                    paintView.setLastBrushSize(smallBrush);
-                    brushDialog.dismiss();
-                }
+            smallBtn.setOnClickListener(v -> {
+                paintView.setBrushSize(smallBrush);
+                paintView.setLastBrushSize(smallBrush);
+                brushDialog.dismiss();
             });
             ImageButton mediumBtn = brushDialog.findViewById(R.id.medium_brush);
-            mediumBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paintView.setBrushSize(mediumBrush);
-                    paintView.setLastBrushSize(mediumBrush);
-                    brushDialog.dismiss();
-                }
+            mediumBtn.setOnClickListener(v -> {
+                paintView.setBrushSize(mediumBrush);
+                paintView.setLastBrushSize(mediumBrush);
+                brushDialog.dismiss();
             });
             ImageButton largeBtn = brushDialog.findViewById(R.id.large_brush);
-            largeBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paintView.setBrushSize(largeBrush);
-                    paintView.setLastBrushSize(largeBrush);
-                    brushDialog.dismiss();
-                }
+            largeBtn.setOnClickListener(v -> {
+                paintView.setBrushSize(largeBrush);
+                paintView.setLastBrushSize(largeBrush);
+                brushDialog.dismiss();
             });
             brushDialog.show();
         } else if (view.getId() == R.id.button_erase) {
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setContentView(R.layout.dialog_brushchooser);
             ImageButton smallBtn = brushDialog.findViewById(R.id.small_brush);
-            smallBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paintView.setErase(true);
-                    paintView.setBrushSize(smallBrush);
-                    brushDialog.dismiss();
-                }
+            smallBtn.setOnClickListener(v -> {
+                paintView.setErase(true);
+                paintView.setBrushSize(smallBrush);
+                brushDialog.dismiss();
             });
             ImageButton mediumBtn = brushDialog.findViewById(R.id.medium_brush);
-            mediumBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paintView.setErase(true);
-                    paintView.setBrushSize(mediumBrush);
-                    brushDialog.dismiss();
-                }
+            mediumBtn.setOnClickListener(v -> {
+                paintView.setErase(true);
+                paintView.setBrushSize(mediumBrush);
+                brushDialog.dismiss();
             });
             ImageButton largeBtn = brushDialog.findViewById(R.id.large_brush);
-            largeBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    paintView.setErase(true);
-                    paintView.setBrushSize(largeBrush);
-                    brushDialog.dismiss();
-                }
+            largeBtn.setOnClickListener(v -> {
+                paintView.setErase(true);
+                paintView.setBrushSize(largeBrush);
+                brushDialog.dismiss();
             });
             paintView.setErase(false);
             paintView.setBrushSize(paintView.getLastBrushSize());
