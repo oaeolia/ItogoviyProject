@@ -6,10 +6,8 @@ from services import db
 import hashlib
 import re
 
-# TODO: Add auth function
 
-
-def auth(login: str, password: str) -> str | tuple[str, int, str, int]:
+def auth(login: str, password: str) -> str | tuple[str, int, str, int, int]:
     name_re = re.compile(r'^[a-zA-Zа-яА-Я0-9_-]{3,20}$')
     email_re = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
     if re.match(name_re, login) is None and re.match(email_re, login):
@@ -24,7 +22,7 @@ def auth(login: str, password: str) -> str | tuple[str, int, str, int]:
         return result
 
 
-def auth_application(application_session_token: str, application_session_id: int) -> str | tuple[str, int]:
+def auth_application(application_session_token: str, application_session_id: int) -> str | tuple[str, int, int]:
     token_re = re.compile(r'^[a-zA-Z0-9]{32}$')
     if re.match(token_re, application_session_token) is None or type(application_session_id) is not int:
         return 'Token or id is not valid'

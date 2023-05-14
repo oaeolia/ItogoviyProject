@@ -2,6 +2,6 @@
 - [x] Add find room function
 - [ ] Add room function
 - [ ] Add logout from session 
-- [ ] Add get role of user in room
+- [x] Add get role of user in room
 - [ ] Add get word for painter role
 - [ ] Add get state of game

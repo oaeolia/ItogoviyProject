@@ -57,3 +57,33 @@ def get_messages(room_id: int) -> list[str]:
     data = db.get_messages_of_game(room_id)
     db.close_now_connection()
     return data
+
+
+def next_drawer(room_id: int) -> None:
+    if db.is_painter_last(room_id):
+        db.stop_room(room_id)
+        return
+
+    db.next_painter(room_id)
+    db.close_now_connection()
+
+
+def try_variant(variant: str, room_id: int) -> bool:
+    buffer = db.check_variant(variant, room_id)
+    db.send_message(variant.lower().strip(), room_id)
+    if buffer:
+        next_drawer(room_id)
+    db.close_now_connection()
+    return buffer
+
+
+def get_status(room_id: int) -> int:
+    buffer = db.is_room_started(room_id)
+    db.close_now_connection()
+    return buffer
+
+
+def get_now_painter(room_id: int) -> int:
+    buffer = db.get_now_painter(room_id)
+    db.close_now_connection()
+    return buffer

@@ -30,7 +30,10 @@ def get_connection() -> Connection:
 def close_now_connection() -> None:
     global now_connection
     if now_connection is not None:
-        now_connection.close()
+        try:
+            now_connection.close()
+        except Exception:
+            pass
     now_connection = None
 
 
@@ -54,7 +57,7 @@ def check_user_email_and_name_for_existence(email: str, name: str) -> bool:
         return cursor.fetchone() is not None
 
 
-def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, int, str, int]:
+def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, int, str, int, int]:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT id FROM users WHERE (email = %s or name = %s) AND password = %s", (login, login, password))
         data = cursor.fetchone()
@@ -68,10 +71,10 @@ def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, 
             cursor.execute("INSERT INTO application_sessions (user_id, last_time, token) VALUES (%s, NOW(), %s)", (data[0], application_token))
             application_session_id = cursor.lastrowid
             cursor.connection.commit()
-            return token, session_id, application_token, application_session_id
+            return token, session_id, application_token, application_session_id, data[0]
 
 
-def try_auth_application_and_create_session(token: str, application_session_id: int) -> None | tuple[str, int]:
+def try_auth_application_and_create_session(token: str, application_session_id: int) -> None | tuple[str, int, int]:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT id, user_id FROM application_sessions WHERE token=%s AND id = %s", (token, application_session_id))
         data = cursor.fetchone()
@@ -82,7 +85,7 @@ def try_auth_application_and_create_session(token: str, application_session_id: 
             cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)", (data[1], '{"user_id": ' + str(data[1]) + '}', token))
             session_id = cursor.lastrowid
             cursor.connection.commit()
-            return token, session_id
+            return token, session_id, data[1]
 
 
 def remove_application_session(session_id: int, session_token: str) -> None:
@@ -244,6 +247,63 @@ def get_now_painter(room_id: int) -> int:
             return -1
         else:
             return data[0]
+
+
+def check_variant(variant: str, room_id: int) -> bool:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_word FROM games_rooms WHERE id = %s AND now_word = %s", (room_id, variant.lower().strip()))
+        data = cursor.fetchone()
+        return data is not None
+
+
+def is_painter_last(room_id: int) -> bool:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_painter FROM games_rooms WHERE id = %s AND now_painter=user_5", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return False
+        else:
+            return True
+
+
+def stop_room(room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("UPDATE games_rooms SET is_started = 0 WHERE id = %s", room_id)
+        cursor.connection.commit()
+
+
+def next_painter(room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data[0] == data[1]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[2], room_id))
+        elif data[0] == data[2]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[3], room_id))
+        elif data[0] == data[3]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[4], room_id))
+        elif data[0] == data[4]:
+            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[5], room_id))
+        else:
+            return
+
+        cursor.connection.commit()
+
+
+def is_room_started(room_id: int) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT is_started FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return -1
+        else:
+            return 1 if data[0] else 0
+
+
+def send_message(message: str, room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("INSERT INTO messages (text, room_id) VALUES (%s, %s)", (message, room_id))
+        cursor.connection.commit()
 
 
 def check_game_check_user_state(room_id: int) -> bool:

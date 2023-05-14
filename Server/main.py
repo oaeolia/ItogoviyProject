@@ -43,13 +43,18 @@ def login() -> Response:
     if 'application_token' in data:
         login_message = auth.auth_application(data['application_token'], data['application_session_id'])
         if type(login_message) is not str:
-            return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0]}))
+            return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0], 'user_id': login_message[2]}))
         else:
             return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
     else:
         login_message = auth.auth(data['login'], data['password'])
         if type(login_message) is not str:
-            return Response(json.dumps({'status': settings.RESPONSE_OK, 'session_id': login_message[1], 'session_token': login_message[0], 'application_token': login_message[2], 'application_id': login_message[3]}))
+            return Response(json.dumps({'status': settings.RESPONSE_OK,
+                                        'session_id': login_message[1],
+                                        'session_token': login_message[0],
+                                        'application_token': login_message[2],
+                                        'application_id': login_message[3],
+                                        'user_id': login_message[4]}))
         else:
             return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': login_message}))
 
@@ -98,7 +103,7 @@ def get_role() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
 
     try:
-        return Response(json.dumps({'status': settings.RESPONSE_OK, 'role': game.get_role(data['room_id'], session['user_id'])}))
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'role': game.get_role(data['room_id'], session['user_id']), 'painter': game.get_now_painter(data['room_id'])}))
     except Exception as e:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': str(e)}))
 
@@ -112,6 +117,37 @@ def get_messages() -> Response:
     if session is None:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'messages': game.get_messages(data['room_id'])}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/try_variant', methods=['POST'])
+def try_variant() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data or 'variant' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'result': game.try_variant(data['variant'], data['room_id'])}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/get_status', methods=['POST'])
+def get_status() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+
+    session = auth.get_session(data['session_id'], data['session_token'])
+
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+
+    status = game.get_status(data['room_id'])
+
+    if status == 'END':
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status}))
+
+    now_painter = game.get_now_painter(data['room_id'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter}))
 
 
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
