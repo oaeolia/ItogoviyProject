@@ -1,9 +1,13 @@
 package com.nikol.sketchit.game;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.nikol.sketchit.Application;
 import com.nikol.sketchit.ChatLayoutAdapter;
+import com.nikol.sketchit.GameMenuActivity;
 import com.nikol.sketchit.MainActivity;
 import com.nikol.sketchit.databinding.ActivityMainBinding;
 
@@ -29,6 +33,8 @@ public class GameLayoutBridge {
         binding.progressBarLayout.setVisibility(View.VISIBLE);
         binding.layoutTools.setVisibility(View.INVISIBLE);
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
+        binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
+        binding.paintView.clear();
         mainActivity.setEnableDraw(false);
     }
 
@@ -36,6 +42,9 @@ public class GameLayoutBridge {
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
         binding.layoutTools.setVisibility(View.VISIBLE);
         binding.layoutPaintColors.setVisibility(View.VISIBLE);
+        binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
+        binding.inputVariant.setVisibility(View.INVISIBLE);
+        binding.paintView.clear();
         mainActivity.setEnableDraw(true);
     }
 
@@ -43,6 +52,9 @@ public class GameLayoutBridge {
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
         binding.layoutTools.setVisibility(View.INVISIBLE);
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
+        binding.buttonEnterVariant.setVisibility(View.VISIBLE);
+        binding.inputVariant.setVisibility(View.VISIBLE);
+        binding.paintView.clear();
         mainActivity.setEnableDraw(false);
     }
 
@@ -50,7 +62,34 @@ public class GameLayoutBridge {
         chatLayoutAdapter.getUpdates(message);
     }
 
+    public void setEnterButtonOnClickListener(View.OnClickListener listener) {
+        binding.buttonEnterVariant.setOnClickListener(listener);
+    }
+
+    public boolean isVariantEmpty() {
+        return binding.inputVariant.getText().toString().isEmpty();
+    }
+
+    public String getVariant() {
+        return binding.inputVariant.getText().toString();
+    }
+
     public Drawable getCanvasImage() {
         return null;
+    }
+
+    public Application getApplication() {
+        return (Application) mainActivity.getApplication();
+    }
+
+    public void endGame() {
+        Intent intent = new Intent(mainActivity, GameMenuActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mainActivity.startActivity(intent);
+        mainActivity.finish();
+    }
+
+    public Context getContext() {
+        return binding.getRoot().getContext();
     }
 }

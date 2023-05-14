@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -27,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float mediumBrush;
     private float largeBrush;
     private ActivityMainBinding binding;
+    private Timer serverUpdateTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         if (intent.hasExtra("roomId")) {
-            createGameController(binding, intent.getIntExtra("roomId", 0));
+            createGameController(binding, intent.getIntExtra("roomId", -1));
         }
 
 
@@ -120,18 +120,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        serverUpdateTimer.cancel();
+        serverUpdateTimer.purge();
+        super.onDestroy();
+    }
+
     // For game system
     private void createGameController(ActivityMainBinding binding, int roomId) {
         GameLayoutBridge bridge = new GameLayoutBridge(binding, this);
         GameController controller = new GameController(roomId, bridge, this);
         controller.startGame();
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        serverUpdateTimer = new Timer();
+        serverUpdateTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 controller.update();
             }
-        }, 0, 1000);
+        }, 0, 3000);
     }
 
     public void setEnableDraw(boolean enable) {

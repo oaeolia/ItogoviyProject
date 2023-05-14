@@ -1,6 +1,7 @@
 package com.nikol.sketchit.game;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.nikol.sketchit.Application;
 import com.nikol.sketchit.loggers.ILogger;
@@ -13,24 +14,11 @@ public class GameController {
     private static final String USER_ROLE = "USER";
     private static final String PAINTER_ROLE = "PAINTER";
 
-    private enum Role {
-        USER,
-        DRAWER
-    }
-
-    private enum State {
-        WAITING,
-        PAINTER,
-        WATCHING,
-        FINISHED
-    }
-
     private final int roomId;
     private final Server server;
     private final ILogger logger;
     private final GameLayoutBridge uiBridge;
-    private Role nowRole = null;
-    private State nowState = State.WAITING;
+    private int nowPainter = -1;
 
     public GameController(int roomId, GameLayoutBridge uiBridge, Context context) {
         Application application = (Application) context.getApplicationContext();
@@ -50,38 +38,76 @@ public class GameController {
         server.getMessageForRoom(roomId, new ServerCallback<List<String>, Boolean, String>() {
             @Override
             public void onDataReady(List<String> arg1, Boolean arg2, String arg3) {
-                if(arg2) {
+                if (arg2) {
                     uiBridge.updateChat(arg1);
-                }else {
+                } else {
                     logger.logWarming("Game", "Cant get messages for game room");
                 }
             }
         }, null);
+
+        server.getStatusOfRoom(roomId, new ServerCallback<Integer, Integer, Boolean>() {
+            @Override
+            public void onDataReady(Integer gameStatus, Integer nowPainter, Boolean status) {
+                serverUpdate(nowPainter, gameStatus);
+            }
+        }, null);
+    }
+
+    private void serverUpdate(int nowPainter, int isNotEnd) {
+        if (isNotEnd != 1) {
+            exitFromGame();
+            return;
+        }
+
+        if (nowPainter != this.nowPainter) {
+            this.nowPainter = nowPainter;
+            if (nowPainter == uiBridge.getApplication().getUserId()) {
+                uiBridge.setPaintState();
+            } else {
+                uiBridge.setWatchState();
+            }
+            logger.logInfo("Game", "Update state");
+            // TODO: Update now painter
+        }
     }
 
     public void exitFromGame() {
         logger.logInfo("Game", "Exit from game");
+        Toast.makeText(uiBridge.getContext(), "Exit from game", Toast.LENGTH_SHORT).show();
+        uiBridge.endGame();
     }
 
-    private class GetRoleServerCallback extends ServerCallback<String, Boolean, Object> {
+    private class GetRoleServerCallback extends ServerCallback<String, Boolean, Integer> {
         @Override
-        public void onDataReady(String arg1, Boolean arg2, Object arg3) {
-            if (arg2) {
-                if(arg1.equals(USER_ROLE)) {
-                    nowRole = Role.USER;
-                    nowState = State.WATCHING;
+        public void onDataReady(String message, Boolean status, Integer painter) {
+            if (status) {
+                if (message.equals(USER_ROLE)) {
                     uiBridge.setWatchState();
-                }else if(arg1.equals(PAINTER_ROLE)) {
-                    nowRole = Role.DRAWER;
-                    nowState = State.PAINTER;
+                    uiBridge.setEnterButtonOnClickListener(view -> {
+                        if (!uiBridge.isVariantEmpty()) {
+                            logger.logDebug("Game", "Send variant " + uiBridge.getVariant());
+                            server.sendVariant(uiBridge.getVariant(), roomId, new ServerCallback<Boolean, String, Boolean>() {
+                                @Override
+                                public void onDataReady(Boolean result, String message, Boolean status) {
+                                    if (status && result) {
+//                                        TODO: Win and update state
+                                        Toast.makeText(view.getContext(), "You win!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }, null);
+                        }
+                    });
+                    nowPainter = painter;
+                } else if (message.equals(PAINTER_ROLE)) {
                     uiBridge.setPaintState();
-                }else {
-                    logger.logInfo("Game", "Can`t reade role " + arg1);
+                } else {
+                    logger.logInfo("Game", "Can`t reade role " + message);
                     return;
                 }
-                logger.logInfo("Game", "Get role " + arg1);
+                logger.logInfo("Game", "Get role " + message);
             } else {
-                logger.logWarming("Game", "Cant get role " + arg1);
+                logger.logWarming("Game", "Cant get role " + message);
 //                TODO: Add error screen
                 // Try again
                 server.getRole(roomId, this, new GetRoleServerErrorCallback());

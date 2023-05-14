@@ -175,15 +175,46 @@
             android:src="@drawable/eraser" />
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/input_variant"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:ems="10"
+        android:hint="@string/title_variant"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/layout_chat"
+        app:layout_constraintStart_toStartOf="@+id/layout_chat"
+        app:layout_constraintTop_toBottomOf="@+id/layout_chat" />
+
+    <ImageButton
+        android:id="@+id/button_enter_variant"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/content_description_enter_variant"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icon_enter"
+        app:layout_constraintBottom_toBottomOf="@+id/input_variant"
+        app:layout_constraintEnd_toEndOf="@+id/layout_chat"
+        app:layout_constraintStart_toEndOf="@+id/input_variant"
+        app:layout_constraintTop_toBottomOf="@+id/layout_chat" />
+
     <com.nikol.sketchit.ChatRecycleView
         android:id="@+id/layout_chat"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:longClickable="false"
-        android:maxHeight="250dp"
+        android:maxHeight="150dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.nikol.sketchit.ChatRecycleView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/progress_bar_layout"
@@ -193,8 +224,10 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -205,6 +238,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

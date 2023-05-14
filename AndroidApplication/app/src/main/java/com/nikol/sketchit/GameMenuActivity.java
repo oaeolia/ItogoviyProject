@@ -67,9 +67,9 @@ public class GameMenuActivity extends AppCompatActivity {
                     Application application = (Application) getApplication();
                     application.getServer().checkRoom(roomId, new ServerCallback<String, Boolean, Object>() {
                         @Override
-                        public void onDataReady(String arg1, Boolean arg2, Object arg3) {
-                            application.getLogger().logDebug("Test", arg1);
-                            if (arg1.equals("STARTED")) {
+                        public void onDataReady(String message, Boolean status, Object arg3) {
+                            application.getLogger().logDebug("Test", message);
+                            if (message.equals("STARTED")) {
                                 application.getLogger().logDebug("Test", "STARTED");
                                 interrupt();
                                 Intent intent = new Intent(GameMenuActivity.this, MainActivity.class);

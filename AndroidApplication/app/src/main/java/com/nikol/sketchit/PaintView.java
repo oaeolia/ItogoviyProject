@@ -125,4 +125,12 @@ public class PaintView extends View {
     public void setEnabledDraw(boolean isEnabled) {
         isDrawEnabled = isEnabled;
     }
+
+    public void clear() {
+        if(mCanvas != null) {
+            backgroundColor = DEFAULT_BG_COLOR;
+            mCanvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
+            invalidate();
+        }
+    }
 }

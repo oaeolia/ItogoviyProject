@@ -9,6 +9,7 @@ public class Application extends android.app.Application {
 
     private Server server;
     private final ILogger logger;
+    private int userId;
 
     public Application(){
         logger = new ConsoleLogger();
@@ -26,5 +27,13 @@ public class Application extends android.app.Application {
 
     public ILogger getLogger(){
         return logger;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

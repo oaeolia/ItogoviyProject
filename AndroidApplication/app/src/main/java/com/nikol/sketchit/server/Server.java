@@ -107,6 +107,7 @@ public class Server {
                         preferences.putString("application_token", responseData.getString("application_token"));
                         preferences.apply();
                     }
+                    ((Application) context.getApplicationContext()).setUserId(responseData.getInt("user_id"));
                     callback.onDataReady(true, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(false, responseData.getString("message"), null);
@@ -204,6 +205,7 @@ public class Server {
                         preferences.putString("application_token", responseData.getString("application_token"));
                         preferences.apply();
                     }
+                    ((Application) context.getApplicationContext()).setUserId(responseData.getInt("user_id"));
                     callback.onDataReady(true, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(false, responseData.getString("message"), null);
@@ -278,7 +280,7 @@ public class Server {
         requestQueue.add(request);
     }
 
-    public void getRole(int roomId, ServerCallback<String, Boolean, Object> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
+    public void getRole(int roomId, ServerCallback<String, Boolean, Integer> callback, @Nullable ServerCallback<String, Integer, Object> errorCallback) {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("session_id", sessionId);
@@ -292,7 +294,7 @@ public class Server {
                 Request.Method.POST, SERVER_URL + "game/get_role", jsonBody, responseData -> {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
-                    callback.onDataReady(responseData.getString("role"), true, null);
+                    callback.onDataReady(responseData.getString("role"), true, responseData.getInt("painter"));
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(responseData.getString("message"), false, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
@@ -387,6 +389,99 @@ public class Server {
             }
             if (errorCallback != null) {
                 errorCallback.onDataReady("Server undefined error (get messages)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void getStatusOfRoom(int roomId, ServerCallback<Integer, Integer, Boolean> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/get_status", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    if(responseData.has("now_painter")) {
+                        callback.onDataReady(responseData.getInt("game_status"), responseData.getInt("now_painter"), true);
+                    }else {
+                        callback.onDataReady(responseData.getInt("game_status"), null, false);
+                    }
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, null, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try get game status)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (get game status): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t get game status " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t get game status " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (get game status)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void sendVariant(String variant, int roomId, ServerCallback<Boolean, String, Boolean> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
+            jsonBody.put("variant", variant);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/try_variant", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    callback.onDataReady(responseData.getBoolean("result"), null, true);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, responseData.getString("message"), false);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try send variant)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (try send variant): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t try send variant " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t try send variant " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try send variant)", null, null);
             }
         });
 
