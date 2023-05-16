@@ -1,3 +1,6 @@
+import os
+
+import settings
 from services import db
 
 
@@ -87,3 +90,13 @@ def get_now_painter(room_id: int) -> int:
     buffer = db.get_now_painter(room_id)
     db.close_now_connection()
     return buffer
+
+
+def send_canvas(room_id: int, user_id: int, canvas) -> None:
+    if db.get_now_painter(room_id) != user_id:
+        return
+
+    with open(os.path.join(settings.UPLOAD_FOLDER, str(room_id) + '.png'), 'bw') as file:
+        file.write(canvas)
+
+    db.close_now_connection()

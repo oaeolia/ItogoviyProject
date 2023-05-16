@@ -1,4 +1,5 @@
 import json
+import os
 
 from flask import Flask, request, Response
 
@@ -148,6 +149,31 @@ def get_status() -> Response:
 
     now_painter = game.get_now_painter(data['room_id'])
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/send_canvas', methods=['POST'])
+def send_canvas() -> Response:
+    data = request.headers
+    if 'Session-Id' not in data or 'Session-Token' not in data or 'Room-Id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(int(data['session_id']), data['session_token'])
+    game.send_canvas(int(data['room_id']), session['user_id'], request.data)
+    return Response(json.dumps({'status': settings.RESPONSE_OK}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/get_canvas', methods=['POST'])
+def get_canvas() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+
+    with open(os.path.join(settings.UPLOAD_FOLDER, str(data['room_id']) + '.png'), 'rb') as file:
+        file_data = file.read()
+
+    return Response(bytes(file_data), mimetype='image/png')
 
 
 @app.route(settings.API_URL_MAIN + '/tools/clear_sessions', methods=['POST'])
