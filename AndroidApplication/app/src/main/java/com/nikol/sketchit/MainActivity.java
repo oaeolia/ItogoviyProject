@@ -142,6 +142,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setEnableDraw(boolean enable) {
-         binding.paintView.setEnabledDraw(enable);
+        binding.paintView.setEnabledDraw(enable);
     }
 }

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -102,6 +103,9 @@ public class PaintView extends View {
     }
 
     public boolean draw(float x, float y, int action) {
+        if (!isDrawEnabled) {
+            return false;
+        }
         mX = x;
         mY = y;
         switch (action) {
@@ -127,10 +131,14 @@ public class PaintView extends View {
     }
 
     public void clear() {
-        if(mCanvas != null) {
+        if (mCanvas != null) {
             backgroundColor = DEFAULT_BG_COLOR;
             mCanvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
             invalidate();
         }
+    }
+
+    public Bitmap getCanvas() {
+        return mBitmap;
     }
 }

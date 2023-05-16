@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nikol.sketchit.Application;
 import com.nikol.sketchit.loggers.ILogger;
@@ -16,8 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Server {
     private static final String SERVER_URL = "http://192.168.1.13:5000/api/v1/";
@@ -101,7 +105,7 @@ public class Server {
                     sessionId = responseData.getInt("session_id");
                     sessionToken = responseData.getString("session_token");
                     logger.logInfo("Server", "Login successful, session id: " + sessionId);
-                    if(responseData.has("application_id")){
+                    if (responseData.has("application_id")) {
                         SharedPreferences.Editor preferences = context.getSharedPreferences(Application.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE).edit();
                         preferences.putInt("application_id", responseData.getInt("application_id"));
                         preferences.putString("application_token", responseData.getString("application_token"));
@@ -152,7 +156,6 @@ public class Server {
                 Request.Method.POST, SERVER_URL + "game/get_new_room", jsonBody, responseData -> {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
-
                     callback.onDataReady(responseData.getInt("room_id"), null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(-1, responseData.getString("message"), null);
@@ -199,7 +202,7 @@ public class Server {
                     sessionId = responseData.getInt("session_id");
                     sessionToken = responseData.getString("session_token");
                     logger.logInfo("Server", "Auto Login successful, session id: " + sessionId);
-                    if(responseData.has("application_id")){
+                    if (responseData.has("application_id")) {
                         SharedPreferences.Editor preferences = context.getSharedPreferences(Application.PREFERENCES_FILE_NAME, Context.MODE_PRIVATE).edit();
                         preferences.putInt("application_id", responseData.getInt("application_id"));
                         preferences.putString("application_token", responseData.getString("application_token"));
@@ -341,7 +344,9 @@ public class Server {
         editor.apply();
 
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST, SERVER_URL + "auth/logout", jsonBody, responseData -> { }, error -> { });
+                Request.Method.POST, SERVER_URL + "auth/logout", jsonBody, responseData -> {
+        }, error -> {
+        });
 
         requestQueue.add(request);
     }
@@ -362,7 +367,7 @@ public class Server {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
                     List<String> resultBuffer = new LinkedList<>();
                     JSONArray dataBuffer = responseData.getJSONArray("messages");
-                    for(int i = 0; i < dataBuffer.length(); i++) {
+                    for (int i = 0; i < dataBuffer.length(); i++) {
                         resultBuffer.add(dataBuffer.getString(i));
                     }
                     callback.onDataReady(resultBuffer, true, null);
@@ -409,9 +414,9 @@ public class Server {
                 Request.Method.POST, SERVER_URL + "game/get_status", jsonBody, responseData -> {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
-                    if(responseData.has("now_painter")) {
+                    if (responseData.has("now_painter")) {
                         callback.onDataReady(responseData.getInt("game_status"), responseData.getInt("now_painter"), true);
-                    }else {
+                    } else {
                         callback.onDataReady(responseData.getInt("game_status"), null, false);
                     }
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
@@ -484,6 +489,76 @@ public class Server {
                 errorCallback.onDataReady("Server undefined error (try send variant)", null, null);
             }
         });
+
+        requestQueue.add(request);
+    }
+
+    public void sendCanvas(byte[] canvas, int roomId) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, SERVER_URL + "game/send_canvas", null, null) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Session-Id", String.valueOf(sessionId));
+                params.put("Session-Token", sessionToken);
+                params.put("Room-Id", String.valueOf(roomId));
+                return params;
+            }
+
+            @Override
+            public byte[] getBody() {
+                return canvas;
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "image/png";
+            }
+        };
+
+        requestQueue.add(request);
+    }
+
+    public void getCanvas(int roomId, ServerCallback<byte[], Boolean, Object> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        StringRequest request = new StringRequest(
+                Request.Method.POST, SERVER_URL + "game/get_canvas", responseData -> callback.onDataReady(responseData.getBytes(StandardCharsets.ISO_8859_1), true, null), error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t try send variant " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t try send variant " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try send variant)", null, null);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> map = new HashMap<>();
+                map.put("session_id", String.valueOf(sessionId));
+                map.put("session_token", sessionToken);
+                map.put("room_id", String.valueOf(roomId));
+                return map;
+            }
+
+            @Override
+            public byte[] getBody() {
+                JSONObject jsonBody = new JSONObject();
+                try {
+                    jsonBody.put("session_id", sessionId);
+                    jsonBody.put("session_token", sessionToken);
+                    jsonBody.put("room_id", roomId);
+                }catch (JSONException e) {
+                    return null;
+                }
+
+                return jsonBody.toString().getBytes();
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return "application/json";
+            }
+        };
 
         requestQueue.add(request);
     }

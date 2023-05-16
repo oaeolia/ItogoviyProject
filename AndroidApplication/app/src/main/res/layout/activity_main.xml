@@ -22,6 +22,22 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
+    <ImageView
+        android:id="@+id/image_canvas"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFFFF"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,MissingConstraints" />
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="50dp"
@@ -212,6 +228,7 @@
         android:longClickable="false"
         android:maxHeight="150dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="200dp"
         app:layout_constraintTop_toTopOf="parent">
 
     </com.nikol.sketchit.ChatRecycleView>

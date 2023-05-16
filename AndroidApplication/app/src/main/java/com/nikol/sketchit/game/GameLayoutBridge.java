@@ -2,7 +2,8 @@ package com.nikol.sketchit.game;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 
 import com.nikol.sketchit.Application;
@@ -34,6 +35,8 @@ public class GameLayoutBridge {
         binding.layoutTools.setVisibility(View.INVISIBLE);
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
+        binding.imageCanvas.setVisibility(View.INVISIBLE);
+        binding.imageCanvas.setVisibility(View.INVISIBLE);
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
     }
@@ -44,6 +47,7 @@ public class GameLayoutBridge {
         binding.layoutPaintColors.setVisibility(View.VISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.inputVariant.setVisibility(View.INVISIBLE);
+        binding.imageCanvas.setVisibility(View.INVISIBLE);
         binding.paintView.clear();
         mainActivity.setEnableDraw(true);
     }
@@ -54,6 +58,7 @@ public class GameLayoutBridge {
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.VISIBLE);
         binding.inputVariant.setVisibility(View.VISIBLE);
+        binding.imageCanvas.setVisibility(View.VISIBLE);
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
     }
@@ -74,8 +79,8 @@ public class GameLayoutBridge {
         return binding.inputVariant.getText().toString();
     }
 
-    public Drawable getCanvasImage() {
-        return null;
+    public Bitmap getCanvasImage() {
+        return binding.paintView.getCanvas();
     }
 
     public Application getApplication() {
@@ -91,5 +96,14 @@ public class GameLayoutBridge {
 
     public Context getContext() {
         return binding.getRoot().getContext();
+    }
+
+    public void updateRecycleViewPosition() {
+        binding.layoutChat.smoothScrollToPosition(chatLayoutAdapter.getItemCount() - 1);
+    }
+
+    public void setCanvas(byte[] canvas) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray(canvas, 0 , canvas.length);
+        binding.imageCanvas.setImageBitmap(bitmap);
     }
 }
