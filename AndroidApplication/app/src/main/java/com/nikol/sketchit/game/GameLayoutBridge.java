@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
-import com.nikol.sketchit.Application;
 import com.nikol.sketchit.ChatLayoutAdapter;
 import com.nikol.sketchit.GameMenuActivity;
 import com.nikol.sketchit.MainActivity;
@@ -17,8 +16,8 @@ import java.util.List;
 public class GameLayoutBridge {
     private final ActivityMainBinding binding;
     private final MainActivity mainActivity;
-
     private final ChatLayoutAdapter chatLayoutAdapter;
+
 
     public GameLayoutBridge(ActivityMainBinding binding, MainActivity mainActivity) {
         this.binding = binding;
@@ -35,7 +34,6 @@ public class GameLayoutBridge {
         binding.layoutTools.setVisibility(View.INVISIBLE);
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
-        binding.imageCanvas.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
@@ -83,10 +81,6 @@ public class GameLayoutBridge {
         return binding.paintView.getCanvas();
     }
 
-    public Application getApplication() {
-        return (Application) mainActivity.getApplication();
-    }
-
     public void endGame() {
         Intent intent = new Intent(mainActivity, GameMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -94,16 +88,16 @@ public class GameLayoutBridge {
         mainActivity.finish();
     }
 
-    public Context getContext() {
-        return binding.getRoot().getContext();
-    }
-
     public void updateRecycleViewPosition() {
         binding.layoutChat.smoothScrollToPosition(chatLayoutAdapter.getItemCount() - 1);
     }
 
     public void setCanvas(byte[] canvas) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray(canvas, 0 , canvas.length);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(canvas, 0, canvas.length);
         binding.imageCanvas.setImageBitmap(bitmap);
+    }
+
+    public Context getContext() {
+        return mainActivity;
     }
 }

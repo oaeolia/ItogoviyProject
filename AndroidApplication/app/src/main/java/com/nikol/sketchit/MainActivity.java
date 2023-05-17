@@ -20,6 +20,8 @@ import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String ROOM_ID_INTENT_KEY = "roomId";
+
     private ImageButton currentPaint, drawBtn, eraseBtn;
     private PaintView paintView;
     private int smallBrush;

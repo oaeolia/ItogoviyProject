@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nikol.sketchit.databinding.ActivityRegistrationBinding;
+import com.nikol.sketchit.loggers.ILogger;
+import com.nikol.sketchit.server.Server;
 import com.nikol.sketchit.server.ServerCallback;
 
 import java.util.regex.Matcher;
@@ -15,9 +18,16 @@ import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
     private ActivityRegistrationBinding binding;
+    private ILogger logger;
+    private Server server;
+    private boolean waitingResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Application application = (Application) getApplication();
+        logger = application.getLogger();
+        server = application.getServer();
+
         super.onCreate(savedInstanceState);
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -35,122 +45,100 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                binding.buttonRegistration.setEnabled(checkAll() == -1);
+                int buffer = checkUserInput();
+                binding.buttonRegistration.setEnabled(buffer == -1 && !waitingResponse);
+                if (buffer != -1) {
+                    binding.textMessage.setText(buffer);
+                } else {
+                    binding.textMessage.setText("");
+                }
             }
         };
 
-        binding.inputEmail.addTextChangedListener(userInputTextWatcher);
         binding.inputUsername.addTextChangedListener(userInputTextWatcher);
+        binding.inputEmail.addTextChangedListener(userInputTextWatcher);
         binding.inputPassword.addTextChangedListener(userInputTextWatcher);
 
-        binding.inputEmail.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText()).matches()) {
-                    binding.textMessage.setText(R.string.message_error_register_email_is_now_valid);
-                } else {
-                    int buffer = checkAll();
-                    if(buffer != -1) {
-                        binding.textMessage.setText(buffer);
-                    }else {
-                        binding.textMessage.setText("");
-                    }
-                }
-            }
-        });
-        binding.inputPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                int checkResult = checkPassword(editable.toString());
-                if (checkResult == -1) {
-                    int buffer = checkAll();
-                    if(buffer != -1) {
-                        binding.textMessage.setText(buffer);
-                    }else {
-                        binding.textMessage.setText("");
-                    }
-                } else {
-                    binding.textMessage.setText(checkResult);
-                }
-            }
-        });
-        binding.inputUsername.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                int checkResult = checkUsername(editable.toString());
-                if (checkResult == -1) {
-                    int buffer = checkAll();
-                    if(buffer != -1) {
-                        binding.textMessage.setText(buffer);
-                    }else {
-                        binding.textMessage.setText("");
-                    }
-                } else {
-                    binding.textMessage.setText(checkResult);
-                }
-            }
-        });
-
-        binding.buttonRegistration.setOnClickListener(view -> {
-            binding.buttonRegistration.setEnabled(false);
-            binding.textMessage.setText("");
-            ((Application) getApplication()).getServer().registration(binding.inputUsername.getText().toString(), binding.inputEmail.getText().toString(), binding.inputPassword.getText().toString(),
-                    new ServerCallback<Boolean, String, Object>() {
-                        @Override
-                        public void onDataReady(Boolean arg1, String arg2, Object arg3) {
-                            if (arg1) {
-                                ((Application) getApplication()).getLogger().logDebug("Registration", "Successfully Registration");
-                            } else {
-                                ((Application) getApplication()).getLogger().logDebug("Registration", "Cant register");
-                                ((Application) getApplication()).getLogger().logDebug("Registration", arg2);
-                                binding.textMessage.setText(R.string.message_error_user_name_or_emeail_is_not_free);
-                            }
-                        }
-                    }, new ServerCallback<String, Integer, Object>() {
-                        @Override
-                        public void onDataReady(String arg1, Integer arg2, Object arg3) {
-                            binding.textMessage.setText(R.string.message_error_cannt_send_request);
-                            ((Application) getApplication()).getLogger().logError("Registration", "Cant Registration (" + arg1 + ")");
-                        }
-                    });
-        });
+        binding.buttonRegistration.setOnClickListener(this::onClickRegister);
         binding.buttonGoLogin.setOnClickListener(view -> {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         });
     }
 
-    private int checkAll() {
+    public void onClickRegister(View view) {
+        binding.buttonRegistration.setEnabled(false);
+        binding.textMessage.setText("");
+
+        binding.inputUsername.setClickable(false);
+        binding.inputEmail.setClickable(false);
+        binding.inputPassword.setClickable(false);
+
+        waitingResponse = true;
+        server.registration(binding.inputUsername.getText().toString(), binding.inputEmail.getText().toString(), binding.inputPassword.getText().toString(),
+                new ServerCallback<Boolean, String, Object>() {
+                    @Override
+                    public void onDataReady(Boolean successfullyRegistered, String message, Object arg) {
+                        if (successfullyRegistered) {
+                            logger.logInfo("Registration", "Successfully registered");
+                            server.login(binding.inputUsername.getText().toString(), binding.inputPassword.getText().toString(), new ServerCallback<Boolean, String, Object>() {
+                                @Override
+                                public void onDataReady(Boolean isAuthed, String message, Object arg) {
+                                    if (isAuthed) {
+                                        logger.logInfo("Login", "Successfully logged in");
+                                        Intent intent = new Intent(RegistrationActivity.this, GameMenuActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        logger.logWarming("Login", "Cant logged in, error " + message);
+
+                                        waitingResponse = false;
+                                        binding.inputUsername.setClickable(true);
+                                        binding.inputEmail.setClickable(true);
+                                        binding.inputPassword.setClickable(true);
+
+                                        binding.textMessage.setText(R.string.message_error_cant_login);
+                                    }
+                                }
+                            }, new ServerCallback<String, Integer, Object>() {
+                                @Override
+                                public void onDataReady(String message, Integer errorCode, Object arg) {
+                                    logger.logError("Registration", "Can`t login, server error: " + message);
+
+                                    binding.textMessage.setText(R.string.message_error_cant_login);
+
+                                    waitingResponse = false;
+                                    binding.inputUsername.setClickable(true);
+                                    binding.inputEmail.setClickable(true);
+                                    binding.inputPassword.setClickable(true);
+                                }
+                            });
+                        } else {
+                            logger.logError("Registration", "Can`t register, server error: " + message);
+                            binding.textMessage.setText(R.string.message_error_user_name_or_emeail_is_not_free);
+                        }
+                        waitingResponse = false;
+
+                        binding.inputUsername.setClickable(true);
+                        binding.inputEmail.setClickable(true);
+                        binding.inputPassword.setClickable(true);
+                    }
+                }, new ServerCallback<String, Integer, Object>() {
+                    @Override
+                    public void onDataReady(String message, Integer errorCode, Object arg3) {
+                        binding.textMessage.setText(R.string.message_error_cannt_send_request);
+                        logger.logError("Registration", "Cant register (" + message + ")");
+                        waitingResponse = false;
+
+                        binding.inputUsername.setClickable(true);
+                        binding.inputEmail.setClickable(true);
+                        binding.inputPassword.setClickable(true);
+                    }
+                });
+    }
+
+    private int checkUserInput() {
         int buffer = checkUsername(binding.inputUsername.getText().toString());
         if (buffer != -1) {
             return buffer;
@@ -162,7 +150,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText()).matches()) {
-            binding.textMessage.setText(R.string.message_error_register_email_is_now_valid);
+            return R.string.message_error_register_email_is_now_valid;
         }
 
         return -1;
