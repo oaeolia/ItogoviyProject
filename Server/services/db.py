@@ -256,6 +256,16 @@ def check_variant(variant: str, room_id: int) -> bool:
         return data is not None
 
 
+def get_room_word(room_id: int) -> str:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_word FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return ""
+        else:
+            return data[0]
+
+
 def is_painter_last(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT now_painter FROM games_rooms WHERE id = %s AND now_painter=user_5", room_id)

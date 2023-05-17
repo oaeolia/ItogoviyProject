@@ -92,6 +92,14 @@ def get_now_painter(room_id: int) -> int:
     return buffer
 
 
+def get_word(room_id: int, user_id: int) -> str:
+    if get_now_painter(room_id) != user_id:
+        return ''
+    buffer = db.get_room_word(room_id)
+    db.close_now_connection()
+    return buffer
+
+
 def send_canvas(room_id: int, user_id: int, canvas) -> None:
     if db.get_now_painter(room_id) != user_id:
         return

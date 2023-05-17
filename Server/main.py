@@ -161,6 +161,21 @@ def send_canvas() -> Response:
     return Response(json.dumps({'status': settings.RESPONSE_OK}))
 
 
+@app.route(settings.API_URL_MAIN + '/game/get_word', methods=['POST'])
+def get_word() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    word = game.get_word(data['room_id'], session['user_id'])
+    if word == '':
+        return Response(json.dumps({'status': settings.RESPONSE_BAD}))
+    else:
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'word': word}))
+
+
 @app.route(settings.API_URL_MAIN + '/game/get_canvas', methods=['POST'])
 def get_canvas() -> Response:
     data = request.get_json()
