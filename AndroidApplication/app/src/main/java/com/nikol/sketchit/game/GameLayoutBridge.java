@@ -17,6 +17,7 @@ public class GameLayoutBridge {
     private final ActivityMainBinding binding;
     private final MainActivity mainActivity;
     private final ChatLayoutAdapter chatLayoutAdapter;
+    private final ChatLayoutManager chatLayoutManager;
 
 
     public GameLayoutBridge(ActivityMainBinding binding, MainActivity mainActivity) {
@@ -24,9 +25,14 @@ public class GameLayoutBridge {
         this.mainActivity = mainActivity;
 
         chatLayoutAdapter = new ChatLayoutAdapter();
-        binding.layoutChat.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(mainActivity));
+        chatLayoutManager = new ChatLayoutManager(mainActivity);
+        binding.layoutChat.setLayoutManager(chatLayoutManager);
         binding.layoutChat.setAdapter(chatLayoutAdapter);
         binding.layoutChat.setPaintView(binding.paintView);
+
+        chatLayoutManager.setScrollEnabled(true);
+        chatLayoutManager.scrollToPosition(chatLayoutAdapter.getItemCount() - 1);
+        chatLayoutManager.setScrollEnabled(false);
     }
 
     public void setLoadState() {
@@ -35,6 +41,7 @@ public class GameLayoutBridge {
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
+        binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
     }
@@ -46,6 +53,7 @@ public class GameLayoutBridge {
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.inputVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
+        binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(true);
     }
@@ -57,12 +65,15 @@ public class GameLayoutBridge {
         binding.buttonEnterVariant.setVisibility(View.VISIBLE);
         binding.inputVariant.setVisibility(View.VISIBLE);
         binding.imageCanvas.setVisibility(View.VISIBLE);
+        binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
     }
 
     public void updateChat(List<String> message) {
+        chatLayoutManager.setScrollEnabled(true);
         chatLayoutAdapter.getUpdates(message);
+        chatLayoutManager.setScrollEnabled(false);
     }
 
     public void setEnterButtonOnClickListener(View.OnClickListener listener) {
@@ -99,5 +110,26 @@ public class GameLayoutBridge {
 
     public Context getContext() {
         return mainActivity;
+    }
+
+    public void setWord(String word) {
+        binding.textWord.setText(word);
+    }
+
+    static class ChatLayoutManager extends androidx.recyclerview.widget.LinearLayoutManager {
+        private boolean scrolledEnabled;
+
+        public ChatLayoutManager(Context context) {
+            super(context);
+        }
+
+        public void setScrollEnabled(boolean enabled) {
+            scrolledEnabled = enabled;
+        }
+
+        @Override
+        public boolean canScrollVertically() {
+            return scrolledEnabled;
+        }
     }
 }

@@ -85,6 +85,23 @@ public class GameController {
             this.nowPainter = nowPainter;
             if (nowPainter == userId) {
                 uiBridge.setPaintState();
+
+                server.getWord(roomId, new ServerCallback<String, Boolean, Object>() {
+                    @Override
+                    public void onDataReady(String message, Boolean status, Object arg) {
+                        if (status) {
+                            logger.logInfo("Game", "Get word " + message);
+                            uiBridge.setWord(message);
+                        } else {
+                            logger.logError("Game", "Cant get word " + message);
+                        }
+                    }
+                }, new ServerCallback<String, Integer, Object>() {
+                    @Override
+                    public void onDataReady(String message, Integer errorCode, Object arg3) {
+                        logger.logError("Game", "Cant get word " + message);
+                    }
+                });
             } else {
                 uiBridge.setWatchState();
             }
@@ -120,6 +137,22 @@ public class GameController {
                     nowPainter = painter;
                 } else if (message.equals(PAINTER_ROLE)) {
                     uiBridge.setPaintState();
+                    server.getWord(roomId, new ServerCallback<String, Boolean, Object>() {
+                        @Override
+                        public void onDataReady(String message, Boolean status, Object arg) {
+                            if (status) {
+                                logger.logInfo("Game", "Get word " + message);
+                                uiBridge.setWord(message);
+                            } else {
+                                logger.logError("Game", "Cant get word " + message);
+                            }
+                        }
+                    }, new ServerCallback<String, Integer, Object>() {
+                        @Override
+                        public void onDataReady(String message, Integer errorCode, Object arg3) {
+                            logger.logError("Game", "Cant get word " + message);
+                        }
+                    });
                 } else {
                     logger.logInfo("Game", "Can`t read role " + message);
                     return;
