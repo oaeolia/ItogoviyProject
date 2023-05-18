@@ -34,11 +34,11 @@ public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.Ch
     public void getUpdates(List<String> messages) {
         int newMessagesCount = messages.size();
         int lastMessagesCount = this.messages.size();
-        if(newMessagesCount > lastMessagesCount) {
+        if (newMessagesCount > lastMessagesCount) {
             this.messages = messages;
-            if(newMessagesCount - lastMessagesCount > 1) {
+            if (newMessagesCount - lastMessagesCount > 1) {
                 notifyItemRangeInserted(this.messages.size(), newMessagesCount - lastMessagesCount);
-            }else{
+            } else {
                 notifyItemInserted(newMessagesCount - 1);
             }
         }

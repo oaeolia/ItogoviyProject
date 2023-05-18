@@ -73,6 +73,7 @@ public class GameLayoutBridge {
     public void updateChat(List<String> message) {
         chatLayoutManager.setScrollEnabled(true);
         chatLayoutAdapter.getUpdates(message);
+        chatLayoutManager.scrollToPosition(chatLayoutAdapter.getItemCount() - 1);
         chatLayoutManager.setScrollEnabled(false);
     }
 
@@ -100,7 +101,9 @@ public class GameLayoutBridge {
     }
 
     public void updateRecycleViewPosition() {
+        chatLayoutManager.setScrollEnabled(true);
         binding.layoutChat.smoothScrollToPosition(chatLayoutAdapter.getItemCount() - 1);
+        chatLayoutManager.setScrollEnabled(false);
     }
 
     public void setCanvas(byte[] canvas) {

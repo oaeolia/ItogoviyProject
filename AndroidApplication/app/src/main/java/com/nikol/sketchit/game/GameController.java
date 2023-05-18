@@ -32,6 +32,20 @@ public class GameController {
         this.logger = application.getLogger();
         this.userId = application.getUserId();
         this.uiBridge = uiBridge;
+
+        uiBridge.setEnterButtonOnClickListener(view -> {
+            if (!uiBridge.isVariantEmpty()) {
+                logger.logInfo("Game", "Send variant " + uiBridge.getVariant());
+                server.sendVariant(uiBridge.getVariant(), roomId, new ServerCallback<Boolean, String, Boolean>() {
+                    @Override
+                    public void onDataReady(Boolean result, String message, Boolean status) {
+                        if (status && result) {
+                            Toast.makeText(view.getContext(), R.string.message_win, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, null);
+            }
+        });
     }
 
     public void startGame() {
@@ -121,19 +135,6 @@ public class GameController {
             if (status) {
                 if (message.equals(USER_ROLE)) {
                     uiBridge.setWatchState();
-                    uiBridge.setEnterButtonOnClickListener(view -> {
-                        if (!uiBridge.isVariantEmpty()) {
-                            logger.logInfo("Game", "Send variant " + uiBridge.getVariant());
-                            server.sendVariant(uiBridge.getVariant(), roomId, new ServerCallback<Boolean, String, Boolean>() {
-                                @Override
-                                public void onDataReady(Boolean result, String message, Boolean status) {
-                                    if (status && result) {
-                                        Toast.makeText(view.getContext(), R.string.message_win, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }, null);
-                        }
-                    });
                     nowPainter = painter;
                 } else if (message.equals(PAINTER_ROLE)) {
                     uiBridge.setPaintState();
