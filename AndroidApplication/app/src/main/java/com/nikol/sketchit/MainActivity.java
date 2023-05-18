@@ -62,18 +62,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void paintClicked(View view) {
         if (view != currentPaint) {
+            paintView.setErase(false);
             ImageButton imgView = (ImageButton) view;
             String color = view.getTag().toString();
             paintView.setColor(color);
             imgView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint_pressed));
             currentPaint.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.paint));
             currentPaint = (ImageButton) view;
+            paintView.setBrushSize(paintView.getLastBrushSize());
+
         }
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.button_draw) {
+            paintView.setErase(false);
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setContentView(R.layout.dialog_brushchooser);
             ImageButton smallBtn = brushDialog.findViewById(R.id.small_brush);
@@ -84,18 +88,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
             ImageButton mediumBtn = brushDialog.findViewById(R.id.medium_brush);
             mediumBtn.setOnClickListener(v -> {
+                paintView.setErase(false);
                 paintView.setBrushSize(mediumBrush);
                 paintView.setLastBrushSize(mediumBrush);
                 brushDialog.dismiss();
             });
             ImageButton largeBtn = brushDialog.findViewById(R.id.large_brush);
             largeBtn.setOnClickListener(v -> {
+                paintView.setErase(false);
                 paintView.setBrushSize(largeBrush);
                 paintView.setLastBrushSize(largeBrush);
                 brushDialog.dismiss();
             });
             brushDialog.show();
-        } else if (view.getId() == R.id.button_erase) {
+        }
+        else if (view.getId() == R.id.button_erase) {
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setContentView(R.layout.dialog_brushchooser);
             ImageButton smallBtn = brushDialog.findViewById(R.id.small_brush);

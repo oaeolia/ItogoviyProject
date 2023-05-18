@@ -7,21 +7,6 @@
     android:orientation="horizontal"
     tools:context=".MainActivity">
 
-    <com.nikol.sketchit.PaintView
-        android:id="@+id/paint_view"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:background="#FFFFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
-
     <ImageView
         android:id="@+id/image_canvas"
         android:layout_width="0dp"
@@ -38,10 +23,25 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription,MissingConstraints" />
 
+    <com.nikol.sketchit.PaintView
+        android:id="@+id/paint_view"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="50dp"
-        android:layout_height="match_parent"
+        android:layout_width="54dp"
+        android:layout_height="405dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
@@ -59,34 +59,45 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
-                android:background="#138372"
+                android:background="#1FCCB2"
                 android:contentDescription="@string/content_description_brush"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#138372"
+                android:tag="#1FCCB2"
                 tools:ignore="ImageContrastCheck,ImageContrastCheck,DuplicateSpeakableTextCheck" />
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
-                android:background="#FFFFCC00"
+                android:background="#13E86B"
                 android:contentDescription="@string/content_description_erase"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#FFFFCC00"
+                android:tag="#13E86B"
                 tools:ignore="ImageContrastCheck,DuplicateSpeakableTextCheck" />
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
-                android:background="#13E86B"
+                android:background="#FFDF1A"
                 android:contentDescription="@string/content_description_color"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#13E86B"
+                android:tag="#FFDF1A"
                 tools:ignore="ImageContrastCheck,DuplicateSpeakableTextCheck" />
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="2dp"
+                android:background="#F06217"
+                android:contentDescription="@string/content_description_color"
+                android:onClick="paintClicked"
+                android:src="@drawable/paint"
+                android:tag="#F06217"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageButton
                 android:layout_width="50dp"
@@ -102,33 +113,22 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
-                android:background="#FFFF6600"
+                android:background="#E61212"
                 android:contentDescription="@string/content_description_color"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#FFFF6600"
+                android:tag="#E61212"
                 tools:ignore="ImageContrastCheck" />
 
             <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
-                android:background="#E80913"
+                android:background="#9B44FA"
                 android:contentDescription="@string/content_description_color"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#E80913"
-                tools:ignore="ImageContrastCheck" />
-
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="2dp"
-                android:background="#791AE8"
-                android:contentDescription="@string/content_description_color"
-                android:onClick="paintClicked"
-                android:src="@drawable/paint"
-                android:tag="#791AE8"
+                android:tag="#9B44FA"
                 tools:ignore="ImageContrastCheck" />
 
             <ImageButton
@@ -146,11 +146,11 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="2dp"
-                android:background="#FF51BD"
+                android:background="#754227"
                 android:contentDescription="@string/content_description_color"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#FF51BD" />
+                android:tag="#754227" />
 
             <ImageButton
                 android:layout_width="50dp"
@@ -188,7 +188,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:contentDescription="@string/content_description_erase"
-            android:src="@drawable/eraser" />
+            android:src="@drawable/eraser"
+            android:tag="#FFFFFF"/>
     </LinearLayout>
 
     <EditText

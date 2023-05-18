@@ -14,7 +14,7 @@
     <string name="action_start_game_room_finder">Искать комнату</string>
     <string name="action_logout">Выйти из аккаунта</string>
 
-    <string name="message_win">Вы отгодали!</string>
+    <string name="message_win">Вы отгадали!</string>
 
     <string name="message_error_login_invalid_user_data">Неверный логин или пароль</string>
     <string name="message_error_user_name_or_emeail_is_not_free">Имя пользователя или почта заняты</string>
