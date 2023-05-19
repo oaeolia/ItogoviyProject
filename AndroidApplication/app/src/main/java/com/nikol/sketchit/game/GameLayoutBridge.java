@@ -1,23 +1,28 @@
 package com.nikol.sketchit.game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
+import com.nikol.sketchit.Application;
 import com.nikol.sketchit.ChatLayoutAdapter;
 import com.nikol.sketchit.GameMenuActivity;
 import com.nikol.sketchit.MainActivity;
 import com.nikol.sketchit.databinding.ActivityMainBinding;
 
 import java.util.List;
+import java.util.Locale;
 
 public class GameLayoutBridge {
     private final ActivityMainBinding binding;
     private final MainActivity mainActivity;
     private final ChatLayoutAdapter chatLayoutAdapter;
     private final ChatLayoutManager chatLayoutManager;
+
+    private long roundTime = -1;
 
 
     public GameLayoutBridge(ActivityMainBinding binding, MainActivity mainActivity) {
@@ -41,6 +46,7 @@ public class GameLayoutBridge {
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
+        binding.textTime.setVisibility(View.INVISIBLE);
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
@@ -53,9 +59,11 @@ public class GameLayoutBridge {
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.inputVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
+        binding.textTime.setVisibility(View.VISIBLE);
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(true);
+        startRoundTimer();
     }
 
     public void setWatchState() {
@@ -65,9 +73,11 @@ public class GameLayoutBridge {
         binding.buttonEnterVariant.setVisibility(View.VISIBLE);
         binding.inputVariant.setVisibility(View.VISIBLE);
         binding.imageCanvas.setVisibility(View.VISIBLE);
+        binding.textTime.setVisibility(View.VISIBLE);
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
+        startRoundTimer();
     }
 
     public void updateChat(List<String> message) {
@@ -101,6 +111,9 @@ public class GameLayoutBridge {
     }
 
     public void updateRecycleViewPosition() {
+        if (chatLayoutManager.getItemCount() <= 0) {
+            return;
+        }
         chatLayoutManager.setScrollEnabled(true);
         binding.layoutChat.smoothScrollToPosition(chatLayoutAdapter.getItemCount() - 1);
         chatLayoutManager.setScrollEnabled(false);
@@ -133,6 +146,31 @@ public class GameLayoutBridge {
         @Override
         public boolean canScrollVertically() {
             return scrolledEnabled;
+        }
+    }
+
+    public void startRoundTimer() {
+        roundTime = System.currentTimeMillis();
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void updateTime() {
+        if (roundTime == -1) {
+            return;
+        }
+
+        long freeTime = Application.ROUND_SECONDS_TIME - (System.currentTimeMillis() - roundTime) / 1000;
+        if (freeTime <= 0) {
+            binding.textTime.setText("00:00");
+            return;
+        }
+
+        if (freeTime >= 60) {
+            long minutes = freeTime / 60;
+            long seconds = freeTime % 60;
+            binding.textTime.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
+        } else {
+            binding.textTime.setText(String.format(Locale.getDefault(), "00:%02d", freeTime));
         }
     }
 }

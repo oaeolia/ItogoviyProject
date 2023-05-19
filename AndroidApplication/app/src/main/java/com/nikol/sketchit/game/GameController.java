@@ -81,15 +81,15 @@ public class GameController {
             }
         }, null);
 
-        server.getStatusOfRoom(roomId, new ServerCallback<Integer, Integer, Boolean>() {
+        server.getStatusOfRoom(roomId, new ServerCallback<Integer, Integer, String>() {
             @Override
-            public void onDataReady(Integer gameStatus, Integer nowPainter, Boolean responseStatus) {
-                serverUpdate(nowPainter, gameStatus);
+            public void onDataReady(Integer gameStatus, Integer nowPainter, String message) {
+                serverUpdate(nowPainter, gameStatus, message);
             }
         }, null);
     }
 
-    private void serverUpdate(int nowPainter, int isNotEnd) {
+    private void serverUpdate(int nowPainter, int isNotEnd, String message) {
         if (isNotEnd != 1) {
             exitFromGame();
             return;
@@ -97,6 +97,7 @@ public class GameController {
 
         if (nowPainter != this.nowPainter) {
             this.nowPainter = nowPainter;
+            Toast.makeText(uiBridge.getContext(), message, Toast.LENGTH_SHORT).show();
             if (nowPainter == userId) {
                 uiBridge.setPaintState();
 
@@ -125,7 +126,7 @@ public class GameController {
 
     public void exitFromGame() {
         logger.logInfo("Game", "Exit from game");
-        Toast.makeText(uiBridge.getContext(), "Exit from game", Toast.LENGTH_SHORT).show();
+        Toast.makeText(uiBridge.getContext(), R.string.message_game_end, Toast.LENGTH_SHORT).show();
         uiBridge.endGame();
     }
 

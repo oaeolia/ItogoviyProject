@@ -6,6 +6,7 @@ import com.nikol.sketchit.server.Server;
 
 public class Application extends android.app.Application {
     public static final String PREFERENCES_FILE_NAME = "preferences";
+    public static final int ROUND_SECONDS_TIME = 90;
 
     private Server server;
     private final ILogger logger;

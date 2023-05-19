@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -22,7 +23,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String ROOM_ID_INTENT_KEY = "roomId";
 
-    private ImageButton currentPaint, drawBtn, eraseBtn;
+    private ImageButton currentPaint;
     private PaintView paintView;
     private int smallBrush;
     private float mediumBrush;
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         smallBrush = getResources().getInteger(R.integer.small_size);
         mediumBrush = getResources().getInteger(R.integer.medium_size);
         largeBrush = getResources().getInteger(R.integer.large_size);
-        drawBtn = findViewById(R.id.button_draw);
-        eraseBtn = findViewById(R.id.button_erase);
+        ImageButton drawBtn = findViewById(R.id.button_draw);
+        ImageButton eraseBtn = findViewById(R.id.button_erase);
         drawBtn.setOnClickListener(this);
         eraseBtn.setOnClickListener(this);
         paintView.setBrushSize(mediumBrush);
@@ -137,6 +138,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // For game system
+    public void setEnableDraw(boolean enable) {
+        binding.paintView.setEnabledDraw(enable);
+    }
+
+    private void setTimeUpdater(GameLayoutBridge uiBridge) {
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                uiBridge.updateTime();
+                handler.postDelayed(this, 1000);
+            }
+        };
+
+        handler.post(runnable);
+    }
+
     private void createGameController(ActivityMainBinding binding, int roomId) {
         GameLayoutBridge bridge = new GameLayoutBridge(binding, this);
         GameController controller = new GameController(roomId, bridge, this);
@@ -148,9 +166,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 controller.update();
             }
         }, 0, 3000);
-    }
-
-    public void setEnableDraw(boolean enable) {
-        binding.paintView.setEnabledDraw(enable);
+        setTimeUpdater(bridge);
     }
 }

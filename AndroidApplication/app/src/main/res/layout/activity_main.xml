@@ -225,10 +225,29 @@
         android:id="@+id/textWord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:textColor="@color/black"
         android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/barrierMainDataForPainter"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierMainDataForPainter"
+        android:orientation="horizontal"
+        android:layout_width="16dp"
+        android:layout_height="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/barrierMainDataForPainter"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.nikol.sketchit.ChatRecycleView

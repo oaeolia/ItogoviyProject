@@ -400,7 +400,7 @@ public class Server {
         requestQueue.add(request);
     }
 
-    public void getStatusOfRoom(int roomId, ServerCallback<Integer, Integer, Boolean> callback, ServerCallback<String, Integer, Object> errorCallback) {
+    public void getStatusOfRoom(int roomId, ServerCallback<Integer, Integer, String> callback, ServerCallback<String, Integer, Object> errorCallback) {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("session_id", sessionId);
@@ -415,9 +415,9 @@ public class Server {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
                     if (responseData.has("now_painter")) {
-                        callback.onDataReady(responseData.getInt("game_status"), responseData.getInt("now_painter"), true);
+                        callback.onDataReady(responseData.getInt("game_status"), responseData.getInt("now_painter"), responseData.getString("message"));
                     } else {
-                        callback.onDataReady(responseData.getInt("game_status"), null, false);
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
                     }
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(null, null, null);
