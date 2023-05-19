@@ -30,6 +30,7 @@ def get_connection() -> Connection:
 def close_now_connection() -> None:
     global now_connection
     if now_connection is not None:
+        # noinspection PyBroadException
         try:
             now_connection.close()
         except Exception:
@@ -214,6 +215,8 @@ def set_drawer(room_id: int) -> None:
         elif data[0] == data[4]:
             cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[5], room_id))
 
+        cursor.execute("UPDATE games_rooms SET start_time = NOW() WHERE id = %s", room_id)
+
         cursor.connection.commit()
 
 
@@ -297,6 +300,8 @@ def next_painter(room_id: int) -> None:
         else:
             return
 
+        cursor.execute("UPDATE games_rooms SET start_time = NOW() WHERE id = %s", room_id)
+
         cursor.connection.commit()
 
 
@@ -308,6 +313,32 @@ def is_room_started(room_id: int) -> int:
             return -1
         else:
             return 1 if data[0] else 0
+
+
+def is_time_end_in_room(room_id: int) -> bool:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_time < NOW() - INTERVAL 90 SECOND;", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return False
+        else:
+            return True
+
+
+def get_room_status_message(room_id: int) -> str:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT message FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return ""
+        else:
+            return data[0]
+
+
+def set_room_status_message(message: str, room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("UPDATE games_rooms SET message = %s WHERE id = %s", (message, room_id))
+        cursor.connection.commit()
 
 
 def send_message(message: str, room_id: int) -> None:

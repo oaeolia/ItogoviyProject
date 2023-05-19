@@ -62,20 +62,24 @@ def get_messages(room_id: int) -> list[str]:
     return data
 
 
-def next_drawer(room_id: int) -> None:
+def next_drawer(room_id: int) -> bool:
     if db.is_painter_last(room_id):
         db.stop_room(room_id)
-        return
+        return True
 
     db.next_painter(room_id)
+    db.auto_set_room_word(room_id)
     db.close_now_connection()
+    return False
 
 
 def try_variant(variant: str, room_id: int) -> bool:
     buffer = db.check_variant(variant, room_id)
     db.send_message(variant.lower().strip(), room_id)
     if buffer:
+        db.set_room_status_message("Слово угадано!", room_id)
         next_drawer(room_id)
+        db.auto_set_room_word(room_id)
     db.close_now_connection()
     return buffer
 
@@ -83,7 +87,25 @@ def try_variant(variant: str, room_id: int) -> bool:
 def get_status(room_id: int) -> int:
     buffer = db.is_room_started(room_id)
     db.close_now_connection()
+    if buffer == 1:
+        if check_for_end_time(room_id):
+            return -1
     return buffer
+
+
+def get_room_status_message(room_id: int) -> str:
+    message = db.get_room_status_message(room_id)
+    db.close_now_connection()
+    return message
+
+
+def check_for_end_time(room_id: int) -> bool:
+    buffer = db.is_time_end_in_room(room_id)
+    if buffer:
+        db.set_room_status_message("Время закончилось! Правильный ответ: " + db.get_room_word(room_id), room_id)
+        buffer = next_drawer(room_id)
+        return buffer
+    return False
 
 
 def get_now_painter(room_id: int) -> int:

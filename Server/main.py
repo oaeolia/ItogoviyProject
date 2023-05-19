@@ -148,7 +148,8 @@ def get_status() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status}))
 
     now_painter = game.get_now_painter(data['room_id'])
-    return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter}))
+    message = game.get_room_status_message(data['room_id'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter, 'message': message}))
 
 
 @app.route(settings.API_URL_MAIN + '/game/send_canvas', methods=['POST'])
