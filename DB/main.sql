@@ -44,6 +44,8 @@ CREATE TABLE `games_rooms`
     `checked_user_4`     boolean                                                        NOT NULL DEFAULT 0,
     `checked_user_5`     boolean                                                        NOT NULL DEFAULT 0,
     `start_checked_time` DATETIME,
+    `start_time`         DATETIME,
+    `message`            VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL DEFAULT '',
     `now_painter`        INT UNSIGNED,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_1`) REFERENCES `users` (`id`) ON DELETE CASCADE,
