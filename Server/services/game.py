@@ -20,6 +20,10 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
         if not db.game_room_set_user_checked(room_id, user_id):
             return ''
     elif buffer == 'WAITING_CHECK':
+        buffer = db.check_room_for_freeze(room_id)
+        if buffer != 'WAITING_CHECK':
+            db.close_now_connection()
+            return buffer
         if not db.game_room_set_user_checked(room_id, user_id):
             return ''
         if db.check_game_room(room_id):

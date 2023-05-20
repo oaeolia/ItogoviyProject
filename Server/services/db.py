@@ -347,6 +347,31 @@ def send_message(message: str, room_id: int) -> None:
         cursor.connection.commit()
 
 
+def check_room_for_freeze(room_id: int) -> str:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return 'WAITING_CHECK'
+        else:
+            cursor.execute("UPDATE games_rooms SET start_checked_time = NULL WHERE id = %s", room_id)
+            cursor.execute('SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5 FROM games_rooms WHERE id = %s', room_id)
+            data = cursor.fetchone()
+            if not data[0]:
+                cursor.execute('UPDATE games_rooms SET user_1 = NULL WHERE id = %s', room_id)
+            elif not data[1]:
+                cursor.execute('UPDATE games_rooms SET user_2 = NULL WHERE id = %s', room_id)
+            elif not data[2]:
+                cursor.execute('UPDATE games_rooms SET user_3 = NULL WHERE id = %s', room_id)
+            elif not data[3]:
+                cursor.execute('UPDATE games_rooms SET user_4 = NULL WHERE id = %s', room_id)
+            elif not data[4]:
+                cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
+            cursor.execute('UPDATE games_rooms SET checked_user_1 = 0, checked_user_2 = 0, checked_user_3 = 0, checked_user_4 = 0, checked_user_5 = 0 WHERE id = %s', room_id)
+            cursor.connection.commit()
+            return 'WAITING'
+
+
 def check_game_check_user_state(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT id FROM games_rooms WHERE id = %s AND checked_user_1 = 1 AND checked_user_2 = 1 AND  checked_user_3 = 1 AND  checked_user_4 = 1 AND  checked_user_5 = 1 AND ", room_id)
