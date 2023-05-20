@@ -35,29 +35,30 @@
             android:id="@+id/button_room_find_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#25E8E6"
             android:text="@string/action_start_game_room_finder"
+            android:textColor="#000000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:backgroundTint="#25E8E6"
-            android:textColor="#000000"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="#25E8E6"
             android:text="@string/action_logout"
+            android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_room_find_start"
-            android:backgroundTint="#25E8E6"
-            android:textColor="#000000" />
+            app:layout_constraintTop_toBottomOf="@+id/button_room_find_start" />
 
         <ImageView
             android:layout_width="261dp"
             android:layout_height="234dp"
-            android:src="@drawable/ic_people_point_to"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_stickman_pointing_with_finger"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/button_room_find_start"
             tools:ignore="MissingConstraints"
@@ -66,7 +67,8 @@
         <ImageView
             android:layout_width="133dp"
             android:layout_height="85dp"
-            android:src="@drawable/ic_battle"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_stickman_argue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -39,6 +39,4 @@
     <string name="content_description_erase">Ластик</string>
     <string name="content_description_color">Цвет</string>
     <string name="content_description_enter_variant">Введите вариант</string>
-    <string name="content_description_people_holding_sign">Человек держит табличу</string>
-    <string name="content_description_application_icon">SketchIt иконка</string>
 </resources>

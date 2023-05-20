@@ -9,7 +9,8 @@
     <ImageView
         android:layout_width="294dp"
         android:layout_height="307dp"
-        android:src="@drawable/ic_people_thinks"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_stickman_thinking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/layout_buttons"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,12 +24,12 @@
         android:gravity="center_horizontal"
         android:textColor="@color/design_default_color_error"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/layout_input_fileds"
-        app:layout_constraintEnd_toEndOf="@+id/layout_input_fileds"
-        app:layout_constraintStart_toStartOf="@+id/layout_input_fileds" />
+        app:layout_constraintBottom_toTopOf="@+id/layout_input_fields"
+        app:layout_constraintEnd_toEndOf="@+id/layout_input_fields"
+        app:layout_constraintStart_toStartOf="@+id/layout_input_fields" />
 
     <LinearLayout
-        android:id="@+id/layout_input_fileds"
+        android:id="@+id/layout_input_fields"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="216dp"
@@ -84,36 +85,36 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/layout_input_fileds"
-        app:layout_constraintStart_toEndOf="@+id/layout_input_fileds"
-        app:layout_constraintTop_toTopOf="@+id/layout_input_fileds">
+        app:layout_constraintBottom_toBottomOf="@+id/layout_input_fields"
+        app:layout_constraintStart_toEndOf="@+id/layout_input_fields"
+        app:layout_constraintTop_toTopOf="@+id/layout_input_fields">
 
         <Button
             android:id="@+id/button_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:backgroundTint="#25E8E6"
             android:enabled="false"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/action_register"
             android:textAllCaps="false"
-            android:textSize="12sp"
-            android:backgroundTint="#25E8E6"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/button_go_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:backgroundTint="#25E8E6"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/action_go_to_login"
             android:textAllCaps="false"
-            android:textSize="12sp"
-            android:backgroundTint="#25E8E6"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="12sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
