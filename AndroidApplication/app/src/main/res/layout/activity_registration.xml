@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".RegistrationActivity">
 
+    <ImageView
+        android:layout_width="294dp"
+        android:layout_height="307dp"
+        android:src="@drawable/ic_2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/layout_buttons"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
     <TextView
         android:id="@+id/text_message"
         android:layout_width="0dp"
@@ -89,7 +98,9 @@
             android:paddingBottom="10dp"
             android:text="@string/action_register"
             android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:backgroundTint="#25E8E6"
+            android:textColor="#000000" />
 
         <Button
             android:id="@+id/button_go_login"
@@ -100,7 +111,9 @@
             android:paddingBottom="10dp"
             android:text="@string/action_go_to_login"
             android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:backgroundTint="#25E8E6"
+            android:textColor="#000000" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

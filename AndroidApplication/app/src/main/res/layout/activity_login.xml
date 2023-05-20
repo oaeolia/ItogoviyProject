@@ -59,6 +59,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -72,6 +73,7 @@
             android:id="@+id/button_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#25E8E6"
             android:enabled="false"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
@@ -83,10 +85,12 @@
             android:id="@+id/button_go_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#25E8E6"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/action_go_to_registration"
             android:textAllCaps="false"
+            android:textColor="#090909"
             android:textSize="12sp" />
 
         <Button
@@ -97,12 +101,12 @@
             android:textAllCaps="false" />
 
         <!--        <Button-->
-<!--            android:id="@+id/button_test_go_paint"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Test paint"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:textSize="12sp" />-->
+        <!--            android:id="@+id/button_test_go_paint"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Test paint"-->
+        <!--            android:textAllCaps="false"-->
+        <!--            android:textSize="12sp" />-->
 
     </LinearLayout>
 
@@ -114,8 +118,10 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <ProgressBar
             style="?android:attr/progressBarStyle"
@@ -125,6 +131,29 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="111dp"
+        android:layout_height="201dp"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar_layout"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="76dp"
+        android:foregroundGravity="center_vertical"
+        android:src="@drawable/ic_sketch_it"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
