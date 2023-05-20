@@ -57,7 +57,7 @@
         <ImageView
             android:layout_width="261dp"
             android:layout_height="234dp"
-            android:src="@drawable/ic_8"
+            android:src="@drawable/ic_people_point_to"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/button_room_find_start"
             tools:ignore="MissingConstraints"
@@ -66,7 +66,7 @@
         <ImageView
             android:layout_width="133dp"
             android:layout_height="85dp"
-            android:src="@drawable/ic_3"
+            android:src="@drawable/ic_battle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

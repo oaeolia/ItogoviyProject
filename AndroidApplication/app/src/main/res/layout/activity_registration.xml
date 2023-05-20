@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="294dp"
         android:layout_height="307dp"
-        android:src="@drawable/ic_2"
+        android:src="@drawable/ic_people_thinks"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/layout_buttons"
         app:layout_constraintStart_toStartOf="parent"
