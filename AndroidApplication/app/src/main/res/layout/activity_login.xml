@@ -140,7 +140,7 @@
         android:layout_width="111dp"
         android:layout_height="201dp"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_1"
+        android:src="@drawable/ic_stickman_with_board"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="@+id/progress_bar_layout"
