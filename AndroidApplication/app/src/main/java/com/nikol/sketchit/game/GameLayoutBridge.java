@@ -47,6 +47,7 @@ public class GameLayoutBridge {
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
         binding.textTime.setVisibility(View.INVISIBLE);
+        binding.paintView.setVisibility(View.VISIBLE);
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
@@ -60,6 +61,7 @@ public class GameLayoutBridge {
         binding.inputVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
         binding.textTime.setVisibility(View.VISIBLE);
+        binding.paintView.setVisibility(View.VISIBLE);
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(true);
@@ -74,6 +76,7 @@ public class GameLayoutBridge {
         binding.inputVariant.setVisibility(View.VISIBLE);
         binding.imageCanvas.setVisibility(View.VISIBLE);
         binding.textTime.setVisibility(View.VISIBLE);
+        binding.paintView.setVisibility(View.INVISIBLE);
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
