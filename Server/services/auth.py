@@ -10,7 +10,7 @@ import re
 def auth(login: str, password: str) -> str | tuple[str, int, str, int, int]:
     name_re = re.compile(r'^[a-zA-Zа-яА-Я0-9_-]{3,20}$')
     email_re = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
-    if re.match(name_re, login) is None and re.match(email_re, login):
+    if re.match(name_re, login) is None and re.match(email_re, login) is None:
         return 'Login is not valid'
 
     password = hashlib.sha256(password.encode()).hexdigest()
