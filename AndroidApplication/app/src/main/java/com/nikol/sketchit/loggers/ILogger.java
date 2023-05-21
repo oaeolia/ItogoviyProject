@@ -6,11 +6,11 @@ different types of logging can be useful in different situations. The usual cons
 the program or sending to the server for further analysis and processing
  */
 public interface ILogger {
-    public void logDebug(String tag, String message);
+    void logDebug(String tag, String message);
 
-    public void logInfo(String tag, String message);
+    void logInfo(String tag, String message);
 
-    public void logWarming(String tag, String message);
+    void logWarming(String tag, String message);
 
-    public void logError(String tag, String message);
+    void logError(String tag, String message);
 }

@@ -530,7 +530,7 @@ public class Server {
             if (errorCallback != null) {
                 errorCallback.onDataReady("Server undefined error (try send variant)", null, null);
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> map = new HashMap<>();
@@ -547,7 +547,7 @@ public class Server {
                     jsonBody.put("session_id", sessionId);
                     jsonBody.put("session_token", sessionToken);
                     jsonBody.put("room_id", roomId);
-                }catch (JSONException e) {
+                } catch (JSONException e) {
                     return null;
                 }
 

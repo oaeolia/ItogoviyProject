@@ -2,7 +2,7 @@ package com.nikol.sketchit.loggers;
 
 import android.util.Log;
 
-public class ConsoleLogger implements ILogger{
+public class ConsoleLogger implements ILogger {
     @Override
     public void logDebug(String tag, String message) {
         Log.d(tag, message);

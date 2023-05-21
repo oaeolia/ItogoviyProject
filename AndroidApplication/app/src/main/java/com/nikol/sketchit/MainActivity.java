@@ -37,13 +37,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         // For game system
-//        TODO: Remake (this is only for test)
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-        if (intent.hasExtra("roomId")) {
-            createGameController(binding, intent.getIntExtra("roomId", -1));
-        }
+
+        assert intent.hasExtra(ROOM_ID_INTENT_KEY);
+
+        createGameController(binding, intent.getIntExtra(ROOM_ID_INTENT_KEY, -1));
 
 
         paintView = findViewById(R.id.paint_view);
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 controller.update();
             }
-        }, 0, 3000);
+        }, 0, 1500);
         setTimeUpdater(bridge);
     }
 }

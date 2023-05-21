@@ -162,7 +162,6 @@ public class GameController {
                 logger.logInfo("Game", "Get role " + message);
             } else {
                 logger.logWarming("Game", "Cant get role " + message);
-//                TODO: Add error screen
                 // Try again
                 server.getRole(roomId, this, new GetRoleServerErrorCallback());
             }

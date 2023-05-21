@@ -15,13 +15,13 @@ import com.nikol.sketchit.server.Server;
 import com.nikol.sketchit.server.ServerCallback;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final String APPLICATION_ID_PREFERENCE_NAME = "application_id";
+    private static final String APPLICATION_TOKEN_PREFERENCE_NAME = "application_token";
+
     private ActivityLoginBinding binding;
     private Server server;
     private ILogger logger;
     private boolean waitingResponse;
-
-    private static final String APPLICATION_ID_PREFERENCE_NAME = "application_id";
-    private static final String APPLICATION_TOKEN_PREFERENCE_NAME = "application_token";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +68,6 @@ public class LoginActivity extends AppCompatActivity {
         binding.buttonGoRegistration.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
-        });
-
-//        TODO: Remove! (only for test)
-        binding.buttonTestPaint.setOnClickListener(view -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
         });
     }
 

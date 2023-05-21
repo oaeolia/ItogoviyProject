@@ -1,5 +1,6 @@
 package com.nikol.sketchit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,20 +16,16 @@ import android.view.View;
 
 public class PaintView extends View {
 
-    private static Paint mPaint;
+    private static Paint paint;
     private int paintColor = 0xFF660000;
     public static final int DEFAULT_BG_COLOR = Color.WHITE;
-    private float mX, mY;
-    private Path mPath;
+    private Path path;
     private Paint canvasPaint;
-    private int backgroundColor = DEFAULT_BG_COLOR;
-    private Bitmap mBitmap;
-    private Canvas mCanvas;
-    private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+    private Bitmap bitmap;
+    private Canvas canvas;
     private float brushSize, lastBrushSize;
-    private boolean erase = false;
 
-    //    For game system
+    // For game system
     private boolean isDrawEnabled = true;
 
     public PaintView(Context context, AttributeSet attrs) {
@@ -37,14 +34,14 @@ public class PaintView extends View {
     }
 
     private void setupDrawing() {
-        mPath = new Path();
-        mPaint = new Paint();
-        mPaint.setColor(paintColor);
-        mPaint.setAntiAlias(true);
-        mPaint.setStrokeWidth(brushSize);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
+        path = new Path();
+        paint = new Paint();
+        paint.setColor(paintColor);
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(brushSize);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeJoin(Paint.Join.ROUND);
+        paint.setStrokeCap(Paint.Cap.ROUND);
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
         brushSize = getResources().getInteger(R.integer.medium_size);
@@ -52,9 +49,8 @@ public class PaintView extends View {
     }
 
     public void setBrushSize(float newSize) {
-        float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, getResources().getDisplayMetrics());
-        brushSize = pixelAmount;
-        mPaint.setStrokeWidth(brushSize);
+        brushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, getResources().getDisplayMetrics());
+        paint.setStrokeWidth(brushSize);
     }
 
     public void setLastBrushSize(float lastSize) {
@@ -66,30 +62,30 @@ public class PaintView extends View {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        mCanvas = new Canvas(mBitmap);
+    protected void onSizeChanged(int w, int h, int oldWidth, int oldHeight) {
+        super.onSizeChanged(w, h, oldWidth, oldHeight);
+        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(bitmap);
     }
 
     public void setColor(String newColor) {
         invalidate();
         paintColor = Color.parseColor(newColor);
-        mPaint.setColor(paintColor);
+        paint.setColor(paintColor);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(mBitmap, 0, 0, canvasPaint);
-        canvas.drawPath(mPath, mPaint);
+        canvas.drawBitmap(bitmap, 0, 0, canvasPaint);
+        canvas.drawPath(path, paint);
     }
 
     public void setErase(boolean isErase) {
-        erase = isErase;
-        if (erase) mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        else mPaint.setXfermode(null);
+        if (isErase) paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        else paint.setXfermode(null);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (isDrawEnabled) {
@@ -105,18 +101,16 @@ public class PaintView extends View {
         if (!isDrawEnabled) {
             return false;
         }
-        mX = x;
-        mY = y;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mPath.moveTo(mX, mY);
+                path.moveTo(x, y);
                 break;
             case MotionEvent.ACTION_MOVE:
-                mPath.lineTo(mX, mY);
+                path.lineTo(x, y);
                 break;
             case MotionEvent.ACTION_UP:
-                mCanvas.drawPath(mPath, mPaint);
-                mPath.reset();
+                canvas.drawPath(path, paint);
+                path.reset();
                 break;
             default:
                 return true;
@@ -124,20 +118,19 @@ public class PaintView extends View {
         return false;
     }
 
-    //    For game system
+    // For game system
     public void setEnabledDraw(boolean isEnabled) {
         isDrawEnabled = isEnabled;
     }
 
     public void clear() {
-        if (mCanvas != null) {
-            backgroundColor = DEFAULT_BG_COLOR;
-            mCanvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
+        if (canvas != null) {
+            canvas.drawColor(DEFAULT_BG_COLOR, PorterDuff.Mode.CLEAR);
             invalidate();
         }
     }
 
     public Bitmap getCanvas() {
-        return mBitmap;
+        return bitmap;
     }
 }

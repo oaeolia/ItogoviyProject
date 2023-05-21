@@ -150,7 +150,8 @@
                 android:contentDescription="@string/content_description_color"
                 android:onClick="paintClicked"
                 android:src="@drawable/paint"
-                android:tag="#754227" />
+                android:tag="#754227"
+                tools:ignore="ImageContrastCheck" />
 
             <ImageButton
                 android:layout_width="50dp"
@@ -180,6 +181,7 @@
             android:id="@+id/button_draw"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:backgroundTint="@android:color/darker_gray"
             android:contentDescription="@string/content_description_brush"
             android:src="@drawable/brush" />
 
@@ -187,9 +189,10 @@
             android:id="@+id/button_erase"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:backgroundTint="@android:color/darker_gray"
             android:contentDescription="@string/content_description_erase"
             android:src="@drawable/eraser"
-            android:tag="#FFFFFF"/>
+            android:tag="#FFFFFF" />
     </LinearLayout>
 
     <EditText
@@ -213,6 +216,7 @@
         android:id="@+id/button_enter_variant"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:backgroundTint="@android:color/darker_gray"
         android:contentDescription="@string/content_description_enter_variant"
         android:scaleType="centerCrop"
         android:src="@drawable/icon_enter"
@@ -233,9 +237,9 @@
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierMainDataForPainter"
-        android:orientation="horizontal"
         android:layout_width="16dp"
         android:layout_height="10dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

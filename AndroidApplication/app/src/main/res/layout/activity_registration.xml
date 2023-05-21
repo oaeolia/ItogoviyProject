@@ -7,14 +7,27 @@
     tools:context=".RegistrationActivity">
 
     <ImageView
-        android:layout_width="294dp"
-        android:layout_height="307dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="-50dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_stickman_thinking"
+        android:scaleType="fitEnd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/layout_buttons"
+        app:layout_constraintEnd_toStartOf="@+id/layout_input_fields"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="@+id/layout_input_fields"
+        app:srcCompat="@drawable/ic_stickman_with_question" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="@+id/layout_buttons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/layout_buttons"
+        app:layout_constraintTop_toTopOf="@+id/layout_buttons"
+        app:srcCompat="@drawable/ic_stickman_pointing_with_finger" />
 
     <TextView
         android:id="@+id/text_message"
@@ -26,18 +39,20 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/layout_input_fields"
         app:layout_constraintEnd_toEndOf="@+id/layout_input_fields"
-        app:layout_constraintStart_toStartOf="@+id/layout_input_fields" />
+        app:layout_constraintStart_toStartOf="@+id/layout_input_fields"
+        tools:ignore="VisualLintBounds" />
 
     <LinearLayout
         android:id="@+id/layout_input_fields"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="216dp"
+        android:layout_marginEnd="250dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="VisualLintBounds">
 
         <EditText
             android:id="@+id/input_username"
@@ -83,24 +98,23 @@
         android:id="@+id/layout_buttons"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="50dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/layout_input_fields"
         app:layout_constraintStart_toEndOf="@+id/layout_input_fields"
-        app:layout_constraintTop_toTopOf="@+id/layout_input_fields">
+        app:layout_constraintTop_toTopOf="@+id/layout_input_fields"
+        tools:ignore="VisualLintBounds">
 
         <Button
             android:id="@+id/button_registration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#25E8E6"
             android:enabled="false"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/action_register"
             android:textAllCaps="false"
-            android:textColor="#000000"
             android:textSize="12sp" />
 
         <Button
@@ -108,12 +122,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#25E8E6"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/action_go_to_login"
             android:textAllCaps="false"
-            android:textColor="#000000"
             android:textSize="12sp" />
     </LinearLayout>
 

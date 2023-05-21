@@ -8,11 +8,11 @@ public class Application extends android.app.Application {
     public static final String PREFERENCES_FILE_NAME = "preferences";
     public static final int ROUND_SECONDS_TIME = 90;
 
-    private Server server;
     private final ILogger logger;
+    private Server server;
     private int userId;
 
-    public Application(){
+    public Application() {
         logger = new ConsoleLogger();
     }
 
@@ -22,11 +22,11 @@ public class Application extends android.app.Application {
         server = new Server(this, logger);
     }
 
-    public Server getServer(){
+    public Server getServer() {
         return server;
     }
 
-    public ILogger getLogger(){
+    public ILogger getLogger() {
         return logger;
     }
 
