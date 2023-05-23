@@ -13,11 +13,13 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/rules_button"
+            android:id="@+id/button_rules"
             android:layout_width="115dp"
             android:layout_height="75dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/circle_button"
-            android:text="@string/game_rules"
+            android:text="@string/action_game_rules"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

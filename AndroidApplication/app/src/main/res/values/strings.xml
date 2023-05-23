@@ -6,6 +6,7 @@
     <string name="title_email_input">Почта</string>
     <string name="title_password_input">Пароль</string>
     <string name="title_variant">Вариант</string>
+    <string name="title_rules">Правила</string>
 
     <string name="action_login">Войти</string>
     <string name="action_register">Зарегистрироваться</string>
@@ -13,7 +14,7 @@
     <string name="action_go_to_login">Уже есть аккаунт? Войти</string>
     <string name="action_start_game_room_finder">Искать комнату</string>
     <string name="action_logout">Выйти из аккаунта</string>
-    <string name="game_rules">Правила игры</string>
+    <string name="action_game_rules">Правила игры</string>
 
     <string name="message_win">Вы отгадали!</string>
     <string name="message_game_end">Игра закончилась</string>
@@ -31,6 +32,11 @@
     <string name="message_error_register_email_is_now_valid">Введите корректный email</string>
     <string name="message_error_cant_auto_login">Не получается войти в аккаунт</string>
     <string name="message_error_cant_login">Не удаётся авторизоваться на сервере. Повторите попытку позже</string>
+    <string name="message_rules">Для того, что бы начать игру надо нажать «найти комнату», после этого начнется ожидание остальных игроков. Когда все пять игроков будут собраны в одной комнате, начнется игра. В каждом раунде, включая первый, будет выбран один ведущий - игрок, который будет изображать загаданное слово.
+Если Вы ведущий, Ваша задача изобразить загаданное слово за 90 секунд. Время и слово будут видны Вам сверху игрового поля.
+Если Вы угадывающий игрок, Ваша задача писать Ваши варианты загаданного слова в чате слева.
+Когда слово будет угадано, на экране появится оповещение об этом. Если же слово угадать ни у одного из игроков не удалось, появится оповещение с правильным ответом.
+По прошествии пяти раундов игра завершится.</string>
 
     <string name="sml">Small</string>
     <string name="med">Medium</string>

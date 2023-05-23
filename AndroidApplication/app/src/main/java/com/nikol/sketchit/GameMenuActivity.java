@@ -3,8 +3,8 @@ package com.nikol.sketchit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nikol.sketchit.databinding.ActivityGameMenuBinding;
@@ -55,11 +55,18 @@ public class GameMenuActivity extends AppCompatActivity {
             }
         }));
 
-        Button rulesButton = findViewById(R.id.rules_button);
-        rulesButton.setOnClickListener(v -> {
-            RulesFragment rulesFragment = new RulesFragment();
-            rulesFragment.show(getSupportFragmentManager(), "rules_dialog");
-        });
+        binding.buttonRules.setOnClickListener(this::showRules);
+    }
+
+    private void showRules(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title_rules);
+        builder.setMessage(R.string.message_rules);
+
+        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 
