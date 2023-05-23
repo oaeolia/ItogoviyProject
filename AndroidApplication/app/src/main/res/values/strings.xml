@@ -13,6 +13,7 @@
     <string name="action_go_to_login">Уже есть аккаунт? Войти</string>
     <string name="action_start_game_room_finder">Искать комнату</string>
     <string name="action_logout">Выйти из аккаунта</string>
+    <string name="game_rules">Правила игры</string>
 
     <string name="message_win">Вы отгадали!</string>
     <string name="message_game_end">Игра закончилась</string>

@@ -3,6 +3,7 @@ package com.nikol.sketchit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -53,6 +54,12 @@ public class GameMenuActivity extends AppCompatActivity {
                 logger.logError("GameMenu", "Can`t waiting room: " + message);
             }
         }));
+
+        Button rulesButton = findViewById(R.id.rules_button);
+        rulesButton.setOnClickListener(v -> {
+            RulesFragment rulesFragment = new RulesFragment();
+            rulesFragment.show(getSupportFragmentManager(), "rules_dialog");
+        });
     }
 
 
