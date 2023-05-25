@@ -103,9 +103,23 @@
         android:background="@color/gentle_white_dark"
         android:visibility="invisible">
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_waiting_for_room"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar2"
+            app:layout_constraintEnd_toEndOf="@+id/progressBar2"
+            app:layout_constraintStart_toStartOf="@+id/progressBar2"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ProgressBar
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:id="@+id/progressBar2"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_marginTop="70dp"
             android:indeterminate="true"
             android:indeterminateTint="@color/teal_700"
             android:indeterminateTintMode="src_atop"
