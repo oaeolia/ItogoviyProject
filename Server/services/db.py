@@ -333,12 +333,12 @@ def next_painter(room_id: int) -> None:
 
 def get_remaining_time(room_id: int) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT start_time, NOW() FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT NOW() - start_time FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
         if data is None:
             return -1
         else:
-            return int(90 - (data[1] - data[0]).total_seconds())
+            return int(90 - data[0])
 
 
 def is_room_started(room_id: int) -> int:
