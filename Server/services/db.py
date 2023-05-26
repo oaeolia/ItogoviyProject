@@ -60,16 +60,19 @@ def check_user_email_and_name_for_existence(email: str, name: str) -> bool:
 
 def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, int, str, int, int]:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id FROM users WHERE (email = %s or name = %s) AND password = %s", (login, login, password))
+        cursor.execute("SELECT id FROM users WHERE (email = %s or name = %s) AND password = %s",
+                       (login, login, password))
         data = cursor.fetchone()
         if data is None:
             return None
         else:
             token = generate_session_token()
             application_token = generate_session_token()
-            cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)", (data[0], '{"user_id": ' + str(data[0]) + '}', token))
+            cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)",
+                           (data[0], '{"user_id": ' + str(data[0]) + '}', token))
             session_id = cursor.lastrowid
-            cursor.execute("INSERT INTO application_sessions (user_id, last_time, token) VALUES (%s, NOW(), %s)", (data[0], application_token))
+            cursor.execute("INSERT INTO application_sessions (user_id, last_time, token) VALUES (%s, NOW(), %s)",
+                           (data[0], application_token))
             application_session_id = cursor.lastrowid
             cursor.connection.commit()
             return token, session_id, application_token, application_session_id, data[0]
@@ -77,13 +80,15 @@ def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, 
 
 def try_auth_application_and_create_session(token: str, application_session_id: int) -> None | tuple[str, int, int]:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_id FROM application_sessions WHERE token=%s AND id = %s", (token, application_session_id))
+        cursor.execute("SELECT id, user_id FROM application_sessions WHERE token=%s AND id = %s",
+                       (token, application_session_id))
         data = cursor.fetchone()
         if data is None:
             return None
         else:
             token = generate_session_token()
-            cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)", (data[1], '{"user_id": ' + str(data[1]) + '}', token))
+            cursor.execute("INSERT INTO sessions (user_id, data, last_time, token) VALUES (%s, %s, NOW(), %s)",
+                           (data[1], '{"user_id": ' + str(data[1]) + '}', token))
             session_id = cursor.lastrowid
             cursor.connection.commit()
             return token, session_id, data[1]
@@ -97,7 +102,8 @@ def remove_application_session(session_id: int, session_token: str) -> None:
 
 def get_new_of_free_room(user_id: int) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE start_checked_time IS NULL  AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL)")
+        cursor.execute(
+            "SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE start_checked_time IS NULL  AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL)")
         data = cursor.fetchone()
         if data is None:
             cursor.execute("INSERT INTO games_rooms (now_word, user_1) VALUES ('', %s)", user_id)
@@ -130,7 +136,9 @@ def get_session(session_id: int, session_token: str) -> dict | None:
 
 def check_game_room_for_user(room_id: int, user_id: int) -> str:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started, start_checked_time FROM games_rooms WHERE (user_1 = %s OR user_2 = %s OR user_3 = %s OR user_4 = %s OR user_5 = %s) AND id=%s", (user_id, user_id, user_id, user_id, user_id, room_id))
+        cursor.execute(
+            "SELECT id, user_1, user_2, user_3, user_4, user_5, is_started, start_checked_time FROM games_rooms WHERE (user_1 = %s OR user_2 = %s OR user_3 = %s OR user_4 = %s OR user_5 = %s) AND id=%s",
+            (user_id, user_id, user_id, user_id, user_id, room_id))
         data = cursor.fetchone()
         if data is None:
             return ''
@@ -138,7 +146,8 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
             if data[6]:
                 return 'STARTED'
             else:
-                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[5] is not None:
+                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[
+                    5] is not None:
                     if data[7] is None:
                         return 'STARTING'
                     else:
@@ -155,7 +164,8 @@ def start_checked_game(room_id: int) -> None:
 
 def game_room_set_user_checked(room_id: int, user_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started  FROM games_rooms WHERE id=%s", room_id)
+        cursor.execute("SELECT id, user_1, user_2, user_3, user_4, user_5, is_started  FROM games_rooms WHERE id=%s",
+                       room_id)
         data = cursor.fetchone()
         if data is None:
             return False
@@ -177,7 +187,9 @@ def game_room_set_user_checked(room_id: int, user_id: int) -> bool:
 
 def check_game_room(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5 FROM games_rooms WHERE id = %s AND start_checked_time > NOW() - INTERVAL 10 MINUTE", room_id)
+        cursor.execute(
+            "SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5 FROM games_rooms WHERE id = %s AND start_checked_time > NOW() - INTERVAL 10 MINUTE",
+            room_id)
         data = cursor.fetchone()
         if data is None:
             cursor.execute("DELETE FROM games_rooms WHERE id = %s", room_id)
@@ -201,7 +213,8 @@ def auto_set_room_word(room_id: int) -> None:
 
 def set_drawer(room_id: int) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s",
+                       room_id)
         data = cursor.fetchone()
 
         if data[0] is None:
@@ -254,7 +267,8 @@ def get_now_painter(room_id: int) -> int:
 
 def check_variant(variant: str, room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT now_word FROM games_rooms WHERE id = %s AND now_word = %s", (room_id, variant.lower().strip()))
+        cursor.execute("SELECT now_word FROM games_rooms WHERE id = %s AND now_word = %s",
+                       (room_id, variant.lower().strip()))
         data = cursor.fetchone()
         return data is not None
 
@@ -287,7 +301,8 @@ def stop_room(room_id: int) -> None:
 
 def next_painter(room_id: int) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s",
+                       room_id)
         data = cursor.fetchone()
         if data[0] == data[1]:
             cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[2], room_id))
@@ -349,13 +364,16 @@ def send_message(message: str, room_id: int) -> None:
 
 def check_room_for_freeze(room_id: int) -> str:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND", room_id)
+        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
+                       room_id)
         data = cursor.fetchone()
         if data is None:
             return 'WAITING_CHECK'
         else:
             cursor.execute("UPDATE games_rooms SET start_checked_time = NULL WHERE id = %s", room_id)
-            cursor.execute('SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5 FROM games_rooms WHERE id = %s', room_id)
+            cursor.execute(
+                'SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5 FROM games_rooms WHERE id = %s',
+                room_id)
             data = cursor.fetchone()
             if not data[0]:
                 cursor.execute('UPDATE games_rooms SET user_1 = NULL WHERE id = %s', room_id)
@@ -367,14 +385,70 @@ def check_room_for_freeze(room_id: int) -> str:
                 cursor.execute('UPDATE games_rooms SET user_4 = NULL WHERE id = %s', room_id)
             elif not data[4]:
                 cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
-            cursor.execute('UPDATE games_rooms SET checked_user_1 = 0, checked_user_2 = 0, checked_user_3 = 0, checked_user_4 = 0, checked_user_5 = 0 WHERE id = %s', room_id)
+            cursor.execute(
+                'UPDATE games_rooms SET checked_user_1 = 0, checked_user_2 = 0, checked_user_3 = 0, checked_user_4 = 0, checked_user_5 = 0 WHERE id = %s',
+                room_id)
             cursor.connection.commit()
             return 'WAITING'
 
 
+def start_checked_started_room(room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute(
+            "UPDATE games_rooms SET start_checked_time = NOW(), checked_user_1 = 0, checked_user_2 = 0, checked_user_3 = 0, checked_user_4 = 0, checked_user_5 = 0 WHERE id = %s",
+            room_id)
+        cursor.connection.commit()
+
+
+def is_room_checked_time_end(room_id: int) -> bool:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
+                       room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return False
+        else:
+            return True
+
+
+def clean_room_for_freeze(room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute('SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s', room_id)
+        data = cursor.fetchone()
+        user_deleted_list = []
+        now_painter = get_now_painter()
+        if not data[0]:
+            cursor.execute('UPDATE games_rooms SET user_1 = NULL WHERE id = %s', room_id)
+            user_deleted_list.append(1)
+        elif not data[1]:
+            cursor.execute('UPDATE games_rooms SET user_2 = NULL WHERE id = %s', room_id)
+            user_deleted_list.append(2)
+        elif not data[2]:
+            cursor.execute('UPDATE games_rooms SET user_3 = NULL WHERE id = %s', room_id)
+            user_deleted_list.append(3)
+        elif not data[3]:
+            cursor.execute('UPDATE games_rooms SET user_4 = NULL WHERE id = %s', room_id)
+            user_deleted_list.append(4)
+        elif not data[4]:
+            cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
+            user_deleted_list.append(5)
+        user_deleted_list_id = [data[5+i] for i in user_deleted_list]
+
+        if now_painter in user_deleted_list_id:
+            now_word = get_room_word(room_id)
+            set_room_status_message('Игрок отключился. Правильный ответ: {}'.format(now_word), room_id)
+            next_painter(room_id)
+
+        if is_room_started(room_id):
+            start_checked_started_room(room_id)
+        cursor.connection.commit()
+
+
 def check_game_check_user_state(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id FROM games_rooms WHERE id = %s AND checked_user_1 = 1 AND checked_user_2 = 1 AND  checked_user_3 = 1 AND  checked_user_4 = 1 AND  checked_user_5 = 1 AND ", room_id)
+        cursor.execute(
+            "SELECT id FROM games_rooms WHERE id = %s AND checked_user_1 = 1 AND checked_user_2 = 1 AND  checked_user_3 = 1 AND  checked_user_4 = 1 AND  checked_user_5 = 1 AND ",
+            room_id)
         data = cursor.fetchone()
         if data is None:
             return False

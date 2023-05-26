@@ -37,6 +37,16 @@ def start_checked_for_game_game(room_id: int) -> None:
     db.start_checked_game(room_id)
 
 
+def check_game_for_freeze_users(room_id: int) -> None:
+    if not db.is_room_started(room_id):
+        return
+
+    if not db.is_room_checked_time_end(room_id):
+        return
+
+    db.clean_room_for_freeze(room_id)
+
+
 def update_checked_for_game(room_id: int) -> None:
     db.check_game_room(room_id)
 
@@ -49,6 +59,7 @@ def start_game(room_id: int) -> None:
     db.set_drawer(room_id)
     db.set_room_starting_status(room_id)
     db.auto_set_room_word(room_id)
+    db.start_checked_started_room(room_id)
 
 
 def get_role(room_id: int, user_id: int) -> str:
@@ -90,6 +101,7 @@ def try_variant(variant: str, room_id: int) -> bool:
 
 def get_status(room_id: int) -> int:
     buffer = db.is_room_started(room_id)
+    check_game_for_freeze_users(room_id)
     db.close_now_connection()
     if buffer == 1:
         if check_for_end_time(room_id):
