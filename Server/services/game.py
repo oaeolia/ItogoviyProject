@@ -39,14 +39,11 @@ def start_checked_for_game_game(room_id: int) -> None:
 
 def check_game_for_freeze_users(room_id: int) -> None:
     if db.is_room_started(room_id) != 1:
-        print("EXIT IN STARTED")
         return
 
     if not db.is_room_checked_time_end(room_id):
-        print("EXIT IN TIME")
         return
 
-    print("WORK")
     db.clean_room_for_freeze(room_id)
 
 
