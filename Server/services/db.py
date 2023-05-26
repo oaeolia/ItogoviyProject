@@ -304,14 +304,26 @@ def next_painter(room_id: int) -> None:
                        room_id)
         data = cursor.fetchone()
         if data[0] == data[1]:
-            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[2], room_id))
+            new_painter = 2
         elif data[0] == data[2]:
-            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[3], room_id))
+            new_painter = 3
         elif data[0] == data[3]:
-            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[4], room_id))
+            new_painter = 4
         elif data[0] == data[4]:
-            cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[5], room_id))
+            new_painter = 5
         else:
+            return
+
+        while new_painter <= 5:
+            if data[new_painter] is not None:
+                cursor.execute("UPDATE games_rooms SET now_painter = %s WHERE id = %s", (data[new_painter], room_id))
+                new_painter = -1
+                break
+            new_painter += 1
+
+        if new_painter == -1:
+            cursor.connection.commit()
+            stop_room(room_id)
             return
 
         cursor.execute("UPDATE games_rooms SET start_time = NOW() WHERE id = %s", room_id)
@@ -439,6 +451,7 @@ def clean_room_for_freeze(room_id: int) -> None:
         elif not data[4]:
             cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(5)
+        cursor.connection.commit()
         user_deleted_list_id = [data[5 + i] for i in user_deleted_list]
 
         if now_painter in user_deleted_list_id:
