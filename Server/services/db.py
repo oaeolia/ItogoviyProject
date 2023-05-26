@@ -416,7 +416,7 @@ def clean_room_for_freeze(room_id: int) -> None:
         cursor.execute('SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s', room_id)
         data = cursor.fetchone()
         user_deleted_list = []
-        now_painter = get_now_painter()
+        now_painter = get_now_painter(room_id)
         if not data[0]:
             cursor.execute('UPDATE games_rooms SET user_1 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(1)
