@@ -338,7 +338,8 @@ def get_remaining_time(room_id: int) -> int:
         if data is None:
             return -1
         else:
-            return 90 - data[0].seconds
+            print(data[0])
+            return 90 - data[0]
 
 
 def is_room_started(room_id: int) -> int:
