@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 
 import com.nikol.sketchit.Application;
@@ -178,6 +179,6 @@ public class GameLayoutBridge {
     }
 
     public void setRemainingTime(int remainingTime) {
-        roundTime = remainingTime;
+        roundTime = System.currentTimeMillis() - (Application.ROUND_SECONDS_TIME - remainingTime) * 1000L;
     }
 }

@@ -37,7 +37,7 @@ public class Server {
     private int sessionId = -1;
     private String sessionToken = "";
 
-    public class GameStatus {
+    public static class GameStatus {
         public int remainingTime;
         public int status;
     }
