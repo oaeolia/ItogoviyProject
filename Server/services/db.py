@@ -146,7 +146,8 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
             if data[6]:
                 return 'STARTED'
             else:
-                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[5] is not None:
+                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[
+                    5] is not None:
                     if data[7] is None:
                         return 'STARTING'
                     else:
@@ -284,12 +285,23 @@ def get_room_word(room_id: int) -> str:
 
 def is_painter_last(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT now_painter FROM games_rooms WHERE id = %s AND now_painter=user_5", room_id)
+        cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s",
+                       room_id)
         data = cursor.fetchone()
         if data is None:
-            return False
-        else:
             return True
+        else:
+            have_painter = False
+            have_other_painter = False
+            for i in range(5):
+                if i == 4 and data[0] == data[5] and not have_painter:
+                    return True
+                if data[0] == data[i + 1] and not have_painter:
+                    have_painter = True
+                if data[0] != data[i + 1] and have_painter:
+                    have_other_painter = True
+                    break
+            return not have_other_painter
 
 
 def stop_room(room_id: int) -> None:
