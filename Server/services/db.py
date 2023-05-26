@@ -1,6 +1,5 @@
 import json
 import random
-from datetime import datetime
 
 from pymysql.connections import Connection
 
@@ -334,14 +333,12 @@ def next_painter(room_id: int) -> None:
 
 def get_remaining_time(room_id: int) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT start_time FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT start_time, NOW() FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
         if data is None:
             return -1
         else:
-            current_time = datetime.now()
-            time_diff = current_time - data[0]
-            return int(90 - time_diff.total_seconds())
+            return int(90 - (data[1] - data[0]).total_seconds())
 
 
 def is_room_started(room_id: int) -> int:
