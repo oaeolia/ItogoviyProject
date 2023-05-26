@@ -321,7 +321,7 @@ def next_painter(room_id: int) -> None:
                 break
             new_painter += 1
 
-        if new_painter == -1:
+        if new_painter != -1:
             cursor.connection.commit()
             stop_room(room_id)
             return
