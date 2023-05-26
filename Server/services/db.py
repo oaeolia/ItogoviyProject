@@ -452,7 +452,7 @@ def clean_room_for_freeze(room_id: int) -> None:
             cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(5)
         cursor.connection.commit()
-        user_deleted_list_id = [data[5 + i] for i in user_deleted_list]
+        user_deleted_list_id = [data[4 + i] for i in user_deleted_list]
 
         if now_painter in user_deleted_list_id:
             now_word = get_room_word(room_id)
