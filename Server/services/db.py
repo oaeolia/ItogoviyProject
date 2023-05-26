@@ -146,8 +146,7 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
             if data[6]:
                 return 'STARTED'
             else:
-                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[
-                    5] is not None:
+                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[5] is not None:
                     if data[7] is None:
                         return 'STARTING'
                     else:
@@ -411,9 +410,17 @@ def is_room_checked_time_end(room_id: int) -> bool:
             return True
 
 
+def set_user_checked_for_room(room_id: int, user_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("UPDATE games_rooms SET checked_user_%s = 1 WHERE id = %s", (user_id, room_id))
+        cursor.connection.commit()
+
+
 def clean_room_for_freeze(room_id: int) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute('SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s', room_id)
+        cursor.execute(
+            'SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s',
+            room_id)
         data = cursor.fetchone()
         user_deleted_list = []
         now_painter = get_now_painter(room_id)
@@ -432,7 +439,7 @@ def clean_room_for_freeze(room_id: int) -> None:
         elif not data[4]:
             cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(5)
-        user_deleted_list_id = [data[5+i] for i in user_deleted_list]
+        user_deleted_list_id = [data[5 + i] for i in user_deleted_list]
 
         if now_painter in user_deleted_list_id:
             now_word = get_room_word(room_id)

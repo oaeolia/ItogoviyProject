@@ -142,7 +142,7 @@ def get_status() -> Response:
     if session is None:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
 
-    status = game.get_status(data['room_id'])
+    status = game.get_status(data['room_id'], session['user_id'])
 
     if status == 'END':
         return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status}))

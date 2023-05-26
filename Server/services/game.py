@@ -38,12 +38,15 @@ def start_checked_for_game_game(room_id: int) -> None:
 
 
 def check_game_for_freeze_users(room_id: int) -> None:
-    if not db.is_room_started(room_id):
+    if db.is_room_started(room_id) != 1:
+        print("EXIT IN STARTED")
         return
 
     if not db.is_room_checked_time_end(room_id):
+        print("EXIT IN TIME")
         return
 
+    print("WORK")
     db.clean_room_for_freeze(room_id)
 
 
@@ -99,8 +102,9 @@ def try_variant(variant: str, room_id: int) -> bool:
     return buffer
 
 
-def get_status(room_id: int) -> int:
+def get_status(room_id: int, user_id: int) -> int:
     buffer = db.is_room_started(room_id)
+    db.set_user_checked_for_room(room_id, user_id)
     check_game_for_freeze_users(room_id)
     db.close_now_connection()
     if buffer == 1:
