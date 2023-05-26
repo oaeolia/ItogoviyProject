@@ -33,6 +33,12 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
     return buffer
 
 
+def get_remaining_time(room_id: int) -> int:
+    buffer = db.get_remaining_time(room_id)
+    db.close_now_connection()
+    return buffer
+
+
 def start_checked_for_game_game(room_id: int) -> None:
     db.start_checked_game(room_id)
 

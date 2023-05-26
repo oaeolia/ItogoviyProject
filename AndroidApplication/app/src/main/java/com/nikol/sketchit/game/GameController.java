@@ -81,19 +81,21 @@ public class GameController {
             }
         }, null);
 
-        server.getStatusOfRoom(roomId, new ServerCallback<Integer, Integer, String>() {
+        server.getStatusOfRoom(roomId, new ServerCallback<Server.GameStatus, Integer, String>() {
             @Override
-            public void onDataReady(Integer gameStatus, Integer nowPainter, String message) {
-                serverUpdate(nowPainter, gameStatus, message);
+            public void onDataReady(Server.GameStatus gameStatus, Integer nowPainter, String message) {
+                serverUpdate(nowPainter, gameStatus.status, message, gameStatus.remainingTime);
             }
         }, null);
     }
 
-    private void serverUpdate(int nowPainter, int isNotEnd, String message) {
+    private void serverUpdate(int nowPainter, int isNotEnd, String message, int remainingTime) {
         if (isNotEnd != 1) {
             exitFromGame();
             return;
         }
+
+        uiBridge.setRemainingTime(remainingTime);
 
         if (nowPainter != this.nowPainter) {
             this.nowPainter = nowPainter;

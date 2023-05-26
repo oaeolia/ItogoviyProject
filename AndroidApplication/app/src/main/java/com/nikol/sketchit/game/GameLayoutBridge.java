@@ -176,4 +176,8 @@ public class GameLayoutBridge {
             binding.textTime.setText(String.format(Locale.getDefault(), "00:%02d", freeTime));
         }
     }
+
+    public void setRemainingTime(int remainingTime) {
+        roundTime = remainingTime;
+    }
 }

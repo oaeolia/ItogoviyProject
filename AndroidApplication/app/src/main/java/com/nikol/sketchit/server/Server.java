@@ -37,6 +37,11 @@ public class Server {
     private int sessionId = -1;
     private String sessionToken = "";
 
+    public class GameStatus {
+        public int remainingTime;
+        public int status;
+    }
+
 
     public Server(Context context, ILogger logger) {
         requestQueue = Volley.newRequestQueue(context);
@@ -400,7 +405,7 @@ public class Server {
         requestQueue.add(request);
     }
 
-    public void getStatusOfRoom(int roomId, ServerCallback<Integer, Integer, String> callback, ServerCallback<String, Integer, Object> errorCallback) {
+    public void getStatusOfRoom(int roomId, ServerCallback<GameStatus, Integer, String> callback, ServerCallback<String, Integer, Object> errorCallback) {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("session_id", sessionId);
@@ -415,7 +420,12 @@ public class Server {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
                     if (responseData.has("now_painter")) {
-                        callback.onDataReady(responseData.getInt("game_status"), responseData.getInt("now_painter"), responseData.getString("message"));
+                        GameStatus gameStatus = new GameStatus();
+                        gameStatus.status = responseData.getInt("game_status");
+                        if (responseData.has("remaining_time")) {
+                            gameStatus.remainingTime = responseData.getInt("remaining_time");
+                        }
+                        callback.onDataReady(gameStatus, responseData.getInt("now_painter"), responseData.getString("message"));
                     } else {
                         errorCallback.onDataReady(responseData.getString("message"), -1, null);
                     }
