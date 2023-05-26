@@ -439,16 +439,16 @@ def clean_room_for_freeze(room_id: int) -> None:
         if not data[0]:
             cursor.execute('UPDATE games_rooms SET user_1 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(1)
-        elif not data[1]:
+        if not data[1]:
             cursor.execute('UPDATE games_rooms SET user_2 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(2)
-        elif not data[2]:
+        if not data[2]:
             cursor.execute('UPDATE games_rooms SET user_3 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(3)
-        elif not data[3]:
+        if not data[3]:
             cursor.execute('UPDATE games_rooms SET user_4 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(4)
-        elif not data[4]:
+        if not data[4]:
             cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(5)
         cursor.connection.commit()
