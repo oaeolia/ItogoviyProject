@@ -12,6 +12,7 @@ import com.nikol.sketchit.server.ServerCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Objects;
 
 public class GameController {
     private static final String USER_ROLE = "USER";
@@ -90,8 +91,14 @@ public class GameController {
     }
 
     private void serverUpdate(int nowPainter, int isNotEnd, String message, int remainingTime) {
-        if (isNotEnd != 1) {
+        if (isNotEnd != 1 && isNotEnd != 2) {
             exitFromGame();
+            return;
+        }
+
+        if(isNotEnd == 1){
+            // TODO: Add set message
+            uiBridge.setMessageState(message, remainingTime);
             return;
         }
 
@@ -99,7 +106,9 @@ public class GameController {
 
         if (nowPainter != this.nowPainter) {
             this.nowPainter = nowPainter;
-            Toast.makeText(uiBridge.getContext(), message, Toast.LENGTH_SHORT).show();
+            if(!Objects.equals(message, "")) {
+                Toast.makeText(uiBridge.getContext(), message, Toast.LENGTH_SHORT).show();
+            }
             if (nowPainter == userId) {
                 uiBridge.setPaintState();
 

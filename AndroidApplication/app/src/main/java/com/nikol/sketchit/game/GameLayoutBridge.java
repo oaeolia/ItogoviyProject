@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 
 import com.nikol.sketchit.Application;
@@ -82,6 +81,11 @@ public class GameLayoutBridge {
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
         startRoundTimer();
+    }
+
+
+    public void setMessageState(String message, int remaining_time) {
+        ((Application)mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remaining_time);
     }
 
     public void updateChat(List<String> message) {

@@ -144,7 +144,7 @@ def get_status() -> Response:
 
     status = game.get_status(data['room_id'], session['user_id'])
 
-    if status == 'END':
+    if status == 'END' or status == 0:
         return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status}))
 
     now_painter = game.get_now_painter(data['room_id'])

@@ -349,7 +349,8 @@ def get_remaining_time(room_id: int) -> int:
         if data is None:
             return -1
         else:
-            print(data[0])
+            if is_room_freeze(room_id) == 0:
+                return 10 - data[0]
             return 90 - data[0]
 
 
@@ -361,6 +362,16 @@ def is_room_started(room_id: int) -> int:
             return -1
         else:
             return 1 if data[0] else 0
+
+
+def is_room_freeze(room_id: int) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT now_painter FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return -1
+        else:
+            return 0 if data[0] is None else 1
 
 
 def is_time_end_in_room(room_id: int) -> bool:
