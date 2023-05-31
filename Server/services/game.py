@@ -49,8 +49,8 @@ def check_game_for_freeze_users(room_id: int) -> None:
 
     if not db.is_room_checked_time_end(room_id):
         return
-
-    db.clean_room_for_freeze(room_id)
+    # TODO: Remove (ONLY FOR TEST!)
+    # db.clean_room_for_freeze(room_id)
 
 
 def update_checked_for_game(room_id: int) -> None:

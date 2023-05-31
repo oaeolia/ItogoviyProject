@@ -143,12 +143,12 @@ def get_status() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
 
     status = game.get_status(data['room_id'], session['user_id'])
+    message = game.get_room_status_message(data['room_id'])
 
-    if status == 'END' or status == 0:
-        return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status}))
+    if status == 'END' or status == 0 or status == -1:
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'message': message}))
 
     now_painter = game.get_now_painter(data['room_id'])
-    message = game.get_room_status_message(data['room_id'])
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter, 'message': message, 'remaining_time': game.get_remaining_time(data['room_id'])}))
 
 
