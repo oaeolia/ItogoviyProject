@@ -366,12 +366,28 @@ def is_room_started(room_id: int) -> int:
 
 def is_room_freeze(room_id: int) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT now_painter FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT is_waiting FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
         if data is None:
             return -1
         else:
-            return 0 if data[0] is None else 1
+            return 0 if data[0] else 1
+
+
+def set_room_waiting_state(room_id: int) -> None:
+    with get_connection().cursor() as cursor:
+        cursor.execute("UPDATE games_rooms SET is_waiting = 1, start_time = NOW() WHERE id = %s", room_id)
+        cursor.connection.commit()
+
+
+def is_room_waiting_state_end(room_id: int) -> bool:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_time < NOW() - INTERVAL 10 SECOND;", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return False
+        else:
+            return True
 
 
 def is_time_end_in_room(room_id: int) -> bool:

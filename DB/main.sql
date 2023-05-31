@@ -47,6 +47,7 @@ CREATE TABLE `games_rooms`
     `start_time`         DATETIME,
     `message`            VARCHAR(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL DEFAULT '',
     `now_painter`        INT UNSIGNED,
+    `is_waiting`         boolean                                                        NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_1`) REFERENCES `users` (`id`) ON DELETE CASCADE,
     FOREIGN KEY (`user_2`) REFERENCES `users` (`id`) ON DELETE CASCADE,
