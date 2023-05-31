@@ -349,7 +349,7 @@ def get_remaining_time(room_id: int) -> int:
         if data is None:
             return -1
         else:
-            if is_room_freeze(room_id) == 0:
+            if is_not_room_freeze(room_id) == 0:
                 return 10 - data[0]
             return 90 - data[0]
 
@@ -364,7 +364,7 @@ def is_room_started(room_id: int) -> int:
             return 1 if data[0] else 0
 
 
-def is_room_freeze(room_id: int) -> int:
+def is_not_room_freeze(room_id: int) -> int:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT is_waiting FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()

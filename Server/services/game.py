@@ -120,14 +120,14 @@ def get_status(room_id: int, user_id: int) -> int:
     buffer = db.is_room_started(room_id)
     db.set_user_checked_for_room(room_id, user_id)
     check_game_for_freeze_users(room_id)
-    if buffer:
-        is_waiting = db.is_room_freeze(room_id)
+    if buffer == 1:
+        is_waiting = db.is_not_room_freeze(room_id)
         if is_waiting == 0:
             if update_wait_state(room_id):
                 return -1
             else:
                 return 1
-        is_waiting += 1
+        buffer += 1
     db.close_now_connection()
     if buffer == 2:
         if check_for_end_time(room_id):
