@@ -374,9 +374,9 @@ def is_not_room_freeze(room_id: int) -> int:
             return 0 if data[0] else 1
 
 
-def set_room_waiting_state(room_id: int) -> None:
+def set_room_waiting_state(room_id: int, state: bool) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("UPDATE games_rooms SET is_waiting = 1, start_time = NOW() WHERE id = %s", room_id)
+        cursor.execute("UPDATE games_rooms SET is_waiting = %s, start_time = NOW() WHERE id = %s", (room_id, 1 if state else 0))
         cursor.connection.commit()
 
 
