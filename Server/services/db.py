@@ -344,7 +344,7 @@ def next_painter(room_id: int) -> None:
 
 def get_remaining_time(room_id: int) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT NOW() - start_time FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT TIMESTAMPDIFF(SECOND, start_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
         if data is None:
             return -1
