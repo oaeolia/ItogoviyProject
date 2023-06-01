@@ -146,10 +146,10 @@ def get_status() -> Response:
     message = game.get_room_status_message(data['room_id'])
 
     if status == 'END' or status == 0 or status == -1:
-        return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'message': message}))
+        return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'message': message, 'is_stopped': True}))
 
     now_painter = game.get_now_painter(data['room_id'])
-    return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter, 'message': message, 'remaining_time': game.get_remaining_time(data['room_id'])}))
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'game_status': status, 'now_painter': now_painter, 'message': message, 'remaining_time': game.get_remaining_time(data['room_id']), 'is_stopped': False}))
 
 
 @app.route(settings.API_URL_MAIN + '/game/send_canvas', methods=['POST'])
