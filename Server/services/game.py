@@ -49,7 +49,8 @@ def check_game_for_freeze_users(room_id: int) -> None:
 
     if not db.is_room_checked_time_end(room_id):
         return
-    # db.clean_room_for_freeze(room_id)
+
+    db.clean_room_for_freeze(room_id)
 
 
 def update_checked_for_game(room_id: int) -> None:
@@ -122,24 +123,17 @@ def get_status(room_id: int, user_id: int) -> int:
     buffer = db.is_room_started(room_id)
     db.set_user_checked_for_room(room_id, user_id)
     check_game_for_freeze_users(room_id)
-    print("START CHECK STATUS: ", buffer)
     if buffer == 1:
-        print("CHECK ROOM TO WAITING STATE")
         is_waiting = db.is_not_room_freeze(room_id)
-        print("IS WAITING: ", is_waiting)
         if is_waiting == 0:
-            print("CHECK WAITING STATE")
             if update_wait_state(room_id):
-                print("END AFTER WAITING")
                 return -1
             else:
-                print("RETURN WAITING STATE")
                 return 1
         buffer += 1
     db.close_now_connection()
     if buffer == 2:
         if check_for_end_time(room_id):
-            print("TIME ENDED")
             return -1
     return buffer
 

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Server {
-    private static final String SERVER_URL = "http://192.168.1.23:80/api/v1/";
+    private static final String SERVER_URL = "http://192.168.1.9:80/api/v1/";
     private static final String SERVER_RESPONSE_OK = "OK";
     private static final String SERVER_RESPONSE_BAD = "BAD";
     private static final String SERVER_RESPONSE_ERROR = "ERROR";
@@ -419,21 +419,29 @@ public class Server {
                 Request.Method.POST, SERVER_URL + "game/get_status", jsonBody, responseData -> {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
-                    if (responseData.has("now_painter")) {
                         GameStatus gameStatus = new GameStatus();
                         gameStatus.status = responseData.getInt("game_status");
                         if (responseData.has("remaining_time")) {
                             gameStatus.remainingTime = responseData.getInt("remaining_time");
                         }
-                        callback.onDataReady(gameStatus, responseData.getInt("now_painter"), responseData.getString("message"));
-                    } else {
-                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
-                    }
+                        if(responseData.has("now_painter")) {
+                            if (responseData.has("message")) {
+                                callback.onDataReady(gameStatus, responseData.getInt("now_painter"), responseData.getString("message"));
+                            } else {
+                                callback.onDataReady(gameStatus, responseData.getInt("now_painter"), "");
+                            }
+                        }else{
+                            if (responseData.has("message")) {
+                                callback.onDataReady(gameStatus, -1, responseData.getString("message"));
+                            } else {
+                                callback.onDataReady(gameStatus, -1, "");
+                            }
+                        }
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
                     callback.onDataReady(null, null, null);
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
                     if (errorCallback != null) {
-                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                        errorCallback.onDataReady("", -1, null);
                     }
                 } else {
                     if (errorCallback != null) {

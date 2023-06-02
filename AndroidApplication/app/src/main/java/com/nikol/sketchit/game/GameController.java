@@ -111,23 +111,7 @@ public class GameController {
             }
             if (nowPainter == userId) {
                 uiBridge.setPaintState();
-
-                server.getWord(roomId, new ServerCallback<String, Boolean, Object>() {
-                    @Override
-                    public void onDataReady(String message, Boolean status, Object arg) {
-                        if (status) {
-                            logger.logInfo("Game", "Get word " + message);
-                            uiBridge.setWord(message);
-                        } else {
-                            logger.logError("Game", "Cant get word " + message);
-                        }
-                    }
-                }, new ServerCallback<String, Integer, Object>() {
-                    @Override
-                    public void onDataReady(String message, Integer errorCode, Object arg3) {
-                        logger.logError("Game", "Cant get word " + message);
-                    }
-                });
+                updateWord();
             } else {
                 uiBridge.setWatchState();
             }
@@ -141,6 +125,25 @@ public class GameController {
         uiBridge.endGame();
     }
 
+    private void updateWord(){
+        server.getWord(roomId, new ServerCallback<String, Boolean, Object>() {
+            @Override
+            public void onDataReady(String message, Boolean status, Object arg) {
+                if (status) {
+                    logger.logInfo("Game", "Get word " + message);
+                    uiBridge.setWord(message);
+                } else {
+                    logger.logError("Game", "Can`t get word " + message);
+                }
+            }
+        }, new ServerCallback<String, Integer, Object>() {
+            @Override
+            public void onDataReady(String message, Integer errorCode, Object arg3) {
+                logger.logError("Game", "Can`t get word " + message);
+            }
+        });
+    }
+
     private class GetRoleServerCallback extends ServerCallback<String, Boolean, Integer> {
         @Override
         public void onDataReady(String message, Boolean status, Integer painter) {
@@ -150,22 +153,7 @@ public class GameController {
                     nowPainter = painter;
                 } else if (message.equals(PAINTER_ROLE)) {
                     uiBridge.setPaintState();
-                    server.getWord(roomId, new ServerCallback<String, Boolean, Object>() {
-                        @Override
-                        public void onDataReady(String message, Boolean status, Object arg) {
-                            if (status) {
-                                logger.logInfo("Game", "Get word " + message);
-                                uiBridge.setWord(message);
-                            } else {
-                                logger.logError("Game", "Cant get word " + message);
-                            }
-                        }
-                    }, new ServerCallback<String, Integer, Object>() {
-                        @Override
-                        public void onDataReady(String message, Integer errorCode, Object arg3) {
-                            logger.logError("Game", "Cant get word " + message);
-                        }
-                    });
+                    updateWord();
                 } else {
                     logger.logInfo("Game", "Can`t read role " + message);
                     return;
