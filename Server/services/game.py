@@ -156,9 +156,12 @@ def check_for_end_time(room_id: int) -> bool:
     if buffer:
         db.set_room_status_message("Время закончилось! Правильный ответ: " + db.get_room_word(room_id), room_id)
         # TODO: Remake this
+        print("START END")
         if db.is_painter_last(room_id):
+            print("END WITHOUT PAINTERS")
             db.stop_room(room_id)
             return True
+        print("DONT END")
         start_wait_state(room_id)
         # buffer = next_drawer(room_id)
         return False
