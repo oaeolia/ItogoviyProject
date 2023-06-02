@@ -397,7 +397,9 @@ def is_time_end_in_room(room_id: int) -> bool:
         if data is None:
             return False
         else:
+            print("TIME IS " + str(data[0]))
             if data[0] > 90:
+                print("END BY TIME")
                 return True
             else:
                 return False
