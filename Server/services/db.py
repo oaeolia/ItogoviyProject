@@ -392,12 +392,15 @@ def is_room_waiting_state_end(room_id: int) -> bool:
 
 def is_time_end_in_room(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_time < NOW() - INTERVAL 90 SECOND;", room_id)
+        cursor.execute("SELECT SELECT TIMESTAMPDIFF(SECOND, start_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
         if data is None:
             return False
         else:
-            return True
+            if data[0] > 90:
+                return True
+            else:
+                return False
 
 
 def get_room_status_message(room_id: int) -> str:
