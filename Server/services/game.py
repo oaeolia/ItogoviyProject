@@ -124,23 +124,18 @@ def get_status(room_id: int, user_id: int) -> int:
     db.set_user_checked_for_room(room_id, user_id)
     check_game_for_freeze_users(room_id)
     if buffer == 1:
-        print("Check waiting")
         is_waiting = db.is_not_room_freeze(room_id)
         if is_waiting == 0:
             if update_wait_state(room_id):
-                print("END GAME AFTER WAITING")
                 db.close_now_connection()
                 return -1
             else:
-                print("WAITING STATE RETURN")
                 db.close_now_connection()
                 return 1
         buffer += 1
     db.close_now_connection()
     if buffer == 2:
-        print("Check Time")
         if check_for_end_time(room_id):
-            print("END AFTER TIME")
             return -1
     return buffer
 
@@ -156,12 +151,9 @@ def check_for_end_time(room_id: int) -> bool:
     if buffer:
         db.set_room_status_message("Время закончилось! Правильный ответ: " + db.get_room_word(room_id), room_id)
         # TODO: Remake this
-        print("START END")
         if db.is_painter_last(room_id):
-            print("END WITHOUT PAINTERS")
             db.stop_room(room_id)
             return True
-        print("DONT END")
         start_wait_state(room_id)
         # buffer = next_drawer(room_id)
         return False
