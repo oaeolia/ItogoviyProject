@@ -290,17 +290,16 @@ def is_painter_last(room_id: int) -> bool:
         if data is None:
             return True
         else:
+            print(data)
             have_painter = False
-            have_other_painter = False
             for i in range(5):
                 if i == 4 and data[0] == data[5] and not have_painter:
                     return True
                 if data[0] == data[i + 1] and not have_painter:
                     have_painter = True
                 if data[0] != data[i + 1] and have_painter:
-                    have_other_painter = True
-                    break
-            return not have_other_painter
+                    return False
+            return True
 
 
 def stop_room(room_id: int) -> None:
