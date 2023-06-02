@@ -392,7 +392,7 @@ def is_room_waiting_state_end(room_id: int) -> bool:
 
 def is_time_end_in_room(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT SELECT TIMESTAMPDIFF(SECOND, start_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT TIMESTAMPDIFF(SECOND, start_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
         if data is None:
             return False
