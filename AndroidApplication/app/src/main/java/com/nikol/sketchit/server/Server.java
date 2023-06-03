@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Server {
-    private static final String SERVER_URL = "http://192.168.1.9:80/api/v1/";
+    private static final String SERVER_URL = "http://192.168.0.69:80/api/v1/";
     private static final String SERVER_RESPONSE_OK = "OK";
     private static final String SERVER_RESPONSE_BAD = "BAD";
     private static final String SERVER_RESPONSE_ERROR = "ERROR";

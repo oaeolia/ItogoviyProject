@@ -83,12 +83,15 @@ def get_messages(room_id: int) -> list[str]:
     return data
 
 
-def update_wait_state(room_id: int) -> bool:
+def update_wait_state(room_id: int) -> int:
     if db.is_room_waiting_state_end(room_id):
         buffer = next_drawer(room_id)
         if not buffer:
             db.set_room_waiting_state(room_id, False)
-        return buffer
+        else:
+            return -1
+        return 2
+    return 1
 
 
 def start_wait_state(room_id: int) -> None:
@@ -126,12 +129,16 @@ def get_status(room_id: int, user_id: int) -> int:
     if buffer == 1:
         is_waiting = db.is_not_room_freeze(room_id)
         if is_waiting == 0:
-            if update_wait_state(room_id):
+            waiting_state = update_wait_state(room_id)
+            if waiting_state == -1:
                 db.close_now_connection()
                 return -1
-            else:
+            elif waiting_state == 1:
                 db.close_now_connection()
                 return 1
+            else:
+                db.close_now_connection()
+                return 2
         buffer += 1
     db.close_now_connection()
     if buffer == 2:
