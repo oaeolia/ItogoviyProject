@@ -86,9 +86,8 @@ def get_messages(room_id: int) -> list[str]:
 def update_wait_state(room_id: int) -> int:
     if db.is_room_waiting_state_end(room_id):
         buffer = next_drawer(room_id)
-        if not buffer:
-            db.set_room_waiting_state(room_id, False)
-        else:
+        db.set_room_waiting_state(room_id, False)
+        if buffer:
             return -1
         return 2
     return 1
