@@ -86,9 +86,7 @@ def get_messages(room_id: int) -> list[str]:
 def update_wait_state(room_id: int) -> int:
     if db.is_room_waiting_state_end(room_id):
         buffer = next_drawer(room_id)
-        print("Set waiting state to false after update waiting")
         db.set_room_waiting_state(room_id, False)
-        print(db.is_not_room_freeze(room_id))
         if buffer:
             return -1
         return 2
@@ -114,11 +112,9 @@ def try_variant(variant: str, room_id: int) -> bool:
     buffer = db.check_variant(variant, room_id)
     db.send_message(variant.lower().strip(), room_id)
     if buffer:
-        db.set_room_status_message("Слово угадано!", room_id)
-        # TODO: Remake this
-        print("Start waiting state after try variant")
+        word = db.get_room_word(room_id)
+        db.set_room_status_message("Слово угадано! Правильный ответ: " + word, room_id)
         start_wait_state(room_id)
-        # next_drawer(room_id)
         db.auto_set_room_word(room_id)
     db.close_now_connection()
     return buffer
@@ -159,13 +155,10 @@ def check_for_end_time(room_id: int) -> bool:
     buffer = db.is_time_end_in_room(room_id)
     if buffer:
         db.set_room_status_message("Время закончилось! Правильный ответ: " + db.get_room_word(room_id), room_id)
-        # TODO: Remake this
         if db.is_painter_last(room_id):
             db.stop_room(room_id)
             return True
-        print('Start waiting after end time for painter')
         start_wait_state(room_id)
-        # buffer = next_drawer(room_id)
         return False
     return False
 
