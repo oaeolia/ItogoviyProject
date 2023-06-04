@@ -88,7 +88,7 @@ def update_wait_state(room_id: int) -> int:
         buffer = next_drawer(room_id)
         print("Set waiting state to false after update waiting")
         db.set_room_waiting_state(room_id, False)
-        print(db.is_room_waiting_state_end(room_id))
+        print(db.is_not_room_freeze(room_id))
         if buffer:
             return -1
         return 2
