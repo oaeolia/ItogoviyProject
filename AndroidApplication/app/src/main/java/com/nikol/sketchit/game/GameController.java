@@ -98,6 +98,7 @@ public class GameController {
 
         if(isNotEnd == 1){
             // TODO: Add set message
+            // TODO: Added check for now state
             uiBridge.setMessageState(message, remainingTime);
             return;
         }

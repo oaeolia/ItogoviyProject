@@ -22,6 +22,7 @@ public class GameLayoutBridge {
     private final ChatLayoutAdapter chatLayoutAdapter;
     private final ChatLayoutManager chatLayoutManager;
 
+    private boolean isWaitingState;
     private long roundTime = -1;
 
 
@@ -65,6 +66,7 @@ public class GameLayoutBridge {
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(true);
+        isWaitingState = false;
         startRoundTimer();
     }
 
@@ -80,12 +82,23 @@ public class GameLayoutBridge {
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
+        isWaitingState = false;
         startRoundTimer();
     }
 
 
     public void setMessageState(String message, int remaining_time) {
-        ((Application)mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remaining_time);
+        ((Application) mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remaining_time);
+        // TODO: Add message text
+        binding.progressBarLayout.setVisibility(View.INVISIBLE);
+        binding.layoutTools.setVisibility(View.INVISIBLE);
+        binding.layoutPaintColors.setVisibility(View.INVISIBLE);
+        binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
+        binding.inputVariant.setVisibility(View.INVISIBLE);
+        binding.layoutChat.setVisibility(View.VISIBLE);
+        mainActivity.setEnableDraw(false);
+        isWaitingState = true;
+        startRoundTimer();
     }
 
     public void updateChat(List<String> message) {
@@ -167,7 +180,13 @@ public class GameLayoutBridge {
             return;
         }
 
-        long freeTime = Application.ROUND_SECONDS_TIME - (System.currentTimeMillis() - roundTime) / 1000;
+        long freeTime;
+        if (isWaitingState) {
+            freeTime = Application.WAITING_SECONDS_TIME - (System.currentTimeMillis() - roundTime) / 1000;
+        } else {
+            freeTime = Application.ROUND_SECONDS_TIME - (System.currentTimeMillis() - roundTime) / 1000;
+        }
+
         if (freeTime <= 0) {
             binding.textTime.setText("00:00");
             return;
