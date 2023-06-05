@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.view.View;
 
 import com.nikol.sketchit.Application;
 import com.nikol.sketchit.ChatLayoutAdapter;
 import com.nikol.sketchit.GameMenuActivity;
+import com.nikol.sketchit.GameRoundEndMessageFragment;
 import com.nikol.sketchit.MainActivity;
 import com.nikol.sketchit.databinding.ActivityMainBinding;
 
@@ -87,8 +89,8 @@ public class GameLayoutBridge {
     }
 
 
-    public void setMessageState(String message, int remaining_time) {
-        ((Application) mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remaining_time);
+    public void setMessageState(String message, String rightAnswer, boolean isVariantTrue, int remainingTime) {
+        ((Application) mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remainingTime);
         // TODO: Add message text
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
         binding.layoutTools.setVisibility(View.INVISIBLE);
@@ -99,6 +101,18 @@ public class GameLayoutBridge {
         mainActivity.setEnableDraw(false);
         isWaitingState = true;
         startRoundTimer();
+
+        GameRoundEndMessageFragment messageFragment = new GameRoundEndMessageFragment();
+
+        Bundle args = new Bundle();
+        args.putString(GameRoundEndMessageFragment.ARG_KEY_MESSAGE, message);
+        args.putString(GameRoundEndMessageFragment.ARG_KEY_RIGHT_ANSWER, rightAnswer);
+        args.putBoolean(GameRoundEndMessageFragment.ARG_KEY_IS_ANSWER_RIGHT, isVariantTrue);
+        args.putInt(GameRoundEndMessageFragment.ARG_KEY_REMAINING_TIME, remainingTime);
+        messageFragment.setArguments(args);
+
+        messageFragment.setCancelable(false);
+        messageFragment.show(mainActivity.getSupportFragmentManager(), "Test");
     }
 
     public void updateChat(List<String> message) {
@@ -203,5 +217,9 @@ public class GameLayoutBridge {
 
     public void setRemainingTime(int remainingTime) {
         roundTime = System.currentTimeMillis() - (Application.ROUND_SECONDS_TIME - remainingTime) * 1000L;
+    }
+
+    public boolean isMessageState() {
+        return isWaitingState;
     }
 }

@@ -25,6 +25,7 @@ public class GameController {
     private final GameLayoutBridge uiBridge;
 
     private int nowPainter = -1;
+    private boolean isLastAnswerRight = false;
 
     public GameController(int roomId, GameLayoutBridge uiBridge, Context context) {
         Application application = (Application) context.getApplicationContext();
@@ -41,6 +42,7 @@ public class GameController {
                     @Override
                     public void onDataReady(Boolean result, String message, Boolean status) {
                         if (status && result) {
+                            isLastAnswerRight = true;
                             Toast.makeText(view.getContext(), R.string.message_win, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -82,33 +84,36 @@ public class GameController {
             }
         }, null);
 
-        server.getStatusOfRoom(roomId, new ServerCallback<Server.GameStatus, Integer, String>() {
+        server.getStatusOfRoom(roomId, new ServerCallback<Server.GameStatus, Integer, Server.StatusMessage>() {
             @Override
-            public void onDataReady(Server.GameStatus gameStatus, Integer nowPainter, String message) {
+            public void onDataReady(Server.GameStatus gameStatus, Integer nowPainter, Server.StatusMessage message) {
                 serverUpdate(nowPainter, gameStatus.status, message, gameStatus.remainingTime);
             }
         }, null);
     }
 
-    private void serverUpdate(int nowPainter, int isNotEnd, String message, int remainingTime) {
+    private void serverUpdate(int nowPainter, int isNotEnd, Server.StatusMessage message, int remainingTime) {
         if (isNotEnd != 1 && isNotEnd != 2) {
             exitFromGame();
             return;
         }
 
-        if(isNotEnd == 1){
-            // TODO: Add set message
+        if (isNotEnd == 1) {
             // TODO: Added check for now state
-            uiBridge.setMessageState(message, remainingTime);
+            if (!uiBridge.isMessageState()) {
+                uiBridge.setMessageState(message.message, message.rightAnswer, isLastAnswerRight, remainingTime);
+                isLastAnswerRight = false;
+            }
             return;
         }
 
         uiBridge.setRemainingTime(remainingTime);
 
         if (nowPainter != this.nowPainter) {
+            isLastAnswerRight = false;
             this.nowPainter = nowPainter;
-            if(!Objects.equals(message, "")) {
-                Toast.makeText(uiBridge.getContext(), message, Toast.LENGTH_SHORT).show();
+            if (!Objects.equals(message.message, "")) {
+                Toast.makeText(uiBridge.getContext(), message.message, Toast.LENGTH_SHORT).show();
             }
             if (nowPainter == userId) {
                 uiBridge.setPaintState();
@@ -126,7 +131,7 @@ public class GameController {
         uiBridge.endGame();
     }
 
-    private void updateWord(){
+    private void updateWord() {
         server.getWord(roomId, new ServerCallback<String, Boolean, Object>() {
             @Override
             public void onDataReady(String message, Boolean status, Object arg) {

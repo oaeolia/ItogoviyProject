@@ -42,6 +42,20 @@ public class Server {
         public int status;
     }
 
+    public static class StatusMessage {
+        public StatusMessage(String message) {
+            this.message = message;
+        }
+
+        public StatusMessage(String message, String rightAnswer) {
+            this.message = message;
+            this.rightAnswer = rightAnswer;
+        }
+
+        public String message;
+        public String rightAnswer;
+    }
+
 
     public Server(Context context, ILogger logger) {
         requestQueue = Volley.newRequestQueue(context);
@@ -405,7 +419,7 @@ public class Server {
         requestQueue.add(request);
     }
 
-    public void getStatusOfRoom(int roomId, ServerCallback<GameStatus, Integer, String> callback, ServerCallback<String, Integer, Object> errorCallback) {
+    public void getStatusOfRoom(int roomId, ServerCallback<GameStatus, Integer, StatusMessage> callback, ServerCallback<String, Integer, Object> errorCallback) {
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("session_id", sessionId);
@@ -426,15 +440,20 @@ public class Server {
                     }
                     if (responseData.has("now_painter")) {
                         if (responseData.has("message")) {
-                            callback.onDataReady(gameStatus, responseData.getInt("now_painter"), responseData.getString("message"));
+                            JSONObject statusMessage = responseData.getJSONObject("message");
+                            if (statusMessage.has("right_answer")) {
+                                callback.onDataReady(gameStatus, responseData.getInt("now_painter"), new StatusMessage(statusMessage.getString("message"), statusMessage.getString("right_answer")));
+                            } else {
+                                callback.onDataReady(gameStatus, responseData.getInt("now_painter"), new StatusMessage(statusMessage.getString("message")));
+                            }
                         } else {
-                            callback.onDataReady(gameStatus, responseData.getInt("now_painter"), "");
+                            callback.onDataReady(gameStatus, responseData.getInt("now_painter"), null);
                         }
                     } else {
                         if (responseData.has("message")) {
-                            callback.onDataReady(gameStatus, -1, responseData.getString("message"));
+                            callback.onDataReady(gameStatus, -1, new StatusMessage(responseData.getString("message")));
                         } else {
-                            callback.onDataReady(gameStatus, -1, "");
+                            callback.onDataReady(gameStatus, -1, null);
                         }
                     }
                 } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
