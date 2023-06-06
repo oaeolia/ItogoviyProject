@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -439,8 +440,8 @@ public class Server {
                         gameStatus.remainingTime = responseData.getInt("remaining_time");
                     }
                     if (responseData.has("now_painter")) {
-                        if (responseData.has("message")) {
-                            JSONObject statusMessage = responseData.getJSONObject("message");
+                        if (responseData.has("message") && responseData.getString("message").length() > 0) {
+                            JSONObject statusMessage = new JSONObject(responseData.getString("message"));
                             if (statusMessage.has("right_answer")) {
                                 callback.onDataReady(gameStatus, responseData.getInt("now_painter"), new StatusMessage(statusMessage.getString("message"), statusMessage.getString("right_answer")));
                             } else {
@@ -469,7 +470,7 @@ public class Server {
                     logger.logError("Server", "Server undefined error (undefined status, try get game status)");
                 }
             } catch (JSONException e) {
-                logger.logError("Server", "Can`t parse JSON from server (get game status): " + e.getMessage());
+                logger.logError("Server", "Can`t parse JSON from server (get game status): " + e.getMessage() + " " + Arrays.toString(e.getStackTrace()));
             }
         }, error -> {
             if (error.getMessage() != null) {

@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.fragment.app.DialogFragment;
+
 import com.nikol.sketchit.Application;
 import com.nikol.sketchit.ChatLayoutAdapter;
 import com.nikol.sketchit.GameMenuActivity;
@@ -26,6 +28,7 @@ public class GameLayoutBridge {
 
     private boolean isWaitingState;
     private long roundTime = -1;
+    private DialogFragment nowMessageFragment = null;
 
 
     public GameLayoutBridge(ActivityMainBinding binding, MainActivity mainActivity) {
@@ -54,6 +57,9 @@ public class GameLayoutBridge {
         binding.textWord.setText("");
         binding.paintView.clear();
         mainActivity.setEnableDraw(false);
+        if (nowMessageFragment != null) {
+            nowMessageFragment.dismiss();
+        }
     }
 
     public void setPaintState() {
@@ -70,6 +76,9 @@ public class GameLayoutBridge {
         mainActivity.setEnableDraw(true);
         isWaitingState = false;
         startRoundTimer();
+        if (nowMessageFragment != null) {
+            nowMessageFragment.dismiss();
+        }
     }
 
     public void setWatchState() {
@@ -86,6 +95,9 @@ public class GameLayoutBridge {
         mainActivity.setEnableDraw(false);
         isWaitingState = false;
         startRoundTimer();
+        if (nowMessageFragment != null) {
+            nowMessageFragment.dismiss();
+        }
     }
 
 
@@ -101,18 +113,22 @@ public class GameLayoutBridge {
         mainActivity.setEnableDraw(false);
         isWaitingState = true;
         startRoundTimer();
+        
+        if (nowMessageFragment != null) {
+            nowMessageFragment.dismiss();
+        }
 
-        GameRoundEndMessageFragment messageFragment = new GameRoundEndMessageFragment();
+        nowMessageFragment = new GameRoundEndMessageFragment();
 
         Bundle args = new Bundle();
         args.putString(GameRoundEndMessageFragment.ARG_KEY_MESSAGE, message);
         args.putString(GameRoundEndMessageFragment.ARG_KEY_RIGHT_ANSWER, rightAnswer);
         args.putBoolean(GameRoundEndMessageFragment.ARG_KEY_IS_ANSWER_RIGHT, isVariantTrue);
         args.putInt(GameRoundEndMessageFragment.ARG_KEY_REMAINING_TIME, remainingTime);
-        messageFragment.setArguments(args);
+        nowMessageFragment.setArguments(args);
 
-        messageFragment.setCancelable(false);
-        messageFragment.show(mainActivity.getSupportFragmentManager(), "Test");
+        nowMessageFragment.setCancelable(false);
+        nowMessageFragment.show(mainActivity.getSupportFragmentManager(), "Test");
     }
 
     public void updateChat(List<String> message) {
