@@ -1,3 +1,4 @@
+import json
 import os
 
 import settings
@@ -113,7 +114,7 @@ def try_variant(variant: str, room_id: int) -> bool:
     db.send_message(variant.lower().strip(), room_id)
     if buffer:
         word = db.get_room_word(room_id)
-        db.set_room_status_message("Слово угадано! Правильный ответ: " + word, room_id)
+        db.set_room_status_message(json.dumps({"message": "Слово угадано!", "right_answer": word}), room_id)
         start_wait_state(room_id)
         db.auto_set_room_word(room_id)
     db.close_now_connection()
@@ -154,7 +155,7 @@ def get_room_status_message(room_id: int) -> str:
 def check_for_end_time(room_id: int) -> bool:
     buffer = db.is_time_end_in_room(room_id)
     if buffer:
-        db.set_room_status_message("Время закончилось! Правильный ответ: " + db.get_room_word(room_id), room_id)
+        db.set_room_status_message(json.dumps({"message": "Время закончилось!", "right_answer": db.get_room_word(room_id)}), room_id)
         if db.is_painter_last(room_id):
             db.stop_room(room_id)
             return True
