@@ -506,7 +506,7 @@ def clean_room_for_freeze(room_id: int) -> None:
 
         if now_painter in user_deleted_list_id:
             now_word = get_room_word(room_id)
-            set_room_status_message('Игрок отключился. Правильный ответ: {}'.format(now_word), room_id)
+            set_room_status_message(json.dumps({"message": "Игрок отключился.", "right_answer": now_word}), room_id)
             next_painter(room_id)
 
         if is_room_started(room_id):
