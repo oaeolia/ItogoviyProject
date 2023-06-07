@@ -1,8 +1,4 @@
 import os
-import dotenv
-
-if os.path.exists('venv/config.env'):
-    dotenv.load_dotenv('venv/config.env')
 
 DB_HOST = os.getenv('DB_HOST', 'localhost')
 DB_USER_NAME = os.getenv('DB_USER_NAME', 'root')
