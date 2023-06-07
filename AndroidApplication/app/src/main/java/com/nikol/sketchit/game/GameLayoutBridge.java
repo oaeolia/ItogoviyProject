@@ -142,6 +142,10 @@ public class GameLayoutBridge {
         binding.buttonEnterVariant.setOnClickListener(listener);
     }
 
+    public void clearVariant() {
+        binding.inputVariant.setText("");
+    }
+
     public boolean isVariantEmpty() {
         return binding.inputVariant.getText().toString().isEmpty();
     }

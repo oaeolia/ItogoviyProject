@@ -47,6 +47,7 @@ public class GameController {
                         }
                     }
                 }, null);
+                uiBridge.clearVariant();
             }
         });
     }
