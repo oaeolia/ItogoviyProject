@@ -112,7 +112,7 @@ public class GameController {
         if (nowPainter != this.nowPainter) {
             isLastAnswerRight = false;
             this.nowPainter = nowPainter;
-            if (!Objects.equals(message.message, "")) {
+            if (message != null && message.message != null && !Objects.equals(message.message, "")) {
                 Toast.makeText(uiBridge.getContext(), message.message, Toast.LENGTH_SHORT).show();
             }
             if (nowPainter == userId) {

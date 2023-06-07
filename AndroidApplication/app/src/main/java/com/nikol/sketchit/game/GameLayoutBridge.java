@@ -113,7 +113,7 @@ public class GameLayoutBridge {
         mainActivity.setEnableDraw(false);
         isWaitingState = true;
         startRoundTimer();
-        
+
         if (nowMessageFragment != null) {
             nowMessageFragment.dismiss();
         }
