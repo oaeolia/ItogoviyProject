@@ -39,6 +39,11 @@
 По прошествии пяти раундов игра завершится.</string>
     <string name="message_waiting_for_room">Поиск команды, ожидайте…</string>
 
+    <string name="message_your_varint_right">Вы отгадали!</string>
+    <string name="message_right_answer">Правильный ответ:</string>
+    <string name="message_time_is_over">Время вышло</string>
+    <string name="message_word_guessed">Слово отгадно</string>
+
     <string name="sml">Small</string>
     <string name="med">Medium</string>
     <string name="lrg">Large</string>

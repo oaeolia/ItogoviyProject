@@ -8,8 +8,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.fragment.app.DialogFragment;
-
 import com.nikol.sketchit.Application;
 import com.nikol.sketchit.ChatLayoutAdapter;
 import com.nikol.sketchit.GameMenuActivity;
@@ -28,7 +26,7 @@ public class GameLayoutBridge {
 
     private boolean isWaitingState;
     private long roundTime = -1;
-    private DialogFragment nowMessageFragment = null;
+    private GameRoundEndMessageFragment nowMessageFragment = null;
 
 
     public GameLayoutBridge(ActivityMainBinding binding, MainActivity mainActivity) {
@@ -223,6 +221,9 @@ public class GameLayoutBridge {
 
         if (freeTime <= 0) {
             binding.textTime.setText("00:00");
+            if (nowMessageFragment != null) {
+                nowMessageFragment.updateTime("00:00");
+            }
             return;
         }
 
@@ -230,8 +231,14 @@ public class GameLayoutBridge {
             long minutes = freeTime / 60;
             long seconds = freeTime % 60;
             binding.textTime.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
+            if (nowMessageFragment != null) {
+                nowMessageFragment.updateTime(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
+            }
         } else {
             binding.textTime.setText(String.format(Locale.getDefault(), "00:%02d", freeTime));
+            if (nowMessageFragment != null) {
+                nowMessageFragment.updateTime(String.format(Locale.getDefault(), "00:%02d", freeTime));
+            }
         }
     }
 
