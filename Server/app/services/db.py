@@ -103,10 +103,10 @@ def remove_application_session(session_id: int, session_token: str) -> None:
 def get_new_of_free_room(user_id: int) -> int:
     with get_connection().cursor() as cursor:
         cursor.execute(
-            "SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE start_checked_time IS NULL  AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL)")
+            "SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE (is_waiting=1 AND is_started=0) AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL)")
         data = cursor.fetchone()
         if data is None:
-            cursor.execute("INSERT INTO games_rooms (now_word, user_1) VALUES ('', %s)", user_id)
+            cursor.execute("INSERT INTO games_rooms (now_word, user_1, is_waiting) VALUES ('', %s, 1)", user_id)
             cursor.connection.commit()
             return cursor.lastrowid
         else:
@@ -250,7 +250,7 @@ def clear_sessions() -> None:
 
 def set_room_starting_status(room_id: int) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("UPDATE games_rooms SET is_started = 1 WHERE id = %s", room_id)
+        cursor.execute("UPDATE games_rooms SET is_started = 1, is_waiting=0 WHERE id = %s", room_id)
         cursor.connection.commit()
 
 
@@ -303,7 +303,7 @@ def is_painter_last(room_id: int) -> bool:
 
 def stop_room(room_id: int) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("UPDATE games_rooms SET is_started = 0 WHERE id = %s", room_id)
+        cursor.execute("UPDATE games_rooms SET is_started = 0, is_waiting=0 WHERE id = %s", room_id)
         cursor.connection.commit()
 
 
@@ -374,7 +374,8 @@ def is_not_room_freeze(room_id: int) -> int:
 
 def set_room_waiting_state(room_id: int, state: bool) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("UPDATE games_rooms SET is_waiting = %s, start_time = NOW() WHERE id = %s", (1 if state else 0, room_id))
+        cursor.execute("UPDATE games_rooms SET is_waiting = %s, start_time = NOW() WHERE id = %s",
+                       (1 if state else 0, room_id))
         cursor.connection.commit()
 
 

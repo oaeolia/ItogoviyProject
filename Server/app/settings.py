@@ -1,9 +1,9 @@
 import os
 
 DB_HOST = os.getenv('DB_HOST', 'localhost')
-DB_USER_NAME = os.getenv('DB_USER_NAME', 'root')
-DB_NAME = os.getenv('DB_NAME', 'samsung_finally_project')
-DB_PASSWORD = os.getenv('DB_PASSWORD', '')
+DB_USER_NAME = os.getenv('DB_USER_NAME', 'sketch_it_system')
+DB_NAME = os.getenv('DB_NAME', 'sketch_it')
+DB_PASSWORD = os.getenv('DB_PASSWORD', 'ske1ch_pass_!t_system_password')
 
 API_URL_MAIN = '/api/v1'
 
