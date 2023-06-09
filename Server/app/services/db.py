@@ -78,6 +78,12 @@ def try_auth_and_create_session(login: str, password: str) -> None | tuple[str, 
             return token, session_id, application_token, application_session_id, data[0]
 
 
+def get_user_name(user_id: int) -> str:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT name FROM users WHERE id = %s", (user_id,))
+        return cursor.fetchone()[0]
+
+
 def try_auth_application_and_create_session(token: str, application_session_id: int) -> None | tuple[str, int, int]:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT id, user_id FROM application_sessions WHERE token=%s AND id = %s",

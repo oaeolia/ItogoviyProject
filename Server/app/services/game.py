@@ -109,12 +109,13 @@ def next_drawer(room_id: int) -> bool:
     return False
 
 
-def try_variant(variant: str, room_id: int) -> bool:
+def try_variant(variant: str, room_id: int, user_id: int) -> bool:
     buffer = db.check_variant(variant, room_id)
     db.send_message(variant.lower().strip(), room_id)
     if buffer:
         word = db.get_room_word(room_id)
-        db.set_room_status_message(json.dumps({"message": "Слово угадано!", "right_answer": word}), room_id)
+        name = db.get_user_name(user_id)
+        db.set_room_status_message(json.dumps({"message": "Слово угадано! Угадал: " + name, "right_answer": word}), room_id)
         start_wait_state(room_id)
         db.auto_set_room_word(room_id)
     db.close_now_connection()

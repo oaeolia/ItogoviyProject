@@ -128,7 +128,7 @@ def try_variant() -> Response:
     session = auth.get_session(data['session_id'], data['session_token'])
     if session is None:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
-    return Response(json.dumps({'status': settings.RESPONSE_OK, 'result': game.try_variant(data['variant'], data['room_id'])}))
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'result': game.try_variant(data['variant'], data['room_id'], session['user_id'])}))
 
 
 @app.route(settings.API_URL_MAIN + '/game/get_status', methods=['POST'])
