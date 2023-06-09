@@ -46,7 +46,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/layout_tools"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -166,35 +166,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/layout_tools"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical"
-        android:weightSum="2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/button_draw"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@android:color/darker_gray"
-            android:contentDescription="@string/content_description_brush"
-            android:src="@drawable/brush" />
-
-        <ImageButton
-            android:id="@+id/button_erase"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:backgroundTint="@android:color/darker_gray"
-            android:contentDescription="@string/content_description_erase"
-            android:src="@drawable/eraser"
-            android:tag="#FFFFFF" />
-    </LinearLayout>
-
     <EditText
         android:id="@+id/input_variant"
         android:layout_width="0dp"
@@ -254,16 +225,53 @@
         app:layout_constraintEnd_toStartOf="@+id/barrierMainDataForPainter"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/textTitileChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titile_variant_chat"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/layout_chat"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_draw"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:contentDescription="@string/content_description_brush"
+        android:src="@drawable/brush"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scrollView2" />
+
+    <ImageButton
+        android:id="@+id/button_erase"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:contentDescription="@string/content_description_erase"
+        android:src="@drawable/eraser"
+        android:tag="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_draw" />
+
     <com.nikol.sketchit.ChatRecycleView
         android:id="@+id/layout_chat"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:longClickable="false"
         android:maxHeight="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_max="200dp"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textTitileChat">
 
     </com.nikol.sketchit.ChatRecycleView>
 
@@ -285,8 +293,8 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:indeterminate="true"
             android:background="@color/teal_700"
+            android:indeterminate="true"
             android:indeterminateTintMode="src_atop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
