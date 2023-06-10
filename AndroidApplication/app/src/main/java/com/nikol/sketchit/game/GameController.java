@@ -42,7 +42,6 @@ public class GameController {
                     public void onDataReady(Boolean result, String message, Boolean status) {
                         if (status && result) {
                             isLastAnswerRight = true;
-                            Toast.makeText(view.getContext(), R.string.message_win, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, null);
