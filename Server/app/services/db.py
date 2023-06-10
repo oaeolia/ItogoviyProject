@@ -152,12 +152,11 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
             if data[6]:
                 return 'STARTED'
             else:
+                if data[7] is not None:
+                    return 'WAITING_CHECK'
                 if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None \
                         and data[5] is not None:
-                    if data[7] is None:
-                        return 'STARTING'
-                    else:
-                        return 'WAITING_CHECK'
+                    return 'STARTING'
                 else:
                     return 'WAITING'
 
