@@ -103,8 +103,6 @@ public class GameLayoutBridge {
 
 
     public void setMessageState(String message, String rightAnswer, boolean isVariantTrue, int remainingTime) {
-        ((Application) mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remainingTime + " " + rightAnswer);
-        // TODO: Add message text
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
         binding.buttonDraw.setVisibility(View.INVISIBLE);
         binding.buttonErase.setVisibility(View.INVISIBLE);
