@@ -46,7 +46,8 @@ public class GameLayoutBridge {
 
     public void setLoadState() {
         binding.progressBarLayout.setVisibility(View.VISIBLE);
-        binding.layoutTools.setVisibility(View.INVISIBLE);
+        binding.buttonDraw.setVisibility(View.INVISIBLE);
+        binding.buttonErase.setVisibility(View.INVISIBLE);
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.imageCanvas.setVisibility(View.INVISIBLE);
@@ -62,7 +63,8 @@ public class GameLayoutBridge {
 
     public void setPaintState() {
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
-        binding.layoutTools.setVisibility(View.VISIBLE);
+        binding.buttonDraw.setVisibility(View.VISIBLE);
+        binding.buttonErase.setVisibility(View.VISIBLE);
         binding.layoutPaintColors.setVisibility(View.VISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.inputVariant.setVisibility(View.INVISIBLE);
@@ -81,8 +83,8 @@ public class GameLayoutBridge {
 
     public void setWatchState() {
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
-        binding.layoutTools.setVisibility(View.INVISIBLE);
-        binding.layoutPaintColors.setVisibility(View.INVISIBLE);
+        binding.buttonDraw.setVisibility(View.INVISIBLE);
+        binding.buttonErase.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.VISIBLE);
         binding.inputVariant.setVisibility(View.VISIBLE);
         binding.imageCanvas.setVisibility(View.VISIBLE);
@@ -103,7 +105,8 @@ public class GameLayoutBridge {
         ((Application) mainActivity.getApplication()).getLogger().logDebug("TEST", "setMessageState: " + message + " " + remainingTime + " " + rightAnswer);
         // TODO: Add message text
         binding.progressBarLayout.setVisibility(View.INVISIBLE);
-        binding.layoutTools.setVisibility(View.INVISIBLE);
+        binding.buttonDraw.setVisibility(View.INVISIBLE);
+        binding.buttonErase.setVisibility(View.INVISIBLE);
         binding.layoutPaintColors.setVisibility(View.INVISIBLE);
         binding.buttonEnterVariant.setVisibility(View.INVISIBLE);
         binding.inputVariant.setVisibility(View.INVISIBLE);

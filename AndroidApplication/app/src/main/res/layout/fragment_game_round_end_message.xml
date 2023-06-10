@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal|center_vertical"
     android:background="@color/teal_200"
     android:minWidth="300dp"
+    android:minHeight="150dp"
     tools:context=".GameRoundEndMessageFragment">
 
     <TextView
@@ -25,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewMessage" />
@@ -34,9 +35,9 @@
         android:id="@+id/textViewTimeLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/textViewMessage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewMessage"
-        app:layout_constraintTop_toTopOf="@+id/textViewMessage" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRightAnswer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

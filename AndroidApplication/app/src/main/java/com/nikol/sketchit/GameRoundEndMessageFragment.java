@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,9 @@ public class GameRoundEndMessageFragment extends DialogFragment {
         return binding.getRoot();
     }
 
+    @SuppressLint("SetTextI18n")
     public void updateTime(String time) {
-        binding.textViewTimeLeft.setText(time);
+        String message = getResources().getString(R.string.message_remaining_time_for_start_game);
+        binding.textViewTimeLeft.setText(message + " " + time);
     }
 }
