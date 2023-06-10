@@ -13,6 +13,7 @@ import com.nikol.sketchit.ChatLayoutAdapter;
 import com.nikol.sketchit.GameMenuActivity;
 import com.nikol.sketchit.GameRoundEndMessageFragment;
 import com.nikol.sketchit.MainActivity;
+import com.nikol.sketchit.R;
 import com.nikol.sketchit.databinding.ActivityMainBinding;
 
 import java.util.List;
@@ -222,10 +223,12 @@ public class GameLayoutBridge {
             freeTime = Application.ROUND_SECONDS_TIME - (System.currentTimeMillis() - roundTime) / 1000;
         }
 
+        String main = mainActivity.getResources().getString(R.string.message_remaining_time_for_start_game) + " ";
+
         if (freeTime <= 0) {
             binding.textTime.setText("00:00");
             if (nowMessageFragment != null) {
-                nowMessageFragment.updateTime("00:00");
+                nowMessageFragment.updateTime(main + "00:00");
             }
             return;
         }
@@ -235,12 +238,12 @@ public class GameLayoutBridge {
             long seconds = freeTime % 60;
             binding.textTime.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
             if (nowMessageFragment != null) {
-                nowMessageFragment.updateTime(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
+                nowMessageFragment.updateTime(main + String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
             }
         } else {
             binding.textTime.setText(String.format(Locale.getDefault(), "00:%02d", freeTime));
             if (nowMessageFragment != null) {
-                nowMessageFragment.updateTime(String.format(Locale.getDefault(), "00:%02d", freeTime));
+                nowMessageFragment.updateTime(main + String.format(Locale.getDefault(), "00:%02d", freeTime));
             }
         }
     }

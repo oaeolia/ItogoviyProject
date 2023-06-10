@@ -12,7 +12,6 @@ import com.nikol.sketchit.server.ServerCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
-import java.util.Objects;
 
 public class GameController {
     private static final String USER_ROLE = "USER";
@@ -113,9 +112,6 @@ public class GameController {
         if (nowPainter != this.nowPainter) {
             isLastAnswerRight = false;
             this.nowPainter = nowPainter;
-            if (message != null && message.message != null && !Objects.equals(message.message, "")) {
-                Toast.makeText(uiBridge.getContext(), message.message, Toast.LENGTH_SHORT).show();
-            }
             if (nowPainter == userId) {
                 uiBridge.setPaintState();
                 updateWord();

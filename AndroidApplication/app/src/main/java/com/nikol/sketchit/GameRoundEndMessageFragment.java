@@ -3,6 +3,7 @@ package com.nikol.sketchit;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import android.view.LayoutInflater;
@@ -25,9 +26,8 @@ public class GameRoundEndMessageFragment extends DialogFragment {
 
     @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO: Set args to view
         Bundle args = getArguments();
         binding = FragmentGameRoundEndMessageBinding.inflate(inflater, container, false);
 
@@ -46,7 +46,6 @@ public class GameRoundEndMessageFragment extends DialogFragment {
 
     @SuppressLint("SetTextI18n")
     public void updateTime(String time) {
-        String message = getResources().getString(R.string.message_remaining_time_for_start_game);
-        binding.textViewTimeLeft.setText(message + " " + time);
+        binding.textViewTimeLeft.setText(time);
     }
 }
