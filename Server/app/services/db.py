@@ -419,6 +419,30 @@ def get_room_status_message(room_id: int) -> str:
             return data[0]
 
 
+def get_players_of_room(room_id: int) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id=%s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return 0
+        else:
+            players_count = 0
+            for i in range(5):
+                if data[i] is not None:
+                    players_count += 1
+            return players_count
+
+
+def get_waiting_time_of_room(room_id: int) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT TIMESTAMPDIFF(SECOND, start_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        if data is None:
+            return -1
+        else:
+            return data[0]
+
+
 def set_room_status_message(message: str, room_id: int) -> None:
     with get_connection().cursor() as cursor:
         cursor.execute("UPDATE games_rooms SET message = %s WHERE id = %s", (message, room_id))

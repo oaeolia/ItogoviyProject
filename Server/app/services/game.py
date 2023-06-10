@@ -17,8 +17,8 @@ def get_or_create_room(user_id: int) -> int:
 def check_game_room_for_user(room_id: int, user_id: int) -> str:
     buffer = db.check_game_room_for_user(room_id, user_id)
     if buffer == 'WAITING':
-        # TODO: Add check for time
-        pass
+        if check_room_for_start_possibility(room_id):
+            start_game(room_id)
     if buffer == 'STARTING':
         start_checked_for_game_game(room_id)
         if not db.game_room_set_user_checked(room_id, user_id):
@@ -35,6 +35,15 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
             start_game(room_id)
     db.close_now_connection()
     return buffer
+
+
+def check_room_for_start_possibility(room_id: int) -> bool:
+    time = db.get_waiting_time_of_room(room_id)
+    players = db.get_players_of_room(room_id)
+
+    if time >= settings.ROOM_WAITING_TIME_FOR_SMALL_START and players >= settings.ROOM_PLAYERS_FOR_SMALL_START:
+        return True
+    return False
 
 
 def get_remaining_time(room_id: int) -> int:
