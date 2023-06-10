@@ -16,6 +16,9 @@ def get_or_create_room(user_id: int) -> int:
 
 def check_game_room_for_user(room_id: int, user_id: int) -> str:
     buffer = db.check_game_room_for_user(room_id, user_id)
+    if buffer == 'WAITING':
+        # TODO: Add check for time
+        pass
     if buffer == 'STARTING':
         start_checked_for_game_game(room_id)
         if not db.game_room_set_user_checked(room_id, user_id):

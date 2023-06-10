@@ -152,7 +152,8 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
             if data[6]:
                 return 'STARTED'
             else:
-                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None and data[5] is not None:
+                if data[1] is not None and data[2] is not None and data[3] is not None and data[4] is not None \
+                        and data[5] is not None:
                     if data[7] is None:
                         return 'STARTING'
                     else:
@@ -354,8 +355,8 @@ def get_remaining_time(room_id: int) -> int:
             return -1
         else:
             if is_not_room_freeze(room_id) == 0:
-                return 10 - data[0]
-            return 90 - data[0]
+                return settings.ROUND_PAUSE_TIME - data[0]
+            return settings.ROUND_TIME - data[0]
 
 
 def is_room_started(room_id: int) -> int:
@@ -402,7 +403,7 @@ def is_time_end_in_room(room_id: int) -> bool:
         if data is None:
             return False
         else:
-            if data[0] > 90:
+            if data[0] > settings.ROUND_TIME:
                 return True
             else:
                 return False
@@ -432,10 +433,11 @@ def send_message(message: str, room_id: int) -> None:
 
 def check_room_for_freeze(room_id: int) -> str:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
-                       room_id)
+        cursor.execute(
+            "SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
+            room_id)
         data = cursor.fetchone()
-        if data is None:
+        if data is None or data[0] > settings.ROUND_PAUSE_TIME:
             return 'WAITING_CHECK'
         else:
             cursor.execute("UPDATE games_rooms SET start_checked_time = NULL WHERE id = %s", room_id)
