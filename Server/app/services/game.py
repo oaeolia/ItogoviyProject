@@ -18,7 +18,7 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
     buffer = db.check_game_room_for_user(room_id, user_id)
     if buffer == 'WAITING':
         if check_room_for_start_possibility(room_id):
-            start_game(room_id)
+            start_checked_for_game_game(room_id)
     if buffer == 'STARTING':
         start_checked_for_game_game(room_id)
         if not db.game_room_set_user_checked(room_id, user_id):
