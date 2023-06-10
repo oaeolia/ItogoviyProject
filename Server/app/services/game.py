@@ -18,6 +18,7 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
     buffer = db.check_game_room_for_user(room_id, user_id)
     if buffer == 'WAITING':
         if check_room_for_start_possibility(room_id):
+            print("start checked")
             start_checked_for_game_game(room_id)
     if buffer == 'STARTING':
         start_checked_for_game_game(room_id)
@@ -41,7 +42,11 @@ def check_room_for_start_possibility(room_id: int) -> bool:
     time = db.get_waiting_time_of_room(room_id)
     players = db.get_players_of_room(room_id)
 
+    print(time)
+    print(players)
+
     if time >= settings.ROOM_WAITING_TIME_FOR_SMALL_START and players >= settings.ROOM_PLAYERS_FOR_SMALL_START:
+        print("return true")
         return True
     return False
 
