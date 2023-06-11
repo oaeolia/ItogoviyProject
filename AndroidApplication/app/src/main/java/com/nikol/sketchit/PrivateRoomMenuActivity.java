@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.nikol.sketchit.databinding.ActivityPrivateRoomMenuBinding;
@@ -22,6 +23,7 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
     private ILogger logger;
     private int roomId;
     private Timer updateTimer;
+    private Thread waitingRoomThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +37,22 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
 
         binding.layoutSelectActionType.setVisibility(View.VISIBLE);
 
-        binding.buttonJoin.setOnClickListener(view -> {
+        binding.buttonJoinPrivateGame.setOnClickListener(view -> {
             binding.layoutSelectActionType.setVisibility(View.INVISIBLE);
             binding.layoutJoinPrivateGame.setVisibility(View.VISIBLE);
         });
-        binding.buttonStartGame.setOnClickListener(view -> startPrivateGame());
+        binding.buttonCreatePrivateGame.setOnClickListener(view -> startPrivateGame());
 
-        binding.buttonJoin.setOnClickListener(view -> joinByToken(binding.textGameToken.getText().toString()));
+        binding.buttonJoin.setOnClickListener(view -> joinByToken(binding.textGameTokenInput.getText().toString().trim()));
         binding.buttonStartGame.setOnClickListener(view -> startGame(roomId));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        updateTimer.cancel();
+        if (updateTimer != null) {
+            updateTimer.cancel();
+        }
     }
 
     private void startGame(int roomId) {
@@ -57,8 +61,8 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
             public void onDataReady(String message, Boolean status, Object arg) {
                 if (!status) {
                     logger.logWarming("PrivateGameMenu", "Can`t start game: " + message);
+                    startGame(roomId);
                 }
-                startGame(roomId);
             }
         }, new ServerCallback<String, Integer, Object>() {
             @Override
@@ -68,6 +72,7 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
             }
         });
 
+        logger.logInfo("PrivateGameMenu", "Start game. Room id: " + roomId);
         startWaitingRoom(roomId);
     }
 
@@ -83,7 +88,10 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
                     startPrivateGame();
                 }
 
+                logger.logInfo("PrivateGameMenu", "Create private game. Room id: " + roomId);
+
                 binding.textGameToken.setText(message);
+                binding.layoutLoad.setVisibility(View.INVISIBLE);
                 binding.layoutPrivateGameManage.setVisibility(View.VISIBLE);
                 PrivateRoomMenuActivity.this.roomId = roomId;
                 startUpdates();
@@ -98,9 +106,6 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
     }
 
     private void startUpdates() {
-        binding.buttonStartGame.setOnClickListener(view -> {
-
-        });
         updateTimer = new Timer();
         updateTimer.schedule(new TimerTask() {
             @Override
@@ -111,7 +116,9 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
                         if (!status) {
                             logger.logWarming("PrivateGameMenu", "Can`t get users: " + message);
                         }
-//                        TODO: Add update users
+
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(PrivateRoomMenuActivity.this, android.R.layout.simple_list_item_1, users);
+                        binding.listUsers.setAdapter(adapter);
                     }
                 }, new ServerCallback<String, Integer, Object>() {
                     @Override
@@ -124,6 +131,7 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
     }
 
     private void joinByToken(String token) {
+        logger.logDebug("PrivateGameMenu", "Join private game by token: " + token);
         if (token.length() != Application.PRIVATE_GAME_TOKEN_LEN) {
             Toast.makeText(this, R.string.message_invalid_private_game_token, Toast.LENGTH_SHORT).show();
             return;
@@ -135,10 +143,12 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
                 if (!status) {
                     logger.logError("PrivateGameMenu", "Can`t join private game: " + message);
                     joinByToken(token);
+                    return;
                 }
 
                 binding.layoutLoad.setVisibility(View.VISIBLE);
                 binding.layoutJoinPrivateGame.setVisibility(View.INVISIBLE);
+                logger.logInfo("PrivateGameMenu", "Join private game by token. Room id: " + roomId);
                 startWaitingRoom(roomId);
             }
         }, new ServerCallback<String, Integer, Object>() {
@@ -151,7 +161,16 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
     }
 
     private void startWaitingRoom(int roomId) {
-        Thread thread = new Thread() {
+        binding.layoutLoad.setVisibility(View.VISIBLE);
+        binding.layoutPrivateGameManage.setVisibility(View.INVISIBLE);
+        binding.layoutJoinPrivateGame.setVisibility(View.INVISIBLE);
+        binding.layoutSelectActionType.setVisibility(View.INVISIBLE);
+        logger.logInfo("PrivateGameMenu", "Start waiting room");
+
+        if (waitingRoomThread != null) {
+            waitingRoomThread.interrupt();
+        }
+        waitingRoomThread = new Thread() {
             private boolean isWorking = true;
 
             @Override
@@ -168,15 +187,17 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
                         @Override
                         public void onDataReady(String message, Boolean status, Object arg3) {
                             logger.logInfo("PrivateGameMenu", "Game status: " + message);
-                            if (message.equals("STARTED")) {
+                            if (message.equals("STARTED") && isWorking) {
                                 interrupt();
+                                logger.logInfo("PrivateGameMenu", "Game started");
                                 Intent intent = new Intent(PrivateRoomMenuActivity.this, MainActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 intent.putExtra(MainActivity.ROOM_ID_INTENT_KEY, roomId);
+                                isWorking = false;
                                 startActivity(intent);
                                 finish();
+                                logger.logInfo("PrivateGameMenu", "Finished");
                                 interrupt();
-                                isWorking = false;
                             }
                         }
                     }, new ServerCallback<String, Integer, Object>() {
@@ -188,6 +209,6 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
                 }
             }
         };
-        thread.start();
+        waitingRoomThread.start();
     }
 }

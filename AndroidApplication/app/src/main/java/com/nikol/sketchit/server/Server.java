@@ -699,7 +699,7 @@ public class Server {
         }
 
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST, SERVER_URL + "game/create_private_room", jsonBody, responseData -> {
+                Request.Method.POST, SERVER_URL + "game/get_private_room", jsonBody, responseData -> {
             try {
                 if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
                     callback.onDataReady(responseData.getInt("room_id"), null, true);

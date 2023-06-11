@@ -73,8 +73,10 @@ public class GameMenuActivity extends AppCompatActivity {
     }
 
     private void openPrivateGame(View view) {
-        Intent intent = new Intent(this, ActivityPrivateRoomMenuBinding.class);
+        Intent intent = new Intent(this, PrivateRoomMenuActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
     }
 
 
