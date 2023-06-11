@@ -140,7 +140,7 @@ def user_check_room() -> Response:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
     status = game.check_game_room_for_user(data['room_id'], session['user_id'])
     if status == '':
-        return Response(json.dumps({'status': settings.RESPONSE_ERROR}))
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Error'}))
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_status': status}))
 
 
