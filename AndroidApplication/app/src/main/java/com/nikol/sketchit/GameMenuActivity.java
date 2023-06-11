@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nikol.sketchit.databinding.ActivityGameMenuBinding;
+import com.nikol.sketchit.databinding.ActivityPrivateRoomMenuBinding;
 import com.nikol.sketchit.loggers.ILogger;
 import com.nikol.sketchit.server.Server;
 import com.nikol.sketchit.server.ServerCallback;
@@ -35,6 +36,8 @@ public class GameMenuActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        binding.buttonPrivateRoom.setOnClickListener(this::openPrivateGame);
 
         binding.buttonRoomFindStart.setOnClickListener(view -> server.startFindRoom(new ServerCallback<Integer, String, Object>() {
             @Override
@@ -67,6 +70,11 @@ public class GameMenuActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void openPrivateGame(View view) {
+        Intent intent = new Intent(this, ActivityPrivateRoomMenuBinding.class);
+        startActivity(intent);
     }
 
 

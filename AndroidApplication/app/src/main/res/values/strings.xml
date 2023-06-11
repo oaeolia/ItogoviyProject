@@ -8,6 +8,11 @@
     <string name="title_variant">Вариант</string>
     <string name="title_rules">Правила</string>
     <string name="titile_variant_chat">Варианты игроков</string>
+    <string name="title_private_game">Приватная игра</string>
+    <string name="title_private_game_id">Индефикатор комнаты:</string>
+    <string name="title_private_game_user_list">Список игроков:</string>
+    <string name="title_private_game_join">Подключение к приватной игре</string>
+    <string name="title_private_game_key">Ключ игры</string>
 
     <string name="action_login">Войти</string>
     <string name="action_register">Зарегистрироваться</string>
@@ -16,6 +21,10 @@
     <string name="action_start_game_room_finder">Искать комнату</string>
     <string name="action_logout">Выйти из аккаунта</string>
     <string name="action_game_rules">Правила игры</string>
+    <string name="action_start_private_room">Приватная игра</string>
+    <string name="action_join">Присоединиться</string>
+    <string name="action_create">Создать</string>
+    <string name="action_start_game">Начать игру</string>
 
     <string name="message_win">Вы отгадали!</string>
     <string name="message_game_end">Игра закончилась</string>
@@ -45,6 +54,8 @@
     <string name="message_time_is_over">Время вышло</string>
     <string name="message_word_guessed">Слово отгадано</string>
     <string name="message_remaining_time_for_start_game">Игра продолжится через:</string>
+
+    <string name="message_invalid_private_game_token">Неверные индефикатор игры</string>
 
     <string name="sml">Small</string>
     <string name="med">Medium</string>

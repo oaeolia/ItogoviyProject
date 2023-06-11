@@ -644,4 +644,184 @@ public class Server {
 
         requestQueue.add(request);
     }
+
+    public void createPrivateGame(ServerCallback<Integer, String, Boolean> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/create_private_room", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    callback.onDataReady(responseData.getInt("room_id"), responseData.getString("token"), true);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, responseData.getString("message"), false);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try create private room)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (try create private room): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t try create private room " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t try create private room " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try create private room)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void getPrivateRoom(String token, ServerCallback<Integer, String, Boolean> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("token", token);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/create_private_room", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    callback.onDataReady(responseData.getInt("room_id"), null, true);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, responseData.getString("message"), false);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try create private room)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (try create private room): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t try create private room " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t try create private room " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try create private room)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void getUsersPrivateGame(int roomId, ServerCallback<List<String>, String, Boolean> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/get_list_of_private_room", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    List<String> resultBuffer = new LinkedList<>();
+                    JSONArray dataBuffer = responseData.getJSONArray("users");
+                    for (int i = 0; i < dataBuffer.length(); i++) {
+                        resultBuffer.add(dataBuffer.getString(i));
+                    }
+                    callback.onDataReady(resultBuffer, null, true);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(null, responseData.getString("message"), false);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try create private room)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (try create private room): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t try create private room " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t try create private room " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try create private room)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void startPrivateGame(int roomId, ServerCallback<String, Boolean, Object> callback, ServerCallback<String, Integer, Object> errorCallback) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("session_id", sessionId);
+            jsonBody.put("session_token", sessionToken);
+            jsonBody.put("room_id", roomId);
+        } catch (JSONException e) {
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, SERVER_URL + "game/start_private_room", jsonBody, responseData -> {
+            try {
+                if (responseData.getString("status").equals(SERVER_RESPONSE_OK)) {
+                    callback.onDataReady(null, true, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_BAD)) {
+                    callback.onDataReady(responseData.getString("message"), false, null);
+                } else if (responseData.getString("status").equals(SERVER_RESPONSE_ERROR)) {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady(responseData.getString("message"), -1, null);
+                    }
+                } else {
+                    if (errorCallback != null) {
+                        errorCallback.onDataReady("Server undefined error (undefined status)", null, null);
+                    }
+                    logger.logError("Server", "Server undefined error (undefined status, try create private room)");
+                }
+            } catch (JSONException e) {
+                logger.logError("Server", "Can`t parse JSON from server (try create private room): " + e.getMessage());
+            }
+        }, error -> {
+            if (error.getMessage() != null) {
+                logger.logError("Server", "Can`t try create private room " + error.getMessage());
+            } else {
+                logger.logError("Server", "Can`t try create private room " + error);
+            }
+            if (errorCallback != null) {
+                errorCallback.onDataReady("Server undefined error (try create private room)", null, null);
+            }
+        });
+
+        requestQueue.add(request);
+    }
 }
