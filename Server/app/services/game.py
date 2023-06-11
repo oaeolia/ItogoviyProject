@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 import settings
 from services import db
@@ -51,6 +52,39 @@ def get_remaining_time(room_id: int) -> int:
     buffer = db.get_remaining_time(room_id)
     db.close_now_connection()
     return buffer
+
+
+def create_private_room(user_id: int) -> tuple[int, str]:
+    token = generate_private_room_token()
+    room_id = db.create_private_room(user_id, token)
+    db.close_now_connection()
+    return room_id, token
+
+
+def generate_private_room_token() -> str:
+    token = ''
+    for i in range(settings.PRIVATE_ROOM_TOKEN_LEN):
+        token += random.choice(settings.TOKEN_SYMBOLS)
+    return token
+
+
+def get_private_room(user_id: int, token: str) -> int:
+    room_id = db.get_private_room(user_id, token)
+    db.close_now_connection()
+    return room_id
+
+
+def get_users_in_private_room(room_id: int) -> list[str]:
+    data = db.get_users_in_private_room(room_id)
+    db.close_now_connection()
+    return data
+
+
+def start_private_room(room_id: int, user_id: int) -> None:
+    room_owner = db.get_private_room_owner(room_id)
+    if room_owner != user_id:
+        return
+    start_game(room_id)
 
 
 def start_checked_for_game_game(room_id: int) -> None:
@@ -127,7 +161,7 @@ def try_variant(variant: str, room_id: int, user_id: int) -> bool:
     db.send_message(variant.lower().strip(), room_id)
     if buffer:
         word = db.get_room_word(room_id)
-        name = db.get_user_name(user_id)
+        name = db.get_user_name_by_id(user_id)
         db.set_room_status_message(json.dumps({"message": "Слово угадано!\nУгадал: " + name, "right_answer": word}), room_id)
         start_wait_state(room_id)
         db.auto_set_room_word(room_id)

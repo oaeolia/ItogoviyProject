@@ -80,6 +80,56 @@ def get_new_room() -> Response:
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_id': game.get_or_create_room(session['user_id'])}))
 
 
+@app.route(settings.API_URL_MAIN + '/game/get_private_room', methods=['POST'])
+def connect_to_private_room() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'token' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    room_id = game.get_private_room(session['user_id'], data['token'])
+    if room_id == -1:
+        return Response(json.dumps({'status': settings.RESPONSE_BAD, 'message': 'Room not find'}))
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_id': room_id}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/create_private_room', methods=['POST'])
+def create_private_room() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    room_id, token = game.create_private_room(session['user_id'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'room_id': room_id, 'token': token}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/get_list_of_private_room', methods=['POST'])
+def get_list_of_private_room() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    users = game.get_users_in_private_room(session['user_id'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK, 'users': users}))
+
+
+@app.route(settings.API_URL_MAIN + '/game/start_private_room', methods=['POST'])
+def start_private_room() -> Response:
+    data = request.get_json()
+    if 'session_id' not in data or 'session_token' not in data or 'room_id' not in data:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Not all data in request'}))
+    session = auth.get_session(data['session_id'], data['session_token'])
+    if session is None:
+        return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
+    game.start_private_room(session['user_id'], data['room_id'])
+    return Response(json.dumps({'status': settings.RESPONSE_OK}))
+
+
 @app.route(settings.API_URL_MAIN + '/game/check_room', methods=['POST'])
 def user_check_room() -> Response:
     data = request.get_json()

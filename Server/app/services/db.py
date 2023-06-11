@@ -106,13 +106,64 @@ def remove_application_session(session_id: int, session_token: str) -> None:
         cursor.connection.commit()
 
 
+def create_private_room(user_id: int, token: str) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("INSERT INTO games_rooms (user_1, token, start_time, is_waiting) VALUES (%s, %s, NOW(), 1)", (user_id, token))
+        cursor.connection.commit()
+        return cursor.lastrowid
+
+
+def get_private_room(user_id: int, token: str) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT id, user_2, user_3, user_4, user_5 FROM games_rooms WHERE token = %s", (user_id, token))
+        data = cursor.fetchone()
+        if data is None:
+            return -1
+        for i in range(1, 5):
+            if data[i] is None:
+                cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(i), (user_id, data[0]))
+        return data[0]
+
+
+def get_user_name_by_id(user_id: int) -> str:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT name FROM users WHERE id = %s", (user_id,))
+        return cursor.fetchone()[0]
+
+
+def get_users_in_private_room(room_id: int) -> list[str]:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s", (room_id,))
+        data = cursor.fetchone()
+        if data is None:
+            return []
+        else:
+            user_id = [data[0], data[1], data[2], data[3], data[4]]
+            result = []
+            for i in user_id:
+                if i is None:
+                    continue
+                result.append(get_user_name_by_id(i))
+            return result
+
+
+def get_private_room_owner(room_id: int) -> int:
+    with get_connection().cursor() as cursor:
+        cursor.execute("SELECT user_1 FROM games_rooms WHERE id = %s", (room_id,))
+        data = cursor.fetchone()
+        if data is None:
+            return -1
+        else:
+            return data[0]
+
+
 def get_new_of_free_room(user_id: int) -> int:
     with get_connection().cursor() as cursor:
         cursor.execute(
-            "SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE (is_waiting=1 AND is_started=0) AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL)")
+            "SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE (is_waiting=1 AND is_started=0) AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL) AND token=\"\"")
         data = cursor.fetchone()
         if data is None:
-            cursor.execute("INSERT INTO games_rooms (now_word, user_1, is_waiting) VALUES ('', %s, 1)", user_id)
+            cursor.execute("INSERT INTO games_rooms (now_word, user_1, is_waiting, start_time) VALUES ('', %s, 1, NOW())", user_id)
             cursor.connection.commit()
             return cursor.lastrowid
         else:

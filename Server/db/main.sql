@@ -31,6 +31,7 @@ CREATE TABLE `application_sessions`
 CREATE TABLE `games_rooms`
 (
     `id`                 INT UNSIGNED                                                   NOT NULL AUTO_INCREMENT,
+    `token`              VARCHAR(50)   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT "",
     `now_word`           VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     `is_started`         BOOLEAN                                                        NOT NULL DEFAULT 0,
     `user_1`             INT UNSIGNED,
