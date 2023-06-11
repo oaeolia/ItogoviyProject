@@ -108,7 +108,7 @@ def remove_application_session(session_id: int, session_token: str) -> None:
 
 def create_private_room(user_id: int, token: str) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("INSERT INTO games_rooms (user_1, token, start_time, is_waiting) VALUES (%s, %s, NOW(), 1)", (user_id, token))
+        cursor.execute("INSERT INTO games_rooms (user_1, token, start_time, is_waiting, now_word) VALUES (%s, %s, NOW(), 1, \"\")", (user_id, token))
         cursor.connection.commit()
         return cursor.lastrowid
 
