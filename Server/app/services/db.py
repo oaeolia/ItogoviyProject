@@ -121,7 +121,7 @@ def get_private_room(user_id: int, token: str) -> int:
             return -1
         for i in range(1, 5):
             if data[i] is None:
-                cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(i), (user_id, data[0]))
+                cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(i+1), (user_id, data[0]))
                 cursor.connection.commit()
                 break
         return data[0]
