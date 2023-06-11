@@ -114,7 +114,7 @@ def get_list_of_private_room() -> Response:
     session = auth.get_session(data['session_id'], data['session_token'])
     if session is None:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
-    users = game.get_users_in_private_room(session['user_id'])
+    users = game.get_users_in_private_room(data['room_id'])
     return Response(json.dumps({'status': settings.RESPONSE_OK, 'users': users}))
 
 
