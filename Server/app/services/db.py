@@ -115,7 +115,7 @@ def create_private_room(user_id: int, token: str) -> int:
 
 def get_private_room(user_id: int, token: str) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT id, user_2, user_3, user_4, user_5 FROM games_rooms WHERE token = %s", (user_id, token))
+        cursor.execute("SELECT id, user_2, user_3, user_4, user_5 FROM games_rooms WHERE token = %s", token)
         data = cursor.fetchone()
         if data is None:
             return -1
