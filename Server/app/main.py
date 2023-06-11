@@ -126,7 +126,7 @@ def start_private_room() -> Response:
     session = auth.get_session(data['session_id'], data['session_token'])
     if session is None:
         return Response(json.dumps({'status': settings.RESPONSE_ERROR, 'message': 'Invalid session'}))
-    game.start_private_room(session['user_id'], data['room_id'])
+    game.start_private_room(data['room_id'], session['user_id'])
     return Response(json.dumps({'status': settings.RESPONSE_OK}))
 
 
