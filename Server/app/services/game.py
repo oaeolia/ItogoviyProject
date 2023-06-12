@@ -37,12 +37,6 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
                 buffer = 'STARTING'
             if buffer == 'STARTING':
                 start_game(room_id)
-        # if buffer != 'WAITING_CHECK':
-        #     db.close_now_connection()
-        #     return buffer
-        # if db.check_game_room(room_id):
-        #     buffer = 'STARTED'
-        #     start_game(room_id)
     db.close_now_connection()
     return buffer
 
