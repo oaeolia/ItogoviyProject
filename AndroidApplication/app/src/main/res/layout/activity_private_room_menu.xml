@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".PrivateRoomMenuActivity">
 
+    <Button
+        android:id="@+id/button_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/main"
+        android:text="@string/action_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_select_action_type"
         android:layout_width="wrap_content"
@@ -40,12 +51,14 @@
                 android:id="@+id/button_create_private_game"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/main"
                 android:text="@string/action_create" />
 
             <Button
                 android:id="@+id/button_join_private_game"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/main"
                 android:text="@string/action_join" />
         </LinearLayout>
 
@@ -133,6 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:backgroundTint="@color/main"
             android:text="@string/action_start_game"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/list_users"
@@ -180,6 +194,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:backgroundTint="@color/main"
             android:text="@string/action_join"
             app:layout_constraintEnd_toEndOf="@+id/text_game_token_input"
             app:layout_constraintStart_toStartOf="@+id/text_game_token_input"

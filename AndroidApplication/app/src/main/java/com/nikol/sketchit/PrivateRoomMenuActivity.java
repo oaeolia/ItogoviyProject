@@ -45,6 +45,12 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
 
         binding.buttonJoin.setOnClickListener(view -> joinByToken(binding.textGameTokenInput.getText().toString().trim()));
         binding.buttonStartGame.setOnClickListener(view -> startGame(roomId));
+        binding.buttonBack.setOnClickListener(view -> {
+            Intent intent = new Intent(PrivateRoomMenuActivity.this, GameMenuActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     @Override
@@ -98,8 +104,8 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
             }
         }, new ServerCallback<String, Integer, Object>() {
             @Override
-            public void onDataReady(String arg1, Integer arg2, Object arg3) {
-                logger.logError("PrivateGameMenu", "Can`t create private game: " + arg1);
+            public void onDataReady(String message, Integer errorCode, Object arg) {
+                logger.logError("PrivateGameMenu", "Can`t create private game: " + message);
                 startPrivateGame();
             }
         });
@@ -122,8 +128,8 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
                     }
                 }, new ServerCallback<String, Integer, Object>() {
                     @Override
-                    public void onDataReady(String arg1, Integer arg2, Object arg3) {
-                        logger.logWarming("PrivateGameMenu", "Can`t get users: " + arg1);
+                    public void onDataReady(String message, Integer errorCode, Object arg) {
+                        logger.logWarming("PrivateGameMenu", "Can`t get users: " + message);
                     }
                 });
             }
@@ -131,7 +137,6 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
     }
 
     private void joinByToken(String token) {
-        logger.logDebug("PrivateGameMenu", "Join private game by token: " + token);
         if (token.length() != Application.PRIVATE_GAME_TOKEN_LEN) {
             Toast.makeText(this, R.string.message_invalid_private_game_token, Toast.LENGTH_SHORT).show();
             return;
@@ -142,7 +147,7 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
             public void onDataReady(Integer roomId, String message, Boolean status) {
                 if (!status) {
                     logger.logError("PrivateGameMenu", "Can`t join private game: " + message);
-                    joinByToken(token);
+                    Toast.makeText(PrivateRoomMenuActivity.this, R.string.message_invalid_private_game_token, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -153,8 +158,8 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
             }
         }, new ServerCallback<String, Integer, Object>() {
             @Override
-            public void onDataReady(String arg1, Integer arg2, Object arg3) {
-                logger.logError("PrivateGameMenu", "Can`t join private game: " + arg1);
+            public void onDataReady(String message, Integer errorCode, Object arg) {
+                logger.logError("PrivateGameMenu", "Can`t join private game: " + message);
                 joinByToken(token);
             }
         });
@@ -185,7 +190,7 @@ public class PrivateRoomMenuActivity extends AppCompatActivity {
 
                     server.checkRoom(roomId, new ServerCallback<String, Boolean, Object>() {
                         @Override
-                        public void onDataReady(String message, Boolean status, Object arg3) {
+                        public void onDataReady(String message, Boolean status, Object arg) {
                             logger.logInfo("PrivateGameMenu", "Game status: " + message);
                             if (message.equals("STARTED") && isWorking) {
                                 interrupt();

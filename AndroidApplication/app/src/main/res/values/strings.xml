@@ -25,6 +25,7 @@
     <string name="action_join">Присоединиться</string>
     <string name="action_create">Создать</string>
     <string name="action_start_game">Начать игру</string>
+    <string name="action_back">Назад</string>
 
     <string name="message_win">Вы отгадали!</string>
     <string name="message_game_end">Игра закончилась</string>
