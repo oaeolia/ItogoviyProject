@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Server {
-    private static final String SERVER_URL = "http://192.168.1.13:80/api/v1/";
+//    private static final String SERVER_URL = "http://192.168.1.13:80/api/v1/";
+    private static final String SERVER_URL = "https://3394-178-214-254-229.ngrok-free.app/api/v1/";
     private static final String SERVER_RESPONSE_OK = "OK";
     private static final String SERVER_RESPONSE_BAD = "BAD";
     private static final String SERVER_RESPONSE_ERROR = "ERROR";
