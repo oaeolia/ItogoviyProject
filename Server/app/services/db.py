@@ -513,7 +513,7 @@ def check_room_for_freeze(room_id: int) -> str:
             "SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
             room_id)
         data = cursor.fetchone()
-        if data is None or data[0] > settings.ROUND_PAUSE_TIME:
+        if data is None or data[0] < settings.CHECK_TIME:
             return 'WAITING_CHECK'
         else:
             cursor.execute("UPDATE games_rooms SET start_checked_time = NULL WHERE id = %s", room_id)
