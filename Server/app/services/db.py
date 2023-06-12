@@ -366,21 +366,26 @@ def stop_room(room_id: int) -> None:
         cursor.connection.commit()
 
 
-def next_painter(room_id: int) -> None:
+def next_painter(room_id: int, last_painter_index: int = None) -> None:
     with get_connection().cursor() as cursor:
         cursor.execute("SELECT now_painter, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s",
                        room_id)
         data = cursor.fetchone()
-        if data[0] == data[1]:
-            new_painter = 2
-        elif data[0] == data[2]:
-            new_painter = 3
-        elif data[0] == data[3]:
-            new_painter = 4
-        elif data[0] == data[4]:
-            new_painter = 5
+
+        if last_painter_index is None:
+            if data[0] == data[1]:
+                new_painter = 2
+            elif data[0] == data[2]:
+                new_painter = 3
+            elif data[0] == data[3]:
+                new_painter = 4
+            elif data[0] == data[4]:
+                new_painter = 5
+            else:
+                print("return")
+                return
         else:
-            return
+            new_painter = last_painter_index + 1
 
         while new_painter <= 5:
             if data[new_painter] is not None:
@@ -390,6 +395,7 @@ def next_painter(room_id: int) -> None:
             new_painter += 1
 
         if new_painter != -1:
+            print("stop by next painter")
             cursor.connection.commit()
             stop_room(room_id)
             return
@@ -587,13 +593,13 @@ def clean_room_for_freeze(room_id: int) -> None:
             cursor.execute('UPDATE games_rooms SET user_5 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(5)
         cursor.connection.commit()
-        user_deleted_list_id = [data[4 + i] for i in user_deleted_list]
+        user_deleted_list_id: list[int] = [data[4 + i] for i in user_deleted_list]
 
         if now_painter in user_deleted_list_id:
             now_word = get_room_word(room_id)
             set_room_status_message(json.dumps({"message": "Игрок отключился.", "right_answer": now_word}), room_id)
             set_room_waiting_state(room_id, True)
-            next_painter(room_id)
+            next_painter(room_id, user_deleted_list[user_deleted_list_id.index(now_painter)])
 
         if is_room_started(room_id):
             start_checked_started_room(room_id)
