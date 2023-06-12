@@ -603,8 +603,8 @@ def clean_room_for_freeze(room_id: int) -> None:
         if now_painter in user_deleted_list_id:
             now_word = get_room_word(room_id)
             set_room_status_message(json.dumps({"message": "Игрок отключился.", "right_answer": now_word}), room_id)
+            cursor.execute("UPDATE games_rooms SET user_{0} WHERE id = %s".format(user_deleted_list[user_deleted_list_id.index(now_painter)]), room_id)
             set_room_waiting_state(room_id, True)
-            next_painter(room_id, user_deleted_list[user_deleted_list_id.index(now_painter)])
 
         if is_room_started(room_id):
             start_checked_started_room(room_id)
