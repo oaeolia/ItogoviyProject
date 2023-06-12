@@ -610,10 +610,10 @@ def clean_room_for_freeze(room_id: int) -> None:
             print("set message")
             cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(user_deleted_list[user_deleted_list_id.index(now_painter)]), (now_painter, room_id))
             print("save")
+            cursor.connection.commit()
 
-        if is_room_started(room_id):
-            start_checked_started_room(room_id)
-        cursor.connection.commit()
+    if is_room_started(room_id):
+        start_checked_started_room(room_id)
 
 
 def check_game_check_user_state(room_id: int) -> bool:
