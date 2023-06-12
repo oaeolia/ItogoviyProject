@@ -9,7 +9,7 @@
     <string name="title_rules">Правила</string>
     <string name="titile_variant_chat">Варианты игроков</string>
     <string name="title_private_game">Приватная игра</string>
-    <string name="title_private_game_id">Индефикатор комнаты:</string>
+    <string name="title_private_game_id">Идентификатор комнаты:</string>
     <string name="title_private_game_user_list">Список игроков:</string>
     <string name="title_private_game_join">Подключение к приватной игре</string>
     <string name="title_private_game_key">Ключ игры</string>
