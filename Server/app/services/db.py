@@ -385,7 +385,6 @@ def next_painter(room_id: int, last_painter_index: int = None) -> None:
             elif data[0] == data[4]:
                 new_painter = 5
             else:
-                print("return")
                 return
         else:
             new_painter = last_painter_index + 1
@@ -398,7 +397,6 @@ def next_painter(room_id: int, last_painter_index: int = None) -> None:
             new_painter += 1
 
         if new_painter != -1:
-            print("stop by next painter")
             cursor.connection.commit()
             stop_room(room_id)
             return
@@ -601,15 +599,10 @@ def clean_room_for_freeze(room_id: int) -> None:
         user_deleted_list_id: list[int] = [data[4 + i] for i in user_deleted_list]
 
         if now_painter in user_deleted_list_id:
-            print('start')
             set_room_waiting_state(room_id, True)
-            print("set wait")
             now_word = get_room_word(room_id)
-            print("word")
             set_room_status_message(json.dumps({"message": "Игрок отключился.", "right_answer": now_word}), room_id)
-            print("set message")
             cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(user_deleted_list[user_deleted_list_id.index(now_painter)]), (now_painter, room_id))
-            print("save")
             cursor.connection.commit()
 
     if is_room_started(room_id):
