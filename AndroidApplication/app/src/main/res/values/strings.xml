@@ -13,6 +13,7 @@
     <string name="title_private_game_user_list">Список игроков:</string>
     <string name="title_private_game_join">Подключение к приватной игре</string>
     <string name="title_private_game_key">Ключ игры</string>
+    <string name="title_waiting_game">Ожидание начала игры…</string>
 
     <string name="action_login">Войти</string>
     <string name="action_register">Зарегистрироваться</string>
