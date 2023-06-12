@@ -108,7 +108,9 @@ def remove_application_session(session_id: int, session_token: str) -> None:
 
 def create_private_room(user_id: int, token: str) -> int:
     with get_connection().cursor() as cursor:
-        cursor.execute("INSERT INTO games_rooms (user_1, token, start_time, is_waiting, now_word) VALUES (%s, %s, NOW(), 1, \"\")", (user_id, token))
+        cursor.execute(
+            "INSERT INTO games_rooms (user_1, token, start_time, is_waiting, now_word) VALUES (%s, %s, NOW(), 1, \"\")",
+            (user_id, token))
         cursor.connection.commit()
         return cursor.lastrowid
 
@@ -121,7 +123,7 @@ def get_private_room(user_id: int, token: str) -> int:
             return -1
         for i in range(1, 5):
             if data[i] is None:
-                cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(i+1), (user_id, data[0]))
+                cursor.execute("UPDATE games_rooms SET user_{0}=%s WHERE id = %s".format(i + 1), (user_id, data[0]))
                 cursor.connection.commit()
                 break
         return data[0]
@@ -165,7 +167,8 @@ def get_new_of_free_room(user_id: int) -> int:
             "SELECT id, user_1, user_2, user_3, user_4 FROM games_rooms WHERE (is_waiting=1 AND is_started=0) AND (user_1 IS NULL OR user_2 IS NULL OR user_3 IS NULL OR user_4 IS NULL OR user_5 IS NULL) AND token=\"\"")
         data = cursor.fetchone()
         if data is None:
-            cursor.execute("INSERT INTO games_rooms (now_word, user_1, is_waiting, start_time) VALUES ('', %s, 1, NOW())", user_id)
+            cursor.execute(
+                "INSERT INTO games_rooms (now_word, user_1, is_waiting, start_time) VALUES ('', %s, 1, NOW())", user_id)
             cursor.connection.commit()
             return cursor.lastrowid
         else:
@@ -554,7 +557,8 @@ def start_checked_started_room(room_id: int) -> None:
 
 def is_room_checked_time_end(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
+        cursor.execute("SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s",
+                       room_id)
         data = cursor.fetchone()
         if data is None or data[0] < settings.CHECK_TIME:
             return False
@@ -564,7 +568,9 @@ def is_room_checked_time_end(room_id: int) -> bool:
 
 def set_user_checked_for_room(room_id: int, user_id: int) -> None:
     with get_connection().cursor() as cursor:
-        cursor.execute("UPDATE games_rooms SET checked_user_%s = 1 WHERE id = %s", (user_id, room_id))
+        cursor.execute("SELECT user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s", room_id)
+        data = cursor.fetchone()
+        cursor.execute("UPDATE games_rooms SET checked_user_%s = 1 WHERE id = %s", (data.index(user_id) + 1, room_id))
         cursor.connection.commit()
 
 
