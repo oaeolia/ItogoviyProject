@@ -554,10 +554,9 @@ def start_checked_started_room(room_id: int) -> None:
 
 def is_room_checked_time_end(room_id: int) -> bool:
     with get_connection().cursor() as cursor:
-        cursor.execute("SELECT 1 FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
-                       room_id)
+        cursor.execute("SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s", room_id)
         data = cursor.fetchone()
-        if data is None:
+        if data is None or data[0] < settings.CHECK_TIME:
             return False
         else:
             return True
@@ -572,11 +571,11 @@ def set_user_checked_for_room(room_id: int, user_id: int) -> None:
 def clean_room_for_freeze(room_id: int) -> None:
     with get_connection().cursor() as cursor:
         cursor.execute(
-            'SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5, user_1, user_2, user_3, user_4, user_5 FROM games_rooms WHERE id = %s',
+            'SELECT checked_user_1, checked_user_2, checked_user_3, checked_user_4, checked_user_5, user_1, user_2, user_3, user_4, user_5, now_painter FROM games_rooms WHERE id = %s',
             room_id)
         data = cursor.fetchone()
         user_deleted_list = []
-        now_painter = get_now_painter(room_id)
+        now_painter = data[10]
         if not data[0]:
             cursor.execute('UPDATE games_rooms SET user_1 = NULL WHERE id = %s', room_id)
             user_deleted_list.append(1)
