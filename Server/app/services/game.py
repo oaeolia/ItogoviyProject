@@ -207,7 +207,7 @@ def check_for_end_time(room_id: int) -> bool:
     if buffer:
         db.set_room_status_message(json.dumps({"message": "Время закончилось!", "right_answer": db.get_room_word(room_id)}), room_id)
         if db.is_painter_last(room_id):
-            db.stop_room(room_id)
+            db.set_room_waiting_state(room_id, True)
             return True
         start_wait_state(room_id)
         return False
