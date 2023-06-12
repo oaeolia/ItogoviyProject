@@ -510,7 +510,7 @@ def send_message(message: str, room_id: int) -> None:
 def check_room_for_freeze(room_id: int) -> str:
     with get_connection().cursor() as cursor:
         cursor.execute(
-            "SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s AND start_checked_time < NOW() - INTERVAL 10 SECOND",
+            "SELECT TIMESTAMPDIFF(SECOND, start_checked_time, NOW()) FROM games_rooms WHERE id = %s",
             room_id)
         data = cursor.fetchone()
         if data is None or data[0] < settings.CHECK_TIME:
@@ -535,7 +535,7 @@ def check_room_for_freeze(room_id: int) -> str:
                 'UPDATE games_rooms SET checked_user_1 = 0, checked_user_2 = 0, checked_user_3 = 0, checked_user_4 = 0, checked_user_5 = 0 WHERE id = %s',
                 room_id)
             cursor.connection.commit()
-            return 'WAITING'
+            return 'CHECK_END'
 
 
 def start_checked_started_room(room_id: int) -> None:

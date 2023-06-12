@@ -26,14 +26,23 @@ def check_game_room_for_user(room_id: int, user_id: int) -> str:
         if not db.game_room_set_user_checked(room_id, user_id):
             return ''
     elif buffer == 'WAITING_CHECK':
+        db.game_room_set_user_checked(room_id, user_id)
         buffer = db.check_room_for_freeze(room_id)
-        if buffer != 'WAITING_CHECK':
+        if buffer == 'WAITING_CHECK':
             db.close_now_connection()
             return buffer
-        db.game_room_set_user_checked(room_id, user_id)
-        if db.check_game_room(room_id):
-            buffer = 'STARTED'
-            start_game(room_id)
+        elif buffer == "CHECK_END":
+            buffer = db.check_game_room_for_user(room_id, user_id)
+            if buffer != 'STARTING' and check_room_for_start_possibility(room_id):
+                buffer = 'STARTING'
+            if buffer == 'STARTING':
+                start_game(room_id)
+        # if buffer != 'WAITING_CHECK':
+        #     db.close_now_connection()
+        #     return buffer
+        # if db.check_game_room(room_id):
+        #     buffer = 'STARTED'
+        #     start_game(room_id)
     db.close_now_connection()
     return buffer
 
