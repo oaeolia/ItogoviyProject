@@ -13,6 +13,9 @@ import com.nikol.sketchit.server.ServerCallback;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+/**
+ * Класс ответывающий за игровую логику.
+ */
 public class GameController {
     private static final String USER_ROLE = "USER";
     private static final String PAINTER_ROLE = "PAINTER";

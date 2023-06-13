@@ -4,6 +4,9 @@ import com.nikol.sketchit.loggers.ConsoleLogger;
 import com.nikol.sketchit.loggers.ILogger;
 import com.nikol.sketchit.server.Server;
 
+/**
+ * Переопределение стандартного класса Application. Фактически является точкой входа.
+ */
 public class Application extends android.app.Application {
     public static final String PREFERENCES_FILE_NAME = "preferences";
     public static final int ROUND_SECONDS_TIME = 210;

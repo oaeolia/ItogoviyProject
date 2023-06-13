@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 
 import com.nikol.sketchit.databinding.FragmentGameRoundEndMessageBinding;
 
-
+/**
+ * Класс фрагмента сообщения после раунда. Отвечает за отображение сообщения после каждого игрового раунда.
+ */
 public class GameRoundEndMessageFragment extends DialogFragment {
     public static final String ARG_KEY_MESSAGE = "message";
     public static final String ARG_KEY_RIGHT_ANSWER = "rightAnswer";

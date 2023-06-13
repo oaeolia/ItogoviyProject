@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Класс активности меню приватной игры. Отвечает за отоюражение интерфейса меню приватной игры и за подключение к ней или её создание.
+ */
 public class PrivateRoomMenuActivity extends AppCompatActivity {
     private ActivityPrivateRoomMenuBinding binding;
     private Server server;

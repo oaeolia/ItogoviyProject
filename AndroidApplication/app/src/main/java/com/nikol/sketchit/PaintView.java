@@ -14,6 +14,9 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * View, на котором происходит рисование. Отвечает за обработку пользователского ввода и отображение результата.
+ */
 public class PaintView extends View {
 
     private static Paint paint;

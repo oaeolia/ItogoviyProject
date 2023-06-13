@@ -8,6 +8,9 @@ import android.view.MotionEvent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Переопределение RecyclerView, для возможности рисования через него.
+ */
 public class ChatRecycleView extends RecyclerView {
     private PaintView paintView;
 

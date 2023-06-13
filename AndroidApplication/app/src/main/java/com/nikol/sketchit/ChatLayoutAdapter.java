@@ -11,6 +11,9 @@ import com.nikol.sketchit.databinding.LayoutChatMessageBinding;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Adapter для чата. Отвечает за обновление данных в ChatRecycleView.
+ */
 public class ChatLayoutAdapter extends RecyclerView.Adapter<ChatLayoutAdapter.ChatLayoutViewHolder> {
     private List<String> messages = new LinkedList<>();
 

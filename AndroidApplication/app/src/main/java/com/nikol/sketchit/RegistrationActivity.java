@@ -16,6 +16,9 @@ import com.nikol.sketchit.server.ServerCallback;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Класс активности регистрации. Отвечает за процесс регистрации.
+ */
 public class RegistrationActivity extends AppCompatActivity {
     private ActivityRegistrationBinding binding;
     private ILogger logger;

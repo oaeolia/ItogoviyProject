@@ -14,6 +14,9 @@ import com.nikol.sketchit.loggers.ILogger;
 import com.nikol.sketchit.server.Server;
 import com.nikol.sketchit.server.ServerCallback;
 
+/**
+ * Класс активность входа в аккаунт. Отвечате за авторизацию.
+ */
 public class LoginActivity extends AppCompatActivity {
     private static final String APPLICATION_ID_PREFERENCE_NAME = "application_id";
     private static final String APPLICATION_TOKEN_PREFERENCE_NAME = "application_token";
@@ -86,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void autoLogin() {
-        logger.logDebug("Login", "Find application id");
         SharedPreferences preferences = getSharedPreferences(Application.PREFERENCES_FILE_NAME, MODE_PRIVATE);
         server.loginByApplicationData(preferences.getString(APPLICATION_TOKEN_PREFERENCE_NAME, ""), preferences.getInt(APPLICATION_ID_PREFERENCE_NAME, 0), new ServerCallback<Boolean, String, Object>() {
             @Override

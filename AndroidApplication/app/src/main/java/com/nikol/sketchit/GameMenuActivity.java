@@ -8,11 +8,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nikol.sketchit.databinding.ActivityGameMenuBinding;
-import com.nikol.sketchit.databinding.ActivityPrivateRoomMenuBinding;
 import com.nikol.sketchit.loggers.ILogger;
 import com.nikol.sketchit.server.Server;
 import com.nikol.sketchit.server.ServerCallback;
 
+/**
+ * Класс активности игрового меню. Отвечает за запуск поиска публичной игры или переход в меню приватной игры.
+ */
 public class GameMenuActivity extends AppCompatActivity {
     private ActivityGameMenuBinding binding;
     private Server server;

@@ -2,6 +2,9 @@ package com.nikol.sketchit.loggers;
 
 import android.util.Log;
 
+/**
+ * Простейшая реализация системы логирования для вывода в консоль.
+ */
 public class ConsoleLogger implements ILogger {
     @Override
     public void logDebug(String tag, String message) {

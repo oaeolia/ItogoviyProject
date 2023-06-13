@@ -1,9 +1,9 @@
 package com.nikol.sketchit.loggers;
 
-/*
-This class abstracts the general interface for the logging class. This is necessary because
-different types of logging can be useful in different situations. The usual console for debugging
-the program or sending to the server for further analysis and processing
+/**
+ * Этот класс абстрагирует общий интерфейс для класса ведения журнала. Это необходимо, поскольку
+ * различные типы ведения журнала могут быть полезны в разных ситуациях. Обычная консоль для отладки
+ * программы или отправки на сервер для дальнейшего анализа и обработки.
  */
 public interface ILogger {
     void logDebug(String tag, String message);

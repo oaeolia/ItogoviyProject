@@ -19,6 +19,9 @@ import com.nikol.sketchit.databinding.ActivityMainBinding;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Посредник между GameController и UI (паттерн Mediator). Отвечает за обновление состояния интрефейса.
+ */
 public class GameLayoutBridge {
     private final ActivityMainBinding binding;
     private final MainActivity mainActivity;

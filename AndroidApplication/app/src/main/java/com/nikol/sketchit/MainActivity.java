@@ -19,7 +19,9 @@ import com.nikol.sketchit.game.GameLayoutBridge;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+/**
+ * Класс игровой активности. Отвечает за отображение интерфейса во время игры.
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String ROOM_ID_INTENT_KEY = "roomId";
 
